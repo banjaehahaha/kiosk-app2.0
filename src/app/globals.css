@@ -1,0 +1,274 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap');
+
+/* Exmouth 폰트 추가 */
+@font-face {
+  font-family: 'Exmouth';
+  src: url('/fonts/exmouth/exmouth_.ttf') format('truetype');
+  font-weight: normal;
+  font-style: normal;
+}
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* D2Coding Ligature 폰트 정의 */
+@font-face {
+    font-family: 'D2Coding Ligature';
+    src: url('/fonts/D2Coding-Regular.ttf') format('truetype');
+    font-weight: normal;
+    font-style: normal;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'D2Coding Ligature';
+    src: url('/fonts/D2Coding-Bold.ttf') format('truetype');
+    font-weight: bold;
+    font-style: normal;
+    font-display: swap;
+}
+
+
+
+/* 프리텐다드 폰트 정의 */
+@font-face {
+    font-family: 'Pretendard';
+    src: url('https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/woff2/Pretendard-Regular.woff2') format('woff2'),
+         url('https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/woff/Pretendard-Regular.woff') format('woff');
+    font-weight: 400;
+    font-style: normal;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'Pretendard';
+    src: url('https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/woff2/Pretendard-Medium.woff2') format('woff2'),
+         url('https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/woff/Pretendard-Medium.woff') format('woff');
+    font-weight: 500;
+    font-style: normal;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'Pretendard';
+    src: url('https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/woff2/Pretendard-SemiBold.woff2') format('woff2'),
+         url('https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/woff/Pretendard-SemiBold.woff') format('woff');
+    font-weight: 600;
+    font-style: normal;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'Pretendard';
+    src: url('https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/woff2/Pretendard-Bold.woff2') format('woff2'),
+         url('https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/woff/Pretendard-Bold.woff') format('woff');
+    font-weight: 700;
+    font-style: normal;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'Pretendard';
+    src: url('https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/woff2/Pretendard-ExtraBold.woff2') format('woff2'),
+         url('https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/woff/Pretendard-ExtraBold.woff') format('woff');
+    font-weight: 800;
+    font-style: normal;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'Pretendard';
+    src: url('https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/woff2/Pretendard-Black.woff2') format('woff2'),
+         url('https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/woff/Pretendard-Black.woff') format('woff');
+    font-weight: 900;
+    font-style: normal;
+    font-display: swap;
+}
+
+/* GowunBatang 폰트 정의 */
+@font-face {
+    font-family: 'GowunBatang-Regular';
+    src: url('https://fastly.jsdelivr.net/gh/projectnoonnu/noonfonts_2108@1.1/GowunBatang-Regular.woff') format('woff');
+    font-weight: normal;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'GowunBatang-Bold';
+    src: url('https://fastly.jsdelivr.net/gh/projectnoonnu/noonfonts_2108@1.1/GowunBatang-Bold.woff') format('woff');
+    font-weight: 700;
+    font-style: normal;
+}
+
+/* 대사 하이라이트 스타일 */
+.dialogue-line.highlight {
+  background-color: #fce7f3 !important;
+  color: #000000 !important;
+}
+
+/* 하이라이트가 제거된 후 기본 텍스트 색상 */
+.dialogue-line {
+  color: #e5e5e5 !important;
+}
+
+/* 하이라이트 시 강제 적용 */
+.dialogue-line[style*="background-color: #fce7f3"] {
+  color: #000000 !important;
+}
+
+/* 다크모드 기본 스타일 */
+:root {
+  --bg-primary: #1a1a1a;
+  --bg-secondary: #2d2d2d;
+  --bg-tertiary: #404040;
+  --text-primary: #e5e5e5;
+  --text-secondary: #b3b3b3;
+  --text-muted: #808080;
+  --border-color: #404040;
+  --accent-color: #F8D1E7;
+}
+
+/* 키오스크 최적화 스타일 */
+body {
+  margin: 0;
+  padding: 0;
+  background-color: var(--bg-primary);
+  color: var(--text-primary);
+  font-family: 'D2Coding Ligature', 'Consolas', 'Monaco', 'Courier New', 'Pretendard', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+    sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  background-color: #f3f4f6; /* 밝은 회색 배경 */
+  user-select: none; /* 텍스트 선택 방지 */
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+}
+
+/* 터치 최적화 */
+* {
+  -webkit-tap-highlight-color: transparent;
+  touch-action: manipulation;
+}
+
+/* 브라우저 기본 제스처 비활성화 */
+html, body {
+  overscroll-behavior-x: none;
+  overscroll-behavior-y: none;
+  -webkit-overflow-scrolling: touch;
+}
+
+/* Edge 브라우저 제스처 방지 */
+@media (pointer: fine) {
+  html, body {
+    overscroll-behavior: none;
+  }
+}
+
+/* 키오스크 화면 크기 최적화 */
+#__next {
+  width: 100vw;
+  height: 100vh;
+}
+
+/* 스크롤바 숨기기 */
+::-webkit-scrollbar {
+  display: none;
+}
+
+/* Firefox용 스크롤바 숨기기 */
+* {
+  scrollbar-width: none;
+}
+
+/* IE용 스크롤바 숨기기 */
+* {
+  -ms-overflow-style: none;
+}
+
+/* GowunBatang 폰트 클래스 */
+.font-gowun {
+  font-family: 'GowunBatang-Regular', serif;
+}
+
+.font-gowun-bold {
+  font-family: 'GowunBatang-Bold', serif;
+  font-weight: 700;
+}
+
+/* 프리텐다드 폰트 클래스 */
+.font-pretendard {
+  font-family: 'Pretendard', sans-serif;
+}
+
+.font-pretendard-medium {
+  font-family: 'Pretendard', sans-serif;
+  font-weight: 500;
+}
+
+.font-pretendard-semibold {
+  font-family: 'Pretendard', sans-serif;
+  font-weight: 600;
+}
+
+.font-pretendard-bold {
+  font-family: 'Pretendard', sans-serif;
+  font-weight: 700;
+}
+
+.font-pretendard-extrabold {
+  font-family: 'Pretendard', sans-serif;
+  font-weight: 800;
+}
+
+.font-pretendard-black {
+  font-family: 'Pretendard', sans-serif;
+  font-weight: 900;
+}
+
+/* 더 강한 굵기를 위한 추가 클래스 */
+.font-pretendard-ultra {
+  font-family: 'Pretendard', sans-serif;
+  font-weight: 900;
+  -webkit-text-stroke: 0.5px currentColor;
+  text-stroke: 0.5px currentColor;
+}
+
+/* D2Coding Ligature 폰트 클래스 */
+.font-d2coding {
+  font-family: 'D2Coding Ligature', 'Consolas', 'Monaco', 'Courier New', monospace !important;
+}
+
+.font-d2coding-bold {
+  font-family: 'D2Coding Ligature', 'Consolas', 'Monaco', 'Courier New', monospace !important;
+  font-weight: bold !important;
+}
+
+/* 터치스크린용 애니메이션 */
+@keyframes shine {
+  0% {
+    transform: translateX(-100%) skewX(-12deg);
+  }
+  100% {
+    transform: translateX(200%) skewX(-12deg);
+  }
+}
+
+@keyframes bounce-x {
+  0%, 100% {
+    transform: translateX(0);
+  }
+  50% {
+    transform: translateX(8px);
+  }
+}
+
+.animate-shine {
+  animation: shine 8s ease-in-out infinite;
+}
+
+.animate-bounce-x {
+  animation: bounce-x 2s ease-in-out infinite;
+}
