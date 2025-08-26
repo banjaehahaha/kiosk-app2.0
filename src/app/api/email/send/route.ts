@@ -27,12 +27,14 @@ export async function POST(request: NextRequest) {
       });
     }
 
-    // 이메일 전송을 위한 transporter 설정
+    // Use SendGrid instead of Gmail
     const transporter = nodemailer.createTransport({
-      service: 'gmail', // Gmail 사용
+      host: 'smtp.sendgrid.net',
+      port: 587,
+      secure: false, // true for 465, false for other ports
       auth: {
-        user: process.env.EMAIL_USER, // 환경변수에서 이메일 주소 가져오기
-        pass: process.env.EMAIL_PASS  // 환경변수에서 앱 비밀번호 가져오기
+        user: 'apikey', // This is always 'apikey'
+        pass: process.env.SENDGRID_API_KEY // Your SendGrid API key
       }
     });
 

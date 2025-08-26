@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
+import { PaymentService } from '@/services/paymentService';
 
 export async function POST(request: NextRequest) {
   try {
@@ -90,42 +91,73 @@ export async function POST(request: NextRequest) {
       throw new Error(`PayApp API 호출 실패: ${payAppResponse.status} ${payAppResponse.statusText}`);
     }
 
-          const responseText = await payAppResponse.text();
-      console.log('PayApp API 응답 (raw):', responseText);
-      
-      // URL 인코딩된 응답을 파싱
-      const responseParams = new URLSearchParams(responseText);
-      
-      // 모든 파라미터 로깅
-      const allParams: Record<string, string> = {};
-      responseParams.forEach((value, key) => {
-        allParams[key] = value;
-      });
-      console.log('PayApp API 응답 파라미터:', allParams);
-      
-      const result = {
-        state: responseParams.get('state'),
-        errorMessage: responseParams.get('errorMessage'),
-        mul_no: responseParams.get('mul_no'),
-        payurl: responseParams.get('payurl'),
-        errorCode: responseParams.get('errorCode'),
-        var1: body.var1,
-        var2: body.var2,
-      };
+    const responseText = await payAppResponse.text();
+    console.log('PayApp API 응답 (raw):', responseText);
+    
+    // URL 인코딩된 응답을 파싱
+    const responseParams = new URLSearchParams(responseText);
+    
+    // 모든 파라미터 로깅
+    const allParams: Record<string, string> = {};
+    responseParams.forEach((value, key) => {
+      allParams[key] = value;
+    });
+    console.log('PayApp API 응답 파라미터:', allParams);
+    
+    const result = {
+      state: responseParams.get('state'),
+      errorMessage: responseParams.get('errorMessage'),
+      mul_no: responseParams.get('mul_no'),
+      payurl: responseParams.get('payurl'),
+      errorCode: responseParams.get('errorCode'),
+      var1: body.var1,
+      var2: body.var2,
+    };
 
-      console.log('파싱된 결과:', result);
-      
-      // 응답 검증
-      if (!result.state) {
-        console.error('PayApp API 응답에 state가 없음');
-        return NextResponse.json({
-          state: '0',
-          errorMessage: 'PayApp API 응답 형식 오류',
-          errorCode: 'RESPONSE_ERROR'
-        });
+    console.log('파싱된 결과:', result);
+    
+    // 응답 검증
+    if (!result.state) {
+      console.error('PayApp API 응답에 state가 없음');
+      return NextResponse.json({
+        state: '0',
+        errorMessage: 'PayApp API 응답 형식 오류',
+        errorCode: 'RESPONSE_ERROR'
+      });
+    }
+
+    // PayApp API 호출이 성공한 경우 (state가 '1' 또는 '2'인 경우) pending 상태로 결제 정보 저장
+    if (result.state === '1' || result.state === '2') {
+      try {
+        const paymentData = {
+          mul_no: result.mul_no || '',
+          state: result.state,
+          price: body.price.toString(),
+          goodname: body.goodname,
+          userid: body.userid || userid,
+          shopname: body.shopname,
+          memo: body.memo || '',
+          status: 'pending' as const,
+          source: 'api_call' as const,
+          payapp_response: allParams, // 전체 PayApp 응답 데이터 저장
+        };
+
+        console.log('결제 정보를 pending 상태로 저장 시도:', paymentData);
+        
+        const savedPayment = await PaymentService.savePayment(paymentData);
+        
+        if (savedPayment) {
+          console.log('✅ pending 상태로 결제 정보 저장 성공:', savedPayment.mul_no);
+        } else {
+          console.error('❌ pending 상태로 결제 정보 저장 실패');
+        }
+      } catch (saveError) {
+        console.error('결제 정보 저장 중 오류 발생:', saveError);
+        // 결제 정보 저장 실패는 전체 요청을 실패시키지 않음 (로깅만)
       }
-      
-      return NextResponse.json(result);
+    }
+    
+    return NextResponse.json(result);
   } catch (error) {
     console.error('PayApp 결제 요청 오류:', error);
     

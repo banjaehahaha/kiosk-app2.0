@@ -82,8 +82,10 @@ export default function PropsList({ onPropSelect, completedProps = [] }: PropsLi
                     isCompleted ? 'filter blur-[3px]' : ''
                   }`}
                   onError={(e) => {
+                    // Remove the placeholder fallback - just let the image fail silently
+                    // or you could hide the image element entirely
                     const target = e.target as HTMLImageElement;
-                    target.src = '/images/props/placeholder.jpg';
+                    target.style.display = 'none';
                   }}
                 />
                 

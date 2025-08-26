@@ -631,7 +631,7 @@ export default function AudienceInfoModal({
                             const result = await response.json();
                             console.log('수동 확인 - API 결과:', result);
                             
-                            if (result.status === 'completed') {
+                            if (result.data.status === 'completed') {
                               console.log('✅ 수동 확인 - API에서 결제 완료 감지!');
                               setPaymentStatus('success');
                               
