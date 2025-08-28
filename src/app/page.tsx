@@ -338,17 +338,15 @@ export default function KioskApp() {
 </div>
 
         <div class="text-center mb-8 sticky top-[25%] z-10 transition-all duration-300">
-          <video 
-            ref={videoRef}
-            class="w-full max-w-2xl mx-auto rounded-lg shadow-lg" 
-            controls 
-            preload="auto"
-            autoPlay
-            loop
-          >
-            <source src="/chapter2_1.0_small.mp4" type="video/mp4" />
-            브라우저가 비디오 재생을 지원하지 않습니다.
-          </video>
+          <div class="w-full max-w-2xl mx-auto rounded-lg shadow-lg overflow-hidden">
+            <iframe 
+              src="https://player.vimeo.com/video/1114072967?h=437c298dd3&autoplay=1&loop=1&title=0&byline=0&portrait=0"
+              class="w-full aspect-video"
+              frameborder="0"
+              allow="autoplay; fullscreen; picture-in-picture"
+              allowfullscreen
+            ></iframe>
+          </div>
         </div>
 
 
