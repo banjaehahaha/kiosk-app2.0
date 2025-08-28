@@ -14,13 +14,8 @@ export interface PayAppPaymentRequest {
   var2?: string;
   sendphone?: "Y" | "N";
   sms?: "Y" | "N";
-  reqaddr?: "요청안함" | "요청";
+  // 주소 입력 관련 파라미터들은 서버에서 고정값으로 설정
   checkretry?: "y" | "n";
-  // 주소 입력 차단을 위한 추가 파라미터
-  addr?: "Y" | "N";
-  addr_required?: "Y" | "N";
-  zipcode?: "Y" | "N";
-  zipcode_required?: "Y" | "N";
 }
 
 export interface PayAppPaymentResponse {

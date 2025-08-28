@@ -49,7 +49,11 @@ export async function POST(request: NextRequest) {
       price: body.price.toString(),
       recvphone: body.recvphone,
       memo: body.memo || '',
-      reqaddr: body.reqaddr || '요청안함',
+      reqaddr: '요청안함', // 주소 입력 요청 안함 (고정값)
+      addr: 'N', // 주소 입력 비활성화
+      addr_required: 'N', // 주소 필수 입력 해제
+      zipcode: 'N', // 우편번호 입력 비활성화
+      zipcode_required: 'N', // 우편번호 필수 입력 해제
       vccode: body.vccode || '82',
       redirecturl: body.redirecturl,
       redirect: body.redirect || 'opener',
