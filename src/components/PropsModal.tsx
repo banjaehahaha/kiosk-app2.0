@@ -13,6 +13,7 @@ interface PropsModalProps {
   isVisible: boolean;
   onClose: () => void;
   onNavigateToChapter4?: () => void;
+  onNavigateToChapter5?: () => void; // 5장으로 넘어가는 콜백 추가
   onStartBooking: (prop: any) => void; // 공연 예매 시작 콜백 추가
   prop: {
     id: number;
@@ -42,6 +43,7 @@ export default function PropsModal({
   isVisible, 
   onClose, 
   onNavigateToChapter4,
+  onNavigateToChapter5,
   onStartBooking,
   prop,
   completedProps = []
@@ -77,8 +79,8 @@ export default function PropsModal({
 
 
   const handleShowPerformanceInfo = () => {
-    if (onNavigateToChapter4) {
-      onNavigateToChapter4();
+    if (onNavigateToChapter5) {
+      onNavigateToChapter5();
     }
     onClose();
   };
@@ -160,7 +162,7 @@ export default function PropsModal({
                 onClick={handleShowPerformanceInfo}
                 className="flex-1 px-4 py-2 bg-[#F8D1E7] text-[#1a1a1a] hover:bg-[#f0c4d8] transition-colors"
               >
-                공연 소개
+                공연 내용
               </button>
               
               <button

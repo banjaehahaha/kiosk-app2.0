@@ -69,7 +69,7 @@ export default function AudienceInfoModal({
   // 결제 관련 상태
   const [showPayment, setShowPayment] = useState(false);
   const [paymentStatus, setPaymentStatus] = useState<
-    "pending" | "checking" | "success" | "failed"
+    "pending" | "checking" | "success" | "failed" | "cancelled"
   >("pending");
   const [isLoading, setIsLoading] = useState(false);
   const [showConfirmation, setShowConfirmation] = useState(false);
@@ -672,16 +672,11 @@ export default function AudienceInfoModal({
                     setIsLoading(true);
                     
                     // 결제 취소 처리 (mul_no가 없는 경우를 위한 처리)
-                    alert('결제가 취소되었습니다.');
-                    // 물품 리스트로 돌아가기
-                    onClose();
-                    // 부모 컴포넌트에 취소 알림
-                    if (onComplete) {
-                      onComplete(null); // null을 전달하여 취소 상태임을 알림
-                    }
+                    setPaymentStatus("cancelled");
+                    // 물품 리스트로 돌아가지 않고 취소 상태 표시
                   } catch (error) {
                     console.error('결제 취소 오류:', error);
-                    alert('결제 취소 처리 중 오류가 발생했습니다.');
+                    setPaymentStatus("failed");
                   } finally {
                     setIsLoading(false);
                   }
@@ -793,6 +788,43 @@ export default function AudienceInfoModal({
                 <p className="text-sm text-gray-600 mt-1">다시 시도해주세요</p>
               </div>
             )}
+
+            {paymentStatus === "cancelled" && (
+              <div className="text-center mb-6">
+                {/* 취소 아이콘 */}
+                <div className="w-20 h-20 bg-red-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                  <svg
+                    className="w-10 h-10 text-red-600"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M6 18L18 6M6 6l12 12"
+                    />
+                  </svg>
+                </div>
+                
+                <h3 className="text-xl font-bold text-gray-800 mb-2">❌ 결제 취소</h3>
+                <p className="text-sm text-gray-600 mb-4">결제가 취소되었습니다</p>
+                
+                {/* 확인 버튼 */}
+                <button
+                  onClick={() => {
+                    onClose();
+                    if (onComplete) {
+                      onComplete(null); // null을 전달하여 취소 상태임을 알림
+                    }
+                  }}
+                  className="px-6 py-2 bg-gray-600 text-white hover:bg-gray-700 transition-colors font-medium"
+                >
+                  확인
+                </button>
+              </div>
+            )}
           </div>
         </div>
       </div>
@@ -875,13 +907,8 @@ export default function AudienceInfoModal({
                     if (cancelResponse.ok) {
                       const cancelResult = await cancelResponse.json();
                       if (cancelResult.success) {
-                        alert('결제가 취소되었습니다.');
-                        // 물품 리스트로 돌아가기
-                        onClose();
-                        // 부모 컴포넌트에 취소 알림
-                        if (onComplete) {
-                          onComplete(null); // null을 전달하여 취소 상태임을 알림
-                        }
+                        setPaymentStatus("cancelled");
+                        // 물품 리스트로 돌아가지 않고 취소 상태 표시
                       } else {
                         alert('결제 취소에 실패했습니다: ' + cancelResult.error);
                       }
