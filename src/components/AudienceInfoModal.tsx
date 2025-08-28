@@ -685,14 +685,94 @@ export default function AudienceInfoModal({
             )}
 
             {paymentStatus === "success" && (
-              <div className="text-gray-800 mb-4">
-                <p className="text-lg font-bold">결제 성공!</p>
-                <p className="text-sm text-gray-600 mt-1">
-                  잠시 후 완료 처리됩니다...
-                </p>
-                <div className="mt-3">
-                  <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-gray-400 mx-auto"></div>
+              <div className="text-center mb-6">
+                {/* 성공 아이콘 */}
+                <div className="w-20 h-20 bg-[#F8D1E7]/20 rounded-full flex items-center justify-center mx-auto mb-4">
+                  <svg
+                    className="w-10 h-10 text-gray-700"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M5 13l4 4L19 7"
+                    />
+                  </svg>
                 </div>
+                
+                <h3 className="text-xl font-bold text-gray-800 mb-2">🎉 결제 완료!</h3>
+                <p className="text-sm text-gray-600 mb-4">예매가 성공적으로 완료되었습니다</p>
+                
+                {/* 결제 확인 내역 */}
+                <div className="bg-[#F8D1E7]/10 p-4 rounded-lg border border-[#F8D1E7]/30 mb-4">
+                  <h4 className="text-sm font-medium text-gray-700 mb-3 text-left">📋 결제 확인 내역</h4>
+                  <div className="space-y-2 text-sm text-left">
+                    <div className="flex justify-between">
+                      <span className="text-gray-600">공연명:</span>
+                      <span className="font-medium text-gray-800">부재시 픽션은 문 앞에 놔주세요</span>
+                    </div>
+                    <div className="flex justify-between">
+                      <span className="text-gray-600">선택 소품:</span>
+                      <span className="font-medium text-gray-800">{propName}</span>
+                    </div>
+                    <div className="flex justify-between">
+                      <span className="text-gray-600">관객명:</span>
+                      <span className="font-medium text-gray-800">{formData.name}</span>
+                    </div>
+                    <div className="flex justify-between">
+                      <span className="text-gray-600">연락처:</span>
+                      <span className="font-medium text-gray-800">{formData.phone}</span>
+                    </div>
+                    <div className="flex justify-between">
+                      <span className="text-gray-600">관람 인원:</span>
+                      <span className="font-medium text-gray-800">{formData.attendeeCount}명</span>
+                    </div>
+                    <div className="flex justify-between">
+                      <span className="text-gray-600">결제 금액:</span>
+                      <span className="font-medium text-gray-800">₩{(formData.attendeeCount * 20000).toLocaleString()}</span>
+                    </div>
+                    {formData.busService && (
+                      <div className="flex justify-between">
+                        <span className="text-gray-600">대절버스:</span>
+                        <span className="font-medium text-gray-800">이용 ({formData.busAttendeeCount}명)</span>
+                      </div>
+                    )}
+                    <div className="flex justify-between">
+                      <span className="text-gray-600">공연 일시:</span>
+                      <span className="font-medium text-gray-800">2024년 10월 30일 오후 7시</span>
+                    </div>
+                    <div className="flex justify-between">
+                      <span className="text-gray-600">공연 장소:</span>
+                      <span className="font-medium text-gray-800">합정역 2번 출구 앞 세아타워</span>
+                    </div>
+                  </div>
+                </div>
+                
+                {/* 안내 메시지 */}
+                <div className="bg-blue-50 p-3 rounded border border-blue-200 mb-4">
+                  <p className="text-sm text-blue-800 font-medium">
+                    🎭 선택하신 소품이 공연에 등장합니다!
+                  </p>
+                  <p className="text-xs text-blue-600 mt-1">
+                    공연 당일 현장에서 확인해주세요
+                  </p>
+                </div>
+                
+                {/* 완료 버튼 */}
+                <button
+                  onClick={() => {
+                    onClose();
+                    if (onComplete) {
+                      onComplete(formData);
+                    }
+                  }}
+                  className="px-6 py-2 bg-[#F8D1E7] text-gray-800 hover:bg-[#f0c4d8] transition-colors rounded font-medium"
+                >
+                  완료
+                </button>
               </div>
             )}
 
