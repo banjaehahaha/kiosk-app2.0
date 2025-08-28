@@ -98,7 +98,19 @@
     font-family: 'GowunBatang-Bold';
     src: url('https://fastly.jsdelivr.net/gh/projectnoonnu/noonfonts_2108@1.1/GowunBatang-Bold.woff') format('woff');
     font-weight: 700;
-    font-style: normal;
+}
+
+/* 글로브 뷰어 90도 회전 스타일 */
+.globe-viewer-rotated {
+  transform: rotate(90deg);
+  transform-origin: center center;
+  width: 100vh;
+  height: 100vw;
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  margin-top: -50vw;
+  margin-left: -50vh;
 }
 
 /* 대사 하이라이트 스타일 */

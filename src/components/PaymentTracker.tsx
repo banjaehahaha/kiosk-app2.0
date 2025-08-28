@@ -275,3 +275,4 @@ export function PaymentTracker({ onConnectionChange, onPaymentCountChange }: Pay
     </div>
   );
 }
+

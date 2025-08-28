@@ -106,3 +106,4 @@ export class GlobeNotificationService {
 
 // 싱글톤 인스턴스 내보내기
 export const globeNotificationService = GlobeNotificationService.getInstance();
+

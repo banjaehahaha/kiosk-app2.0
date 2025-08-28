@@ -382,6 +382,7 @@ export default function AudienceInfoModal({
   };
 
   const startPaymentMonitoring = async (mulNo: string) => {
+    await new Promise(resolve => setTimeout(resolve, 3000));
     console.log('=== 결제 상태 모니터링 시작 ===');
     console.log('mul_no:', mulNo);
     console.log('propName:', propName);
@@ -416,7 +417,7 @@ export default function AudienceInfoModal({
                 await handlePaymentSuccess();
                 return;
               } else if (paymentData.status === 'failed') {
-                console.log('❌ feedbackurl API에서 결제 실패 감지');
+                console.log('❌ check-status API에서 결제 실패 감지');
                 setPaymentStatus('failed');
                 clearInterval(checkInterval);
                 return;

@@ -59,23 +59,6 @@ export async function POST(request: NextRequest) {
         if (dbResult.paymentStatus === 'completed') {
           console.log('✅ 데이터베이스에서 결제 완료 확인:', mulNo);
           
-          // Supabase에도 저장
-          const savedPayment = await PaymentService.savePayment({
-            mul_no: mulNo,
-            state: '1',
-            price: '0',
-            goodname: 'Database Backup',
-            userid: 'system',
-            shopname: 'System',
-            status: 'completed',
-            source: 'manual_check',
-            processed_at: new Date().toISOString()
-          });
-          
-          if (savedPayment) {
-            console.log('📝 Supabase에 백업 데이터 저장됨:', mulNo);
-          }
-          
           return NextResponse.json({ 
             status: 'success', 
             mul_no: mulNo, 

@@ -1,6 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { PaymentService } from '@/services/paymentService';
-import { globeNotificationService } from '@/services/globeNotificationService';
 
 // PayApp에서 결제 완료 후 호출하는 feedbackurl
 export async function POST(request: NextRequest) {
@@ -24,7 +23,8 @@ export async function POST(request: NextRequest) {
       price: formData.get('price') || formData.get('goodPrice') || 'N/A',
       goodname: formData.get('goodname') || formData.get('goodName') || 'N/A',
       userid: formData.get('userid') || 'N/A',
-      shopname: formData.get('shopname') || formData.get('shopName') || 'N/A',
+      shopname: formData.get('shopname') || 'N/A',
+      pay_state: formData.get('pay_state') || 'N/A',
       memo: formData.get('memo') || 'N/A',
       // 추가 파라미터들
       errorMessage: formData.get('errorMessage') || null,
@@ -41,20 +41,9 @@ export async function POST(request: NextRequest) {
       timestamp: new Date().toISOString()
     };
     
-    console.log('=== PayApp 결제 결과 파싱 완료 ===');
-    console.log('결제 번호 (mul_no):', paymentResult.mul_no);
-    console.log('결제 상태 (state):', paymentResult.state);
-    console.log('결제 금액 (price):', paymentResult.price);
-    console.log('상품명 (goodname):', paymentResult.goodname);
-    console.log('사용자 ID (userid):', paymentResult.userid);
-    console.log('상점명 (shopname):', paymentResult.shopname);
-    console.log('메모 (memo):', paymentResult.memo);
-    console.log('에러 메시지:', paymentResult.errorMessage);
-    console.log('에러 코드:', paymentResult.errorCode);
-    console.log('=====================================');
     
     // 결제 상태 확인 (PayApp 매뉴얼 기준: state=1 성공, state=0 실패)
-    if (paymentResult.state === '1') {
+    if (paymentResult.pay_state === '4') {
       console.log('✅ 결제 성공:', paymentResult.mul_no);
       
       // Supabase에 결제 완료 정보 저장
@@ -64,67 +53,16 @@ export async function POST(request: NextRequest) {
         price: paymentResult.price.toString(),
         goodname: paymentResult.goodname.toString(),
         userid: paymentResult.userid.toString(),
-        shopname: paymentResult.shopname.toString(),
         memo: paymentResult.memo?.toString(),
+        shopname: paymentResult.shopname.toString(),
         status: 'completed',
         source: 'payapp_feedback',
         processed_at: new Date().toISOString(),
-        payapp_response: {
-          ...paymentResult,
-          // 카드 정보가 있는 경우 추가
-          card_info: paymentResult.cardName ? {
-            cardName: paymentResult.cardName,
-            cardNum: paymentResult.cardNum,
-            date: paymentResult.date,
-            installment: paymentResult.installment
-          } : null,
-          // URL 정보
-          urls: {
-            payurl: paymentResult.payurl,
-            csturl: paymentResult.csturl
-          }
-        }
+        payapp_response: JSON.stringify(allFormData)
       });
       
       if (savedPayment) {
         console.log('📝 Supabase에 결제 완료 상태 저장됨:', paymentResult.mul_no);
-        
-        // 지구본에 결제 완료 알림 전송
-        try {
-          // 상품 정보에서 출발지 정보 추출 (memo에서 prop_id 파싱)
-          const memo = paymentResult.memo?.toString() || '';
-          const propIdMatch = memo.match(/prop_id:(\d+)/);
-          
-          if (propIdMatch) {
-            const propId = parseInt(propIdMatch[1]);
-            // props.json에서 상품 정보 조회
-            const propsData = await import('@/data/props.json');
-            const prop = propsData.default.props.find((p: any) => p.id === propId);
-            
-            if (prop && prop.origin) {
-              await globeNotificationService.notifyPaymentCompleted(
-                {
-                  prop_id: propId,
-                  prop_name: prop.name,
-                  payment_amount: parseInt(paymentResult.price.toString()),
-                  payment_status: 'completed',
-                  booking_status: 'confirmed',
-                  audience_id: 0, // 실제로는 booking에서 가져와야 함
-                  payapp_mul_no: paymentResult.mul_no.toString(),
-                  created_at: new Date().toISOString(),
-                  updated_at: new Date().toISOString()
-                },
-                {
-                  city: prop.origin.city,
-                  country: prop.origin.country
-                }
-              );
-              console.log('🌍 지구본 알림 전송 완료');
-            }
-          }
-        } catch (error) {
-          console.error('지구본 알림 전송 실패:', error);
-        }
       } else {
         console.error('❌ Supabase 저장 실패:', paymentResult.mul_no);
       }
@@ -154,11 +92,8 @@ export async function POST(request: NextRequest) {
         source: 'payapp_feedback',
         processed_at: new Date().toISOString(),
         payapp_response: {
-          ...paymentResult,
-          error_details: {
-            errorMessage: paymentResult.errorMessage,
-            errorCode: paymentResult.errorCode
-          }
+          ...allFormData,
+        
         }
       });
       
