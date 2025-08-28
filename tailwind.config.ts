@@ -36,25 +36,25 @@ const config: Config = {
           'Helvetica Neue',
           'sans-serif',
         ],
-        'd2coding': ['D2Coding', 'monospace'],
-        'd2coding-bold': ['D2Coding-Bold', 'monospace'],
+        'd2coding': ['D2Coding Ligature', 'Consolas', 'Monaco', 'Courier New', 'monospace'],
+        'd2coding-bold': ['D2Coding Ligature', 'Consolas', 'Monaco', 'Courier New', 'monospace'],
         'pretendard': ['Pretendard', 'sans-serif'],
-        'pretendard-semibold': ['Pretendard-SemiBold', 'sans-serif'],
-        'exmouth': ['Exmouth', 'serif'], // Exmouth 폰트 추가
+        'pretendard-semibold': ['Pretendard', 'sans-serif'],
+        'exmouth': ['Exmouth', 'serif'],
       },
       screens: {
         'kiosk': '1024px', // 키오스크 해상도에 맞춤
       },
       animation: {
-        'bounce-x': 'bounceX 1s infinite',
-        'shine': 'shine 2s ease-in-out infinite',
+        'bounce-x': 'bounce-x 2s ease-in-out infinite',
+        'shine': 'shine 8s ease-in-out infinite',
       },
       keyframes: {
-        bounceX: {
+        'bounce-x': {
           '0%, 100%': { transform: 'translateX(0)' },
-          '50%': { transform: 'translateX(25px)' },
+          '50%': { transform: 'translateX(8px)' },
         },
-        shine: {
+        'shine': {
           '0%': { transform: 'translateX(-100%) skewX(-12deg)' },
           '100%': { transform: 'translateX(200%) skewX(-12deg)' },
         },

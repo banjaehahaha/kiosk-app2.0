@@ -36,8 +36,35 @@ export default function ChapterPage({ chapterNumber, title, location, content, v
           console.error('완료된 물품 목록 파싱 오류:', error);
         }
       }
+      
+      // 4장일 때 바티칸(ID: 31)과 베이징(ID: 32)을 자동으로 주문 완료 상태로 설정
+      if (chapterNumber === 4) {
+        setCompletedProps(prev => {
+          const newCompletedProps = [...prev];
+          
+          // 바티칸(ID: 31) 추가
+          if (!newCompletedProps.includes(31)) {
+            newCompletedProps.push(31);
+          }
+          
+          // 베이징(ID: 32) 추가
+          if (!newCompletedProps.includes(32)) {
+            newCompletedProps.push(32);
+          }
+          
+          // 로컬 스토리지에 저장
+          localStorage.setItem('completedProps', JSON.stringify(newCompletedProps));
+          
+          // 부모 컴포넌트에 변경 알림
+          if (onCompletedPropsChange) {
+            onCompletedPropsChange(newCompletedProps);
+          }
+          
+          return newCompletedProps;
+        });
+      }
     }
-  }, [chapterNumber]);
+  }, [chapterNumber, onCompletedPropsChange]);
 
   // 물품 선택 이벤트 리스너
   useEffect(() => {

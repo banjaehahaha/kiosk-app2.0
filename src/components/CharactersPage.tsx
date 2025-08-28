@@ -18,14 +18,14 @@ export default function CharactersPage() {
                 <tr>
                   <td className="py-4 px-4 text-lg font-bold text-[#F8D1E7] w-1/4 align-top">최가영</td>
                   <td className="py-4 px-4 text-lg text-[#e5e5e5] leading-relaxed w-3/4">
-                    (작성 예정)
+                  30대 중반 여. 반재하와 함께 전시 《방금 전의 소문과 오래된 증거로부터》의 사전 리서치로 중국에 간 작가. 통조림에 대한 집요함으로 리서치 트립 내내 어디서나 눈에 보이는 모든 것을 카메라에 담는다. 
                   </td>
                 </tr>
                 
                 <tr>
                   <td className="py-4 px-4 text-lg font-bold text-[#F8D1E7] w-1/4 align-top">이혜원</td>
                   <td className="py-4 px-4 text-lg text-[#e5e5e5] leading-relaxed w-3/4">
-                    (작성 예정)
+                  30대 중반 여. 전시 《방금 전의 소문과 오래된 증거로부터》의 기획자. 반재하, 최가영과 함께 중국으로 리서치를 다녀왔다. 긍정적인 태도의 소유자로 낯선 이에게도 쉽게 인사를 건넨다. 
                   </td>
                 </tr>
                 
@@ -37,7 +37,7 @@ export default function CharactersPage() {
                 </tr>
                 
                 <tr>
-                  <td className="py-4 px-4 text-lg font-bold text-[#F8D1E7] w-1/4 align-top">시장상인</td>
+                  <td className="py-4 px-4 text-lg font-bold text-[#F8D1E7] w-1/4 align-top">상인</td>
                   <td className="py-4 px-4 text-lg text-[#e5e5e5] leading-relaxed w-3/4">
                     70대초 여. 도문에서 평생을 살았으며, 도문 중심시장에서 김치 장사를 하고 있는 조선족. 한국인에 대한 호의가 있으며 북한 물건을 찾아가는 반재하와 일행들에게 정보를 주기 위해 최선을 다 한다.
                   </td>
@@ -53,35 +53,28 @@ export default function CharactersPage() {
                 <tr>
                   <td className="py-4 px-4 text-lg font-bold text-[#F8D1E7] w-1/4 align-top">국가정보원</td>
                   <td className="py-4 px-4 text-lg text-[#e5e5e5] leading-relaxed w-3/4">
-                    국외 정보 및 북한의 보안정보의 수집·작성 및 배포, 국가 기밀에 속하는 문서·자재·시설 및 지역에 대한 보안 업무, 정보 및 보안 업무의 기획·조정의 직무를 수행하는 대한민국의 대통령 직속 정보기관이다. 전시장으로 들어오는 북한 물건을 감시할 수도, 안 할 수도 있다.
+                  해외·북한정보, 방첩, 대테러, 대공수사, 사이버보안 등 다양한 분야에서 국가안보 관련 정보·보안 및 범죄수사 업무를 수행하고 있는 대한민국의 대통령 직속 정보기관. 전시장으로 들어오는 북한 물건을 감시할 수도, 안 할 수도 있다.
                   </td>
                 </tr>
                 
                 <tr>
                   <td className="py-4 px-4 text-lg font-bold text-[#F8D1E7] w-1/4 align-top">관객</td>
                   <td className="py-4 px-4 text-lg text-[#e5e5e5] leading-relaxed w-3/4">
-                    전시 《방금 전의 소문과 오래된 증거로부터》에서 10월 30일 공연을 예매하면, 공연에 등장할 공연 소품을 선택할 수 있다.
-                  </td>
-                </tr>
-                
-                <tr>
-                  <td className="py-4 px-4 text-lg font-bold text-[#F8D1E7] w-1/4 align-top">북한 물건 판매자</td>
-                  <td className="py-4 px-4 text-lg text-[#e5e5e5] leading-relaxed w-3/4">
-                    (작성 예정)
+                  전시 《방금 전의 소문과 오래된 증거로부터》에서 10월 30일 공연 〈뜻밖의 보간과 최근접 이웃 찾기〉를 예매하면, 공연에 등장할 공연 소품을 선택할 수 있다. 의식하지 못한 채 분단에 틈을 만드는 데에 기여할 수 있다.
                   </td>
                 </tr>
                 
                 <tr>
                   <td className="py-4 px-4 text-lg font-bold text-[#F8D1E7] w-1/4 align-top">북한 물건</td>
                   <td className="py-4 px-4 text-lg text-[#e5e5e5] leading-relaxed w-3/4">
-                    1948년 12월 1일에 국가보안법이 제정된 후로 위험한 물건이 아닐 때에도 종종 위험물이라는 누명을 쓴다.
+                    1948년 12월 1일에 국가보안법이 제정된 후로 위험한 물건이 아닐 때에도 종종 위험물이라는 누명을 쓴다. 누명을 쓸 위험에도 불구하고, 북한 물건으로 위장하는 물건들이 존재한다.
                   </td>
                 </tr>
                 
                 <tr>
-                  <td className="py-4 px-4 text-lg font-bold text-[#F8D1E7] w-1/4 align-top">공연</td>
+                  <td className="py-4 px-4 text-lg font-bold text-[#F8D1E7] w-1/4 align-top">뜻밖의 보간과<br></br>최근접 이웃 찾기</td>
                   <td className="py-4 px-4 text-lg text-[#e5e5e5] leading-relaxed w-3/4">
-                    (작성 예정)
+                  2025년 10월 30일에 인천아트플랫폼 C동 공연장에서 진행할 공연 제목. 중국 리서치 트립-전시-공연-출판으로 이어지는 프로젝트의 세 번째 순서이다. 관객이 주문한 물건은 이 공연에서 감정을 받게 된다. 
                   </td>
                 </tr>
               </tbody>

@@ -77,6 +77,30 @@ export default function KioskApp() {
     window.scrollTo(0, 0);
   }, [currentPage]);
 
+  // 간단한 3분 자동 리셋
+  useEffect(() => {
+    let timer: NodeJS.Timeout;
+    
+    // 홈 페이지가 아닐 때만 타이머 시작
+    if (currentPage !== 'home') {
+      timer = setTimeout(() => {
+        setCurrentPage('home');
+        setSelectedProp(null);
+        setShowToc(false);
+        setCompletedProps([]);
+        setShowAudienceInfo(false);
+        setSelectedPropForBooking(null);
+        localStorage.removeItem('completedProps');
+        console.log('3분 비활성으로 인한 자동 리셋');
+      }, 3 * 60 * 1000); // 3분
+    }
+    
+    // 클린업
+    return () => {
+      if (timer) clearTimeout(timer);
+    };
+  }, [currentPage]);
+
   const currentConfig = pageConfigs[currentPage];
   const currentIndex = pageOrder.indexOf(currentPage);
   
@@ -333,7 +357,7 @@ export default function KioskApp() {
 <div class="text-center mb-8">
   <div class="text-lg">이혜원</div>
   <div class="max-w-md mx-auto p-4 mt-2 text-left">
-    <span class="text-base dialogue-line" data-time="5.5-6.5">안녕하세요</span>
+    <span class="text-base dialogue-line" data-time="5.5-6.5">안녕하세요.</span>
   </div>
 </div>
 
@@ -347,7 +371,7 @@ export default function KioskApp() {
 <div class="text-center mb-8">
   <div class="text-lg">반재하</div>
   <div class="max-w-md mx-auto p-4 mt-2 text-left">
-    <span class="text-base dialogue-line" data-time="9-9.5">네</span>
+    <span class="text-base dialogue-line" data-time="9-9.5">네.</span>
   </div>
 </div>
 
@@ -361,168 +385,168 @@ export default function KioskApp() {
 <div class="text-center mb-8">
   <div class="text-lg">이혜원</div>
   <div class="max-w-md mx-auto p-4 mt-2 text-left">
-    <span class="text-base dialogue-line" data-time="13.5-15.5">네 너무 재밌어요</span>
+    <span class="text-base dialogue-line" data-time="13.5-15.5">네, 너무 재밌어요.</span>
   </div>
 </div>
 
 <div class="text-center mb-8">
   <div class="text-lg">상인</div>
   <div class="max-w-md mx-auto p-4 mt-2 text-left">
-    <span class="text-base dialogue-line" data-time="15-15.8">어 언제왔길래?</span>
+    <span class="text-base dialogue-line" data-time="15-15.8">어, 언제왔길래?</span>
   </div>
 </div>
 
 <div class="text-center mb-8">
   <div class="text-lg">최가영</div>
   <div class="max-w-md mx-auto p-4 mt-2 text-left">
-    <span class="text-base dialogue-line" data-time="16.4-18.1">저희 여기 연변에 어제 왔어요</span>
+    <span class="text-base dialogue-line" data-time="16.4-18.1">저희 여기 연변에 어제 왔어요.</span>
   </div>
 </div>
 
 <div class="text-center mb-8">
   <div class="text-lg">상인</div>
   <div class="max-w-md mx-auto p-4 mt-2 text-left">
-    <span class="text-base dialogue-line" data-time="16.-26">연변에. 연변이 살기 좋아.</span>
+    <span class="text-base dialogue-line" data-time="18.3-20.3">연변에. 연변이 살기 좋아.</span>
   </div>
 </div>
 
 <div class="text-center mb-8">
   <div class="text-lg">반재하</div>
   <div class="max-w-md mx-auto p-4 mt-2 text-left">
-    <span class="text-base dialogue-line" data-time="26-29">너무 좋더라구요</span>
+    <span class="text-base dialogue-line" data-time="21.2-22.2">너무 좋더라구요.</span>
   </div>
 </div>
 
 <div class="text-center mb-8">
   <div class="text-lg">최가영</div>
   <div class="max-w-md mx-auto p-4 mt-2 text-left">
-    <span class="text-base dialogue-line" data-time="29-32">얼마나 사셨어요?</span>
+    <span class="text-base dialogue-line" data-time="23-24.25">얼마나 사셨어요?</span>
   </div>
 </div>
 
 <div class="text-center mb-8">
   <div class="text-lg">상인</div>
   <div class="max-w-md mx-auto p-4 mt-2 text-left">
-    <span class="text-base dialogue-line" data-time="32-36">우리 여기 도문 토박이야</span>
+    <span class="text-base dialogue-line" data-time=24.5-26">우리 여기 도문 토박이야.</span>
   </div>
 </div>
 
 <div class="text-center mb-8">
   <div class="text-lg">반재하</div>
   <div class="max-w-md mx-auto p-4 mt-2 text-left">
-    <span class="text-base dialogue-line" data-time="36-42">여기 이렇게 식자재 말고 공산품 같은거 파는 데도 있어요?</span>
+    <span class="text-base dialogue-line" data-time="28-30">여기 이렇게 식자재 말고</span> <span class="text-base dialogue-line" data-time="30-32.2">공산품 같은거 파는 데도 있어요?</span>
   </div>
 </div>
 
 <div class="text-center mb-8">
   <div class="text-lg">상인</div>
   <div class="max-w-md mx-auto p-4 mt-2 text-left">
-    <span class="text-base dialogue-line" data-time="42-46">있어요. 공산품. 뭘 사려고요?</span>
+    <span class="text-base dialogue-line" data-time="32.1-34.3">있어요. 공산품. 뭘 사려고요?</span>
   </div>
 </div>
 
 <div class="text-center mb-8">
   <div class="text-lg">반재하</div>
   <div class="max-w-md mx-auto p-4 mt-2 text-left">
-    <span class="text-base dialogue-line" data-time="46-51">그냥 북조선에서 온 물건들 구경하고 싶어가지고.</span>
+    <span class="text-base dialogue-line" data-time="38-41.25">그냥 북조선에서 온 물건들 구경하고 싶어가지고.</span>
   </div>
 </div>
 
 <div class="text-center mb-8">
   <div class="text-lg">상인</div>
   <div class="max-w-md mx-auto p-4 mt-2 text-left">
-    <span class="text-base dialogue-line" data-time="51-58">북조선에서 오는 물건은 없는데, 지금. 지금 북조선 문이 닫겨가지고. 맘대로 못 들어와.</span>
+    <span class="text-base dialogue-line" data-time="41.3-44.25">북조선에서 오는 물건은 없는데, 지금.</span> <span class="text-base dialogue-line" data-time="44.3-46.3">지금 북조선 문이 닫겨가지고.</span> <span class="text-base dialogue-line" data-time="47.15-48.3">맘대로 못 들어와.</span>
   </div>
 </div>
 
 <div class="text-center mb-8">
-  <div class="text-lg">반재하</div>
+  <div class="text-lg">이혜원</div>
   <div class="max-w-md mx-auto p-4 mt-2 text-left">
-    <span class="text-base dialogue-line" data-time="58-61">그럼 물건은 못 사요?</span>
-  </div>
-</div>
-
-<div class="text-center mb-8">
-  <div class="text-lg">상인</div>
-  <div class="max-w-md mx-auto p-4 mt-2 text-left">
-    <span class="text-base dialogue-line" data-time="61-65">일찍부터 지금 문이 닫겼어요. 지금 맘대로 못 다녀요.</span>
-  </div>
-</div>
-
-<div class="text-center mb-8">
-  <div class="text-lg">반재하</div>
-  <div class="max-w-md mx-auto p-4 mt-2 text-left">
-    <span class="text-base dialogue-line" data-time="65-68">예전에는 북조선 물건도 많았어요?</span>
+    <span class="text-base dialogue-line" data-time="48.3-50.15">그럼 물건은 못 사요?</span>
   </div>
 </div>
 
 <div class="text-center mb-8">
   <div class="text-lg">상인</div>
   <div class="max-w-md mx-auto p-4 mt-2 text-left">
-    <span class="text-base dialogue-line" data-time="68-71">아이 많이 들어왔지</span>
+    <span class="text-base dialogue-line" data-time="50.15-53.1">이층부터 지금 문이 닫겼어요.</span> <span class="text-base dialogue-line" data-time="53.3-55">지금 맘대로 못 다녀요.</span>
   </div>
 </div>
 
 <div class="text-center mb-8">
   <div class="text-lg">반재하</div>
   <div class="max-w-md mx-auto p-4 mt-2 text-left">
-    <span class="text-base dialogue-line" data-time="71-74">어느 시장에 많았어요?</span>
+    <span class="text-base dialogue-line" data-time="56.25-58.3">예전에는 북조선 물건도 많았어요?</span>
   </div>
 </div>
 
 <div class="text-center mb-8">
   <div class="text-lg">상인</div>
   <div class="max-w-md mx-auto p-4 mt-2 text-left">
-    <span class="text-base dialogue-line" data-time="74-80">예전에 남시장이라고 있었어. 지금 남시장 다 문닫고 없어. 거긴 좀만 보면 북조선 물건 팔았거든. 지금은 없어.</span>
+    <span class="text-base dialogue-line" data-time="58.3-59.3">아이 많이 들어왔지.</span>
   </div>
 </div>
 
 <div class="text-center mb-8">
   <div class="text-lg">반재하</div>
   <div class="max-w-md mx-auto p-4 mt-2 text-left">
-    <span class="text-base dialogue-line" data-time="80-83">그럼 북시장에도 없어요?</span>
+    <span class="text-base dialogue-line" data-time="59.3-60.25">어느 시장에 많았어요?</span>
   </div>
 </div>
 
 <div class="text-center mb-8">
   <div class="text-lg">상인</div>
   <div class="max-w-md mx-auto p-4 mt-2 text-left">
-    <span class="text-base dialogue-line" data-time="83-88">북시장에도 없어, 지금. 북조선 물건은 전혀. 그걸 들어오질 못하니까.</span>
+    <span class="text-base dialogue-line" data-time="60.25-61.5">예전에 남시장이라고 있었어.</span> <span class="text-base dialogue-line" data-time="61.5-63.1">지금 남시장 다 문닫고 없어.</span> <span class="text-base dialogue-line" data-time="63.1-66">거긴 좀만 보면 북조선 물건 팔았거든.</span> <span class="text-base dialogue-line" data-time="66-66.5">지금은 없어.</span>
   </div>
 </div>
 
 <div class="text-center mb-8">
   <div class="text-lg">반재하</div>
   <div class="max-w-md mx-auto p-4 mt-2 text-left">
-    <span class="text-base dialogue-line" data-time="88-91">들어오는게 없으니까?</span>
+    <span class="text-base dialogue-line" data-time="67-68.25">그럼 북시장에도 없어요?</span>
+  </div>
+</div>
+
+<div class="text-center mb-8">
+  <div class="text-lg">상인</div>
+  <div class="max-w-md mx-auto p-4 mt-2 text-left">
+    <span class="text-base dialogue-line" data-time="68.25-69.5">북시장에도 없어, 지금.</span> <span class="text-base dialogue-line" data-time="70-73.3">북조선 물건은 전혀. 그걸 들어오질 못하니까.</span>
   </div>
 </div>
 
 <div class="text-center mb-8">
   <div class="text-lg">반재하</div>
   <div class="max-w-md mx-auto p-4 mt-2 text-left">
-    <span class="text-base dialogue-line" data-time="91-94">그렇구나</span>
+    <span class="text-base dialogue-line" data-time="73.5-75.15">들어오는게 없으니까.</span>
+  </div>
+</div>
+
+<div class="text-center mb-8">
+  <div class="text-lg">반재하</div>
+  <div class="max-w-md mx-auto p-4 mt-2 text-left">
+    <span class="text-base dialogue-line" data-time="75.3-76.15">그렇구나.</span>
   </div>
 </div>
 
 <div class="text-center mb-8">
   <div class="text-lg">최가영</div>
   <div class="max-w-md mx-auto p-4 mt-2 text-left">
-    <span class="text-base dialogue-line" data-time="94-97">사람들도 안 와요?</span>
+    <span class="text-base dialogue-line" data-time="76.15-77.4">사람들도 안 와요?</span>
   </div>
 </div>
 
 <div class="text-center mb-8">
   <div class="text-lg">상인</div>
   <div class="max-w-md mx-auto p-4 mt-2 text-left">
-    <span class="text-base dialogue-line" data-time="97-105">못 와. 북조선 사람들 많이 못 봤어. 오래 못 봤어. 예전에는 조선에 해관에서 이리로 많이 들려오잖아. 지금은 못 봤어. 몇 년 째. 못 들어와 지금.</span>
+    <span class="text-base dialogue-line" data-time="77.45-80.25">못 와. 북조선 사람들 많이 못 봤어. 오래 못 봤어.</span> <span class="text-base dialogue-line" data-time="80.25-83.25"> 예전에는 조선에 해관에서 이리로 많이 건너오잖아.</span> <span class="text-base dialogue-line" data-time="83.25-85.3">지금은 못 봤어. 몇 년 째. 못 들어와 지금.</span>
   </div>
 </div>
 
 <div class="text-center mb-8">
-  <div class="text-lg">반재하</div>
+  <div class="text-lg">이혜원</div>
   <div class="max-w-md mx-auto p-4 mt-2 text-left">
-    <span class="text-base dialogue-line" data-time="105-108">그렇구나.</span>
+    <span class="text-base dialogue-line" data-time="88.25-89.25">그렇구나.</span>
   </div>
 </div>`}
           />
@@ -577,7 +601,26 @@ export default function KioskApp() {
             chapterNumber={5}
             title=""
             location=""
-            content=""
+            content={`<div class="text-left text-lg font-bold mb-6">실내. 인천아트플랫폼 C동 공연장 – 2025년 10월 30일 – 저녁</div>
+
+<div class="text-left text-base mb-8">
+  제목: 뜻밖의 보간과 최근접 이웃 찾기
+</div>
+
+<div class="text-left text-base mb-8">
+  공연이 시작된다. 조명이 켜지고 테이블 위에 놓인 물건들이 보인다. 전시《방금 전의 소문과 오래된 증거로부터》중에 〈부재시 픽션은 문 앞에 놔주세요〉에서 관객들이 선택한 소품들이다. 곧 경쾌한 음악이 흐르고, 백스테이지에서 한 남성이 걸어 나온다. 북한 물건 콜렉터다. 그는 북한 물건 감정사로 공연에 출연한다.
+</div>
+
+<div class="text-center mb-8">
+  <div class="text-lg">북한 물건 콜렉터</div>
+  <div class="max-w-md mx-auto p-4 mt-2 text-left">
+    <span class="text-base">"90년대 이전 물건들은 희귀해요. 고난의 행군 때 많은 물건들이 뗄감 등으로 쓰였거든요. 이 물건을 보면…"</span>
+  </div>
+</div>
+
+<div class="text-center text-base mb-8">
+  (후략)
+</div>`}
           />
         );
       default:
@@ -598,16 +641,9 @@ export default function KioskApp() {
         />
       )}
       
-      {/* 지구본 뷰어 링크 - 세로형 모니터에 최적화 */}
-      <div className="fixed top-4 right-4 z-50">
-        <a
-          href="/globe-viewer"
-          className="bg-pink-600 hover:bg-pink-700 text-white px-3 py-2 rounded-lg shadow-lg transition-colors duration-200 flex items-center space-x-2 text-sm"
-        >
-          <span className="text-lg">🌍</span>
-          <span className="hidden md:inline">글로벌 트래커</span>
-        </a>
-      </div>
+
+      
+
       
       {/* 메인 콘텐츠 */}
       <main>

@@ -16,6 +16,8 @@ const GlobeViewerDynamic = dynamic(() => import('@/components/GlobeViewer'), {
   )
 });
 
+
+
 export default function GlobeViewerPage() {
   const [isConnected, setIsConnected] = useState(false);
   const [paymentCount, setPaymentCount] = useState(0);

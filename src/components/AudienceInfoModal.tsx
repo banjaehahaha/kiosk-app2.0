@@ -275,16 +275,18 @@ export default function AudienceInfoModal({
       );
       if (mapContainer) {
         mapContainer.innerHTML = `
-          <div style="font:normal normal 400 12px/normal dotum, sans-serif; width:100%; height:100%; color:#333; position:relative">
-            <div style="height: 100%;">
-              <img class="map" src="http://t1.daumcdn.net/roughmap/imgmap/3d955c01aac6028aae05cffeb42ea9932d383dec93bc02592915bf7c521fab66" width="100%" height="100%" style="border:1px solid #ccc; object-fit: cover;">
+          <div style="font-style: normal; font-variant-caps: normal; font-weight: normal; font-width: normal; font-size: 12px; line-height: normal; font-family: AppleSDGothicNeo-Regular, dotum, sans-serif; font-size-adjust: none; font-kerning: auto; font-variant-alternates: normal; font-variant-ligatures: normal; font-variant-numeric: normal; font-variant-east-asian: normal; font-variant-position: normal; font-variant-emoji: normal; font-feature-settings: normal; font-optical-sizing: auto; font-variation-settings: normal; letter-spacing: -1px; width:100%; height:100%; color: rgb(51, 51, 51); position: relative;">
+            <div style="height: 208px;">
+              <img class="map" src="http://t1.daumcdn.net/roughmap/imgmap/331671cf2e0435f31d45ca2151ec3cceaa3786c64e44608c43b476f962148b88" width="100%" height="100%" style="border: 1px solid rgb(204, 204, 204); object-fit: cover;">
             </div>
             <div style="overflow: hidden; padding: 7px 11px; border: 1px solid rgba(0, 0, 0, 0.1); border-radius: 0px 0px 2px 2px; background-color: rgb(249, 249, 249);">
-              <div style="float: left;">
+              <a href="https://map.kakao.com" target="_blank" style="float: left;">
                 <img src="//t1.daumcdn.net/localimg/localimages/07/2018/pc/common/logo_kakaomap.png" width="72" height="16" alt="카카오맵" style="display:block;width:72px;height:16px">
-              </div>
-              <div style="float: right; position: relative; top: 1px; font-size: 11px; color: #666;">
-                위치 정보
+              </a>
+              <div style="float: right; position: relative; top: 1px; font-size: 11px;">
+                <a target="_blank" href="https://map.kakao.com/?from=roughmap&amp;srcid=21160542&amp;confirmid=21160542&amp;q=%ED%95%A9%EC%A0%95%EC%97%AD&amp;rv=on" style="float:left;height:15px;padding-top:1px;line-height:15px;color:#000;text-decoration: none;">로드뷰</a>
+                <span style="width: 1px;padding: 0;margin: 0 8px 0 9px;height: 11px;vertical-align: top;position: relative;top: 2px;border-left: 1px solid #d0d0d0;float: left;"></span>
+                <a target="_blank" href="https://map.kakao.com/?from=roughmap&amp;eName=%ED%95%A9%EC%A0%95%EC%97%AD&amp;eX=481101.6187924985&amp;eY=1125118.3298250008" style="float:left;height:15px;padding-top:1px;line-height:15px;color:#000;text-decoration: none;">길찾기</a>
               </div>
             </div>
           </div>
@@ -1051,7 +1053,7 @@ export default function AudienceInfoModal({
                     </span>
                   </div>
                   <div className="text-xs text-[#b3b3b3]">
-                    탑승 위치: 합정역 2번 출구 앞 세아타워
+                    탑승 위치: 합정역 인근(정확한 위치는 추후 문자로 안내드립니다.)
                   </div>
                   <div className="text-xs text-[#b3b3b3]">
                     탑승 시간: 10월 30일 오후 5시
@@ -1244,7 +1246,7 @@ export default function AudienceInfoModal({
                 className="w-4 h-4 text-[#F8D1E7] border-[#404040] focus:ring-[#F8D1E7]"
               />
               <span className="text-sm font-medium text-[#e5e5e5]">
-                대절버스 이용
+                대절버스 이용(무료)
               </span>
             </label>
           </div>
@@ -1288,7 +1290,7 @@ export default function AudienceInfoModal({
               대절버스 탑승 위치
             </h4>
             <p className="text-sm text-[#b3b3b3] mb-3">
-              10월 30일 오후 5시 합정역 2번 출구 앞 세아타워
+              10월 30일 오후 5시 합정역 인근(정확한 위치는 추후 안내드립니다)
             </p>
 
             {/* 카카오맵 실제 지도퍼가기 - 세아타워 위치 (이미지 크기에 맞춤) */}
