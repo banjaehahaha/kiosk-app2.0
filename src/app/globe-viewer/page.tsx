@@ -19,21 +19,28 @@ const GlobeViewerDynamic = dynamic(() => import('@/components/GlobeViewer'), {
 export default function GlobeViewerPage() {
   const [isConnected, setIsConnected] = useState(false);
   const [paymentCount, setPaymentCount] = useState(0);
+  const containerRef = useRef<HTMLDivElement>(null);
+
+  // DOM 마운트 후 직접 스타일 적용
+  useEffect(() => {
+    if (containerRef.current) {
+      const container = containerRef.current;
+      container.style.transform = 'rotate(90deg)';
+      container.style.transformOrigin = 'center center';
+      container.style.width = '100vh';
+      container.style.height = '100vw';
+      container.style.position = 'fixed';
+      container.style.top = '50%';
+      container.style.left = '50%';
+      container.style.marginTop = '-50vw';
+      container.style.marginLeft = '-50vh';
+    }
+  }, []);
 
   return (
     <div 
+      ref={containerRef}
       className="min-h-screen bg-gray-900 text-white"
-      style={{
-        transform: 'rotate(90deg)',
-        transformOrigin: 'center center',
-        width: '100vh',
-        height: '100vw',
-        position: 'fixed',
-        top: '50%',
-        left: '50%',
-        marginTop: '-50vw',
-        marginLeft: '-50vh'
-      }}
     >
       {/* 메인 컨텐츠 - 전체 화면 지구본 */}
       <main className="h-screen">
