@@ -651,6 +651,36 @@ export default function AudienceInfoModal({
                   </div>
                 </div>
 
+                {/* 결제 취소 버튼 추가 */}
+                <div className="mt-6">
+                  <button
+                    onClick={async () => {
+                      if (confirm('정말로 결제를 취소하시겠습니까?')) {
+                        try {
+                          setIsLoading(true);
+                          
+                          // 결제 취소 처리 (mul_no가 없는 경우를 위한 처리)
+                          alert('결제가 취소되었습니다.');
+                          // 물품 리스트로 돌아가기
+                          onClose();
+                          // 부모 컴포넌트에 취소 알림
+                          if (onComplete) {
+                            onComplete(null); // null을 전달하여 취소 상태임을 알림
+                          }
+                        } catch (error) {
+                          console.error('결제 취소 오류:', error);
+                          alert('결제 취소 처리 중 오류가 발생했습니다.');
+                        } finally {
+                          setIsLoading(false);
+                        }
+                      }
+                    }}
+                    disabled={isLoading}
+                    className="px-6 py-2 bg-gray-600 text-white hover:bg-gray-700 transition-colors rounded disabled:opacity-50"
+                  >
+                    {isLoading ? '처리중...' : '결제 취소'}
+                  </button>
+                </div>
               </>
             )}
 
