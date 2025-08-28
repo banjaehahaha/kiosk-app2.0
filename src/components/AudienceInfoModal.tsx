@@ -615,9 +615,9 @@ export default function AudienceInfoModal({
             {paymentStatus === "checking" && (
               <>
                 <div className="mb-4">
-                  <div className="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto">
+                  <div className="w-16 h-16 bg-[#F8D1E7]/20 rounded-full flex items-center justify-center mx-auto">
                     <svg
-                      className="w-8 h-8 text-green-600"
+                      className="w-8 h-8 text-gray-700"
                       fill="none"
                       stroke="currentColor"
                       viewBox="0 0 24 24"
@@ -631,21 +631,21 @@ export default function AudienceInfoModal({
                     </svg>
                   </div>
                 </div>
-                <div className="bg-green-50 p-4 rounded-lg mb-4">
-                  <h4 className="text-lg font-semibold text-green-800 mb-2">
+                <div className="bg-[#F8D1E7]/20 p-4 rounded-lg mb-4">
+                  <h4 className="text-lg font-semibold text-gray-700 mb-2">
                     📱 SMS 결제 링크 전송 완료!
                   </h4>
-                  <p className="text-sm text-green-700 mb-2">
+                  <p className="text-sm text-gray-700 mb-2">
                     <strong>{formData.phone}</strong> 번호로
                   </p>
-                  <p className="text-sm text-green-700 mb-3">
+                  <p className="text-sm text-gray-700 mb-3">
                     결제 링크가 전송되었습니다
                   </p>
-                  <div className="bg-blue-50 p-3 rounded border border-blue-200">
-                    <p className="text-sm text-blue-800 font-medium">
+                  <div className="bg-[#F8D1E7]/30 p-3 rounded border border-[#F8D1E7]/50">
+                    <p className="text-sm text-gray-700 font-medium">
                       💳 문자메시지를 확인하여 결제를 완료해주세요
                     </p>
-                    <p className="text-xs text-blue-600 mt-1">
+                    <p className="text-xs text-gray-600 mt-1">
                       결제 완료 후 자동으로 다음 단계로 진행됩니다
                     </p>
                   </div>
@@ -728,9 +728,9 @@ export default function AudienceInfoModal({
             </h3>
 
             {/* 성공 아이콘 */}
-            <div className="w-24 h-24 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
+            <div className="w-24 h-24 bg-[#F8D1E7]/20 rounded-full flex items-center justify-center mx-auto mb-4">
               <svg
-                className="w-12 h-12 text-green-600"
+                className="w-12 h-12 text-gray-700"
                 fill="none"
                 stroke="currentColor"
                 viewBox="0 0 24 24"
