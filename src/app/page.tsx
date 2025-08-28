@@ -690,12 +690,20 @@ export default function KioskApp() {
           isVisible={showAudienceInfo}
           onClose={() => setShowAudienceInfo(false)}
           onComplete={(audienceInfo) => {
-            console.log('예매 완료:', audienceInfo);
-            setShowAudienceInfo(false);
-            // 예매 완료 처리
-            const handlePropCompleted = (window as unknown as { handlePropCompleted?: (id: number) => void }).handlePropCompleted;
-            if (handlePropCompleted) {
-              handlePropCompleted(selectedPropForBooking.id);
+            if (audienceInfo === null) {
+              // 결제 취소된 경우
+              console.log('결제가 취소되었습니다.');
+              setShowAudienceInfo(false);
+              // 물품 리스트로 돌아가기 (별도 처리 불필요)
+            } else {
+              // 예매 완료된 경우
+              console.log('예매 완료:', audienceInfo);
+              setShowAudienceInfo(false);
+              // 예매 완료 처리
+              const handlePropCompleted = (window as unknown as { handlePropCompleted?: (id: number) => void }).handlePropCompleted;
+              if (handlePropCompleted) {
+                handlePropCompleted(selectedPropForBooking.id);
+              }
             }
           }}
           onShowPerformanceInfo={() => {

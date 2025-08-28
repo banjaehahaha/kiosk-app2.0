@@ -23,7 +23,7 @@ interface FormErrors {
 interface AudienceInfoModalProps {
   isVisible: boolean;
   onClose: () => void;
-  onComplete: (info: AudienceInfo) => void;
+  onComplete: (info: AudienceInfo | null) => void; // null을 받을 수 있도록 수정
   onShowPerformanceInfo: () => void;
   propName: string;
   propId: number; // 물품 ID 추가
@@ -861,35 +861,64 @@ export default function AudienceInfoModal({
             <div className="text-[#b3b3b3] text-sm bg-[#404040] p-3 rounded">
               <p>📱 문자메시지를 확인하여 결제를 완료해주세요</p>
               <p>💳 결제 완료 후 자동으로 다음 단계로 진행됩니다</p>
-              <p className="mt-2 text-[#F8D1E7]">
-                ⏰ 결제 상태를 자동으로 확인하고 있습니다...
-              </p>
-            </div>
-
-            {/* 결제 상태 표시 */}
-            <div className="bg-[#404040] p-3 rounded-lg">
-              <p className="text-sm text-[#e5e5e5] mb-2">
-                <strong>결제 상태 모니터링 중...</strong>
-              </p>
-              <p className="text-xs text-[#b3b3b3]">
-                {paymentStatus === "pending" &&
-                  "SMS 결제 링크 전송 완료, 결제 대기 중..."}
-                {paymentStatus === "checking" &&
-                  "결제 상태 확인 중... (3초마다 체크)"}
-                {paymentStatus === "success" &&
-                  "결제 완료! 예매가 확정되었습니다."}
-                {paymentStatus === "failed" && "결제 실패 또는 취소되었습니다."}
-              </p>
             </div>
 
             {/* 하단 버튼 */}
             <div className="flex justify-center space-x-3 mt-6">
+              <button
+                onClick={async () => {
+                  if (confirm('정말로 결제를 취소하시겠습니까?')) {
+                    try {
+                      setIsLoading(true);
+                      
+                      // PayApp 결제 취소 API 호출
+                      const cancelResponse = await fetch('/api/payapp/cancel-payment', {
+                        method: 'POST',
+                        headers: {
+                          'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify({
+                          mul_no: qrCodeData.mul_no
+                        }),
+                      });
+
+                      if (cancelResponse.ok) {
+                        const cancelResult = await cancelResponse.json();
+                        if (cancelResult.success) {
+                          alert('결제가 취소되었습니다.');
+                          // 물품 리스트로 돌아가기
+                          onClose();
+                          // 부모 컴포넌트에 취소 알림
+                          if (onComplete) {
+                            onComplete(null); // null을 전달하여 취소 상태임을 알림
+                          }
+                        } else {
+                          alert('결제 취소에 실패했습니다: ' + cancelResult.error);
+                        }
+                      } else {
+                        alert('결제 취소 처리 중 오류가 발생했습니다.');
+                      }
+                    } catch (error) {
+                      console.error('결제 취소 오류:', error);
+                      alert('결제 취소 처리 중 오류가 발생했습니다.');
+                    } finally {
+                      setIsLoading(false);
+                    }
+                  }
+                }}
+                disabled={isLoading}
+                className="px-4 py-2 bg-red-600 text-white hover:bg-red-700 transition-colors rounded disabled:opacity-50"
+              >
+                {isLoading ? '처리중...' : '결제 취소'}
+              </button>
+              
               <button
                 onClick={() => setShowQRCode(false)}
                 className="px-4 py-2 bg-[#404040] text-[#e5e5e5] hover:bg-[#505050] transition-colors rounded"
               >
                 닫기
               </button>
+              
               <button
                 onClick={() => {
                   // SMS 재전송 로직 (필요시 구현)
