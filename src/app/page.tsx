@@ -340,7 +340,7 @@ export default function KioskApp() {
         <div class="text-center mb-8 sticky top-[25%] z-10 transition-all duration-300">
           <div class="w-full max-w-2xl mx-auto rounded-lg shadow-lg overflow-hidden">
             <iframe 
-              src="https://player.vimeo.com/video/1114072967?h=437c298dd3&autoplay=1&loop=1&title=0&byline=0&portrait=0"
+              src="https://player.vimeo.com/video/1114072967?h=437c298dd3&autoplay=1&loop=1&title=0&byline=0&portrait=0&controls=0&showinfo=0&modestbranding=1&rel=0&color=ffffff&muted=0"
               class="w-full aspect-video"
               frameborder="0"
               allow="autoplay; fullscreen; picture-in-picture"
