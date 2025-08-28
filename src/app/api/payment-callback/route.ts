@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { PaymentService } from '@/services/paymentService';
+import { globeNotificationService } from '@/services/globeNotificationService';
 
 // PayApp에서 결제 완료 후 호출하는 feedbackurl
 export async function POST(request: NextRequest) {
@@ -87,6 +88,43 @@ export async function POST(request: NextRequest) {
       
       if (savedPayment) {
         console.log('📝 Supabase에 결제 완료 상태 저장됨:', paymentResult.mul_no);
+        
+        // 지구본에 결제 완료 알림 전송
+        try {
+          // 상품 정보에서 출발지 정보 추출 (memo에서 prop_id 파싱)
+          const memo = paymentResult.memo?.toString() || '';
+          const propIdMatch = memo.match(/prop_id:(\d+)/);
+          
+          if (propIdMatch) {
+            const propId = parseInt(propIdMatch[1]);
+            // props.json에서 상품 정보 조회
+            const propsData = await import('@/data/props.json');
+            const prop = propsData.default.props.find((p: any) => p.id === propId);
+            
+            if (prop && prop.origin) {
+              await globeNotificationService.notifyPaymentCompleted(
+                {
+                  prop_id: propId,
+                  prop_name: prop.name,
+                  payment_amount: parseInt(paymentResult.price.toString()),
+                  payment_status: 'completed',
+                  booking_status: 'confirmed',
+                  audience_id: 0, // 실제로는 booking에서 가져와야 함
+                  payapp_mul_no: paymentResult.mul_no.toString(),
+                  created_at: new Date().toISOString(),
+                  updated_at: new Date().toISOString()
+                },
+                {
+                  city: prop.origin.city,
+                  country: prop.origin.country
+                }
+              );
+              console.log('🌍 지구본 알림 전송 완료');
+            }
+          }
+        } catch (error) {
+          console.error('지구본 알림 전송 실패:', error);
+        }
       } else {
         console.error('❌ Supabase 저장 실패:', paymentResult.mul_no);
       }

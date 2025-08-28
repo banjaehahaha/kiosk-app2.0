@@ -598,6 +598,17 @@ export default function KioskApp() {
         />
       )}
       
+      {/* 지구본 뷰어 링크 - 세로형 모니터에 최적화 */}
+      <div className="fixed top-4 right-4 z-50">
+        <a
+          href="/globe-viewer"
+          className="bg-pink-600 hover:bg-pink-700 text-white px-3 py-2 rounded-lg shadow-lg transition-colors duration-200 flex items-center space-x-2 text-sm"
+        >
+          <span className="text-lg">🌍</span>
+          <span className="hidden md:inline">글로벌 트래커</span>
+        </a>
+      </div>
+      
       {/* 메인 콘텐츠 */}
       <main>
         {renderCurrentPage()}

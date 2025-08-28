@@ -81,6 +81,16 @@ Thumbs.db
 *.aac
 *.ogg
 
+# Large image files
+*.jpg
+*.jpeg
+*.png
+*.gif
+*.bmp
+*.tiff
+*.webp
+*.svg
+
 # Fonts (if too large)
 public/fonts/
 

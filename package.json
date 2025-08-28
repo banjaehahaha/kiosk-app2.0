@@ -6,11 +6,14 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "websocket": "node websocket-server.js",
+    "dev:all": "concurrently \"npm run dev\" \"npm run websocket\""
   },
   "dependencies": {
     "@supabase/supabase-js": "^2.56.0",
     "@types/nodemailer": "^7.0.1",
+    "@types/three": "^0.179.0",
     "autoprefixer": "^10.4.21",
     "next": "14.2.3",
     "nodemailer": "^7.0.5",
@@ -18,6 +21,8 @@
     "react-dom": "18.3.1",
     "sqlite": "^5.1.1",
     "sqlite3": "^5.1.7",
+    "three": "^0.179.1",
+    "ws": "^8.18.3",
     "xlsx": "^0.18.5"
   },
   "devDependencies": {
@@ -26,6 +31,7 @@
     "@types/node": "^20",
     "@types/react": "^18",
     "@types/react-dom": "^18",
+    "concurrently": "^9.2.1",
     "electron": "^37.3.1",
     "electron-builder": "^26.0.12",
     "eslint": "^8.57.0",
