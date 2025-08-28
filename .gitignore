@@ -75,27 +75,15 @@ Thumbs.db
 *.flv
 *.mkv
 *.webm
-*.mp3
+# *.mp3
 *.wav
 *.flac
 *.aac
 *.ogg
 
-# Large image files
-*.jpg
-*.jpeg
-*.png
-*.gif
-*.bmp
-*.tiff
-*.webp
-*.svg
-
 # Fonts (if too large)
 public/fonts/
 
-# Props images (if too large)
-public/images/props/
 
 # Vercel
 .vercel
