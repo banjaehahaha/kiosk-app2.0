@@ -156,6 +156,20 @@ export default function AudienceInfoModal({
     };
   }, []);
 
+  // 모달이 열릴 때 body 스크롤 방지
+  useEffect(() => {
+    if (isVisible || showPayment || showConfirmation || showQRCode || showKeyboard) {
+      document.body.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = 'unset';
+    }
+
+    // 클린업: 컴포넌트가 언마운트되거나 모달이 닫힐 때 스크롤 복원
+    return () => {
+      document.body.style.overflow = 'unset';
+    };
+  }, [isVisible, showPayment, showConfirmation, showQRCode, showKeyboard]);
+
   // 키보드 표시 시 초기화
   useEffect(() => {
     if (showKeyboard && keyboardRef.current && window.customKeyboard) {
@@ -549,15 +563,14 @@ export default function AudienceInfoModal({
       ).handlePropCompleted(propId);
     }
 
-    // 결제 모달 닫기
-    setShowPayment(false);
-
-    // SMS 전송 완료 모달 닫기
-    setShowQRCode(false);
-
-    // 바로 완료 처리
-    console.log("결제 완료 - 바로 완료 처리");
-    onComplete(formData);
+    // 결제 완료 상태는 유지하되, 모달은 닫지 않음
+    // 사용자가 "완료" 버튼을 눌러야 모달이 닫힘
+    console.log("결제 완료 - 모달 유지, 사용자 확인 대기");
+    
+    // 모달을 닫지 않고 결제 완료 상태 유지
+    // setShowPayment(false); // 제거
+    // setShowQRCode(false); // 제거
+    // onComplete(formData); // 제거 - 사용자가 완료 버튼을 눌러야 호출됨
   };
 
   const handleInputChange = (
@@ -592,7 +605,7 @@ export default function AudienceInfoModal({
   if (showPayment) {
     return (
       <div className="fixed inset-0 bg-black/70 z-60 flex items-center justify-center p-5">
-        <div className="bg-white rounded-lg shadow-2xl max-w-md w-full p-6">
+        <div className="bg-white shadow-2xl max-w-md w-full p-6">
           <div className="text-center">
             <h3 className="text-xl font-bold mb-4">결제 진행 중</h3>
 
@@ -631,7 +644,7 @@ export default function AudienceInfoModal({
                     </svg>
                   </div>
                 </div>
-                <div className="bg-[#F8D1E7]/20 p-4 rounded-lg mb-4">
+                <div className="bg-[#F8D1E7]/20 p-4 mb-4">
                   <h4 className="text-lg font-semibold text-gray-700 mb-2">
                     📱 SMS 결제 링크 전송 완료!
                   </h4>
@@ -641,7 +654,7 @@ export default function AudienceInfoModal({
                   <p className="text-sm text-gray-700 mb-3">
                     결제 링크가 전송되었습니다
                   </p>
-                  <div className="bg-[#F8D1E7]/30 p-3 rounded border border-[#F8D1E7]/50">
+                  <div className="bg-[#F8D1E7]/30 p-3 border border-[#F8D1E7]/50">
                     <p className="text-sm text-gray-700 font-medium">
                       💳 문자메시지를 확인하여 결제를 완료해주세요
                     </p>
@@ -654,29 +667,27 @@ export default function AudienceInfoModal({
                 {/* 결제 취소 버튼 추가 */}
                 <div className="mt-6">
                   <button
-                    onClick={async () => {
-                      if (confirm('정말로 결제를 취소하시겠습니까?')) {
-                        try {
-                          setIsLoading(true);
-                          
-                          // 결제 취소 처리 (mul_no가 없는 경우를 위한 처리)
-                          alert('결제가 취소되었습니다.');
-                          // 물품 리스트로 돌아가기
-                          onClose();
-                          // 부모 컴포넌트에 취소 알림
-                          if (onComplete) {
-                            onComplete(null); // null을 전달하여 취소 상태임을 알림
-                          }
-                        } catch (error) {
-                          console.error('결제 취소 오류:', error);
-                          alert('결제 취소 처리 중 오류가 발생했습니다.');
-                        } finally {
-                          setIsLoading(false);
-                        }
-                      }
-                    }}
+                                    onClick={async () => {
+                  try {
+                    setIsLoading(true);
+                    
+                    // 결제 취소 처리 (mul_no가 없는 경우를 위한 처리)
+                    alert('결제가 취소되었습니다.');
+                    // 물품 리스트로 돌아가기
+                    onClose();
+                    // 부모 컴포넌트에 취소 알림
+                    if (onComplete) {
+                      onComplete(null); // null을 전달하여 취소 상태임을 알림
+                    }
+                  } catch (error) {
+                    console.error('결제 취소 오류:', error);
+                    alert('결제 취소 처리 중 오류가 발생했습니다.');
+                  } finally {
+                    setIsLoading(false);
+                  }
+                }}
                     disabled={isLoading}
-                    className="px-6 py-2 bg-gray-600 text-white hover:bg-gray-700 transition-colors rounded disabled:opacity-50"
+                    className="px-6 py-2 bg-gray-600 text-white hover:bg-gray-700 transition-colors disabled:opacity-50"
                   >
                     {isLoading ? '처리중...' : '결제 취소'}
                   </button>
@@ -707,7 +718,7 @@ export default function AudienceInfoModal({
                 <p className="text-sm text-gray-600 mb-4">예매가 성공적으로 완료되었습니다</p>
                 
                 {/* 결제 확인 내역 */}
-                <div className="bg-[#F8D1E7]/10 p-4 rounded-lg border border-[#F8D1E7]/30 mb-4">
+                <div className="bg-[#F8D1E7]/10 p-4 border border-[#F8D1E7]/30 mb-4">
                   <h4 className="text-sm font-medium text-gray-700 mb-3 text-left">📋 결제 확인 내역</h4>
                   <div className="space-y-2 text-sm text-left">
                     <div className="flex justify-between">
@@ -752,7 +763,7 @@ export default function AudienceInfoModal({
                 </div>
                 
                 {/* 안내 메시지 */}
-                <div className="bg-blue-50 p-3 rounded border border-blue-200 mb-4">
+                <div className="bg-blue-50 p-3 border border-blue-200 mb-4">
                   <p className="text-sm text-blue-800 font-medium">
                     🎭 선택하신 소품이 공연에 등장합니다!
                   </p>
@@ -769,7 +780,7 @@ export default function AudienceInfoModal({
                       onComplete(formData);
                     }
                   }}
-                  className="px-6 py-2 bg-[#F8D1E7] text-gray-800 hover:bg-[#f0c4d8] transition-colors rounded font-medium"
+                  className="px-6 py-2 bg-[#F8D1E7] text-gray-800 hover:bg-[#f0c4d8] transition-colors font-medium"
                 >
                   완료
                 </button>
@@ -838,7 +849,7 @@ export default function AudienceInfoModal({
             </div>
 
             {/* 안내 메시지 */}
-            <div className="text-[#b3b3b3] text-sm bg-[#404040] p-3 rounded">
+            <div className="text-[#b3b3b3] text-sm bg-[#404040] p-3">
               <p>📱 문자메시지를 확인하여 결제를 완료해주세요</p>
               <p>💳 결제 완료 후 자동으로 다음 단계로 진행됩니다</p>
             </div>
@@ -847,54 +858,52 @@ export default function AudienceInfoModal({
             <div className="flex justify-center space-x-3 mt-6">
               <button
                 onClick={async () => {
-                  if (confirm('정말로 결제를 취소하시겠습니까?')) {
-                    try {
-                      setIsLoading(true);
-                      
-                      // PayApp 결제 취소 API 호출
-                      const cancelResponse = await fetch('/api/payapp/cancel-payment', {
-                        method: 'POST',
-                        headers: {
-                          'Content-Type': 'application/json',
-                        },
-                        body: JSON.stringify({
-                          mul_no: qrCodeData.mul_no
-                        }),
-                      });
+                  try {
+                    setIsLoading(true);
+                    
+                    // PayApp 결제 취소 API 호출
+                    const cancelResponse = await fetch('/api/payapp/cancel-payment', {
+                      method: 'POST',
+                      headers: {
+                        'Content-Type': 'application/json',
+                      },
+                      body: JSON.stringify({
+                        mul_no: qrCodeData.mul_no
+                      }),
+                    });
 
-                      if (cancelResponse.ok) {
-                        const cancelResult = await cancelResponse.json();
-                        if (cancelResult.success) {
-                          alert('결제가 취소되었습니다.');
-                          // 물품 리스트로 돌아가기
-                          onClose();
-                          // 부모 컴포넌트에 취소 알림
-                          if (onComplete) {
-                            onComplete(null); // null을 전달하여 취소 상태임을 알림
-                          }
-                        } else {
-                          alert('결제 취소에 실패했습니다: ' + cancelResult.error);
+                    if (cancelResponse.ok) {
+                      const cancelResult = await cancelResponse.json();
+                      if (cancelResult.success) {
+                        alert('결제가 취소되었습니다.');
+                        // 물품 리스트로 돌아가기
+                        onClose();
+                        // 부모 컴포넌트에 취소 알림
+                        if (onComplete) {
+                          onComplete(null); // null을 전달하여 취소 상태임을 알림
                         }
                       } else {
-                        alert('결제 취소 처리 중 오류가 발생했습니다.');
+                        alert('결제 취소에 실패했습니다: ' + cancelResult.error);
                       }
-                    } catch (error) {
-                      console.error('결제 취소 오류:', error);
+                    } else {
                       alert('결제 취소 처리 중 오류가 발생했습니다.');
-                    } finally {
-                      setIsLoading(false);
                     }
+                  } catch (error) {
+                    console.error('결제 취소 오류:', error);
+                    alert('결제 취소 처리 중 오류가 발생했습니다.');
+                  } finally {
+                    setIsLoading(false);
                   }
                 }}
                 disabled={isLoading}
-                className="px-4 py-2 bg-gray-600 text-white hover:bg-gray-700 transition-colors rounded disabled:opacity-50"
+                className="px-4 py-2 bg-gray-600 text-white hover:bg-gray-700 transition-colors disabled:opacity-50"
               >
                 {isLoading ? '처리중...' : '결제 취소'}
               </button>
               
               <button
                 onClick={() => setShowQRCode(false)}
-                className="px-4 py-2 bg-[#404040] text-[#e5e5e5] hover:bg-[#505050] transition-colors rounded"
+                className="px-4 py-2 bg-[#404040] text-[#e5e5e5] hover:bg-[#505050] transition-colors"
               >
                 닫기
               </button>
@@ -904,7 +913,7 @@ export default function AudienceInfoModal({
                   // SMS 재전송 로직 (필요시 구현)
                   console.log("SMS 재전송 요청");
                 }}
-                className="px-4 py-2 bg-[#F8D1E7] text-[#2d2d2d] hover:bg-[#e8b8d4] transition-colors rounded"
+                className="px-4 py-2 bg-[#F8D1E7] text-[#2d2d2d] hover:bg-[#e8b8d4] transition-colors"
               >
                 SMS 재전송
               </button>
