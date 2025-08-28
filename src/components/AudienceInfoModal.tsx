@@ -709,16 +709,16 @@ export default function AudienceInfoModal({
                   </svg>
                 </div>
                 
-                <h3 className="text-xl font-bold text-gray-800 mb-2">🎉 결제 완료!</h3>
+                <h3 className="text-xl font-bold text-gray-800 mb-2">결제 완료</h3>
                 <p className="text-sm text-gray-600 mb-4">예매가 성공적으로 완료되었습니다</p>
                 
                 {/* 결제 확인 내역 */}
                 <div className="bg-[#F8D1E7]/10 p-4 border border-[#F8D1E7]/30 mb-4">
-                  <h4 className="text-sm font-medium text-gray-700 mb-3 text-left">📋 결제 확인 내역</h4>
+                  <h4 className="text-sm font-medium text-gray-700 mb-3 text-left">결제 확인 내역</h4>
                   <div className="space-y-2 text-sm text-left">
                     <div className="flex justify-between">
                       <span className="text-gray-600">공연명:</span>
-                      <span className="font-medium text-gray-800">부재시 픽션은 문 앞에 놔주세요</span>
+                      <span className="font-medium text-gray-800">뜻밖의 보간과 최근접 이웃 찾기</span>
                     </div>
                     <div className="flex justify-between">
                       <span className="text-gray-600">선택 소품:</span>
@@ -748,24 +748,16 @@ export default function AudienceInfoModal({
                     )}
                     <div className="flex justify-between">
                       <span className="text-gray-600">공연 일시:</span>
-                      <span className="font-medium text-gray-800">2024년 10월 30일 오후 7시</span>
+                      <span className="font-medium text-gray-800">2025년 10월 30일 오후 7시</span>
                     </div>
                     <div className="flex justify-between">
                       <span className="text-gray-600">공연 장소:</span>
-                      <span className="font-medium text-gray-800">합정역 2번 출구 앞 세아타워</span>
+                      <span className="font-medium text-gray-800">인천아트플랫폼 C동 공연장</span>
                     </div>
                   </div>
                 </div>
                 
-                {/* 안내 메시지 */}
-                <div className="bg-blue-50 p-3 border border-blue-200 mb-4">
-                  <p className="text-sm text-blue-800 font-medium">
-                    🎭 선택하신 소품이 공연에 등장합니다!
-                  </p>
-                  <p className="text-xs text-blue-600 mt-1">
-                    공연 당일 현장에서 확인해주세요
-                  </p>
-                </div>
+
                 
                 {/* 완료 버튼 */}
                 <button
@@ -791,24 +783,7 @@ export default function AudienceInfoModal({
 
             {paymentStatus === "cancelled" && (
               <div className="text-center mb-6">
-                {/* 취소 아이콘 */}
-                <div className="w-20 h-20 bg-red-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                  <svg
-                    className="w-10 h-10 text-red-600"
-                    fill="none"
-                    stroke="currentColor"
-                    viewBox="0 0 24 24"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth={2}
-                      d="M6 18L18 6M6 6l12 12"
-                    />
-                  </svg>
-                </div>
-                
-                <h3 className="text-xl font-bold text-gray-800 mb-2">❌ 결제 취소</h3>
+                <h3 className="text-xl font-bold text-gray-800 mb-2">결제 취소</h3>
                 <p className="text-sm text-gray-600 mb-4">결제가 취소되었습니다</p>
                 
                 {/* 확인 버튼 */}
