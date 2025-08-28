@@ -126,6 +126,30 @@
   margin-left: -50vh !important;
 }
 
+/* 글로브 뷰어 페이지에서 모든 헤더 요소 숨기기 */
+.globe-viewer-container header,
+.globe-viewer-container .header,
+.globe-viewer-container [class*="header"],
+.globe-viewer-container [id*="header"] {
+  display: none !important;
+  visibility: hidden !important;
+  opacity: 0 !important;
+  height: 0 !important;
+  width: 0 !important;
+  position: absolute !important;
+  left: -9999px !important;
+}
+
+/* 글로브 뷰어 페이지 전체 강제 스타일 */
+body:has(.globe-viewer-container) {
+  overflow: hidden !important;
+}
+
+/* 글로브 뷰어 페이지에서 모든 상단 요소 숨기기 */
+.globe-viewer-container > *:not(main) {
+  display: none !important;
+}
+
 /* 대사 하이라이트 스타일 */
 .dialogue-line.highlight {
   background-color: #fce7f3 !important;
