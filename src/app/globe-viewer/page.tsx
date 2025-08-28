@@ -43,6 +43,36 @@ export default function GlobeViewerPage() {
       // 강제 적용을 위한 추가 스타일
       container.style.setProperty('transform', 'rotate(90deg)', 'important');
       container.style.setProperty('position', 'fixed', 'important');
+      
+      // 추가 강제 스타일
+      container.style.setProperty('width', '100vh', 'important');
+      container.style.setProperty('height', '100vw', 'important');
+      container.style.setProperty('top', '50%', 'important');
+      container.style.setProperty('left', '50%', 'important');
+      container.style.setProperty('margin-top', '-50vw', 'important');
+      container.style.setProperty('margin-left', '-50vh', 'important');
+      
+      // 헤더 요소 강제 숨김
+      const headers = document.querySelectorAll('header, .header, [class*="header"], [id*="header"]');
+      headers.forEach(header => {
+        if (header instanceof HTMLElement) {
+          header.style.display = 'none';
+          header.style.visibility = 'hidden';
+          header.style.opacity = '0';
+          header.style.height = '0';
+          header.style.width = '0';
+          header.style.position = 'absolute';
+          header.style.left = '-9999px';
+        }
+      });
+      
+      // 상단 요소들 강제 숨김
+      const topElements = container.querySelectorAll(':scope > *:not(main)');
+      topElements.forEach(element => {
+        if (element instanceof HTMLElement) {
+          element.style.display = 'none';
+        }
+      });
     }
   }, []);
 
