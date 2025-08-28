@@ -83,16 +83,14 @@ export default function KioskApp() {
     
     // 홈 페이지가 아닐 때만 타이머 시작
     if (currentPage !== 'home') {
-      timer = setTimeout(() => {
-        setCurrentPage('home');
-        setSelectedProp(null);
-        setShowToc(false);
-        setCompletedProps([]);
-        setShowAudienceInfo(false);
-        setSelectedPropForBooking(null);
-        localStorage.removeItem('completedProps');
-        console.log('3분 비활성으로 인한 자동 리셋');
-      }, 3 * 60 * 1000); // 3분
+              timer = setTimeout(() => {
+          setCurrentPage('home');
+          setSelectedProp(null);
+          setShowToc(false);
+          setShowAudienceInfo(false);
+          setSelectedPropForBooking(null);
+          console.log('3분 비활성으로 인한 자동 리셋');
+        }, 3 * 60 * 1000); // 3분
     }
     
     // 클린업
