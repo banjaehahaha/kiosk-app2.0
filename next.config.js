@@ -10,8 +10,8 @@ const nextConfig = {
     unoptimized: true, // 키오스크 환경에서 정적 이미지 사용
   },
   
-  // 출력 설정 - Vercel 배포를 위해 standalone 활성화
-  output: 'standalone',
+  // 출력 설정 - standalone 제거하여 CSS 스타일 정상 적용
+  // output: 'standalone',
   
   // 압축 설정
   compress: true,

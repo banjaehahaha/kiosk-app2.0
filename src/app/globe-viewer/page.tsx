@@ -21,7 +21,20 @@ export default function GlobeViewerPage() {
   const [paymentCount, setPaymentCount] = useState(0);
 
   return (
-    <div className="min-h-screen bg-gray-900 text-white globe-viewer-rotated">
+    <div 
+      className="min-h-screen bg-gray-900 text-white"
+      style={{
+        transform: 'rotate(90deg)',
+        transformOrigin: 'center center',
+        width: '100vh',
+        height: '100vw',
+        position: 'fixed',
+        top: '50%',
+        left: '50%',
+        marginTop: '-50vw',
+        marginLeft: '-50vh'
+      }}
+    >
       {/* 메인 컨텐츠 - 전체 화면 지구본 */}
       <main className="h-screen">
         <GlobeViewerDynamic 
