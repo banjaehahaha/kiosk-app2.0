@@ -21,10 +21,15 @@ export default function GlobeViewerPage() {
   const [paymentCount, setPaymentCount] = useState(0);
   const containerRef = useRef<HTMLDivElement>(null);
 
-  // DOM 마운트 후 직접 스타일 적용
+  // DOM 마운트 후 직접 스타일 적용 + CSS 클래스 추가
   useEffect(() => {
     if (containerRef.current) {
       const container = containerRef.current;
+      
+      // CSS 클래스 추가
+      container.classList.add('globe-viewer-container');
+      
+      // 직접 스타일 적용 (백업)
       container.style.transform = 'rotate(90deg)';
       container.style.transformOrigin = 'center center';
       container.style.width = '100vh';
@@ -34,6 +39,10 @@ export default function GlobeViewerPage() {
       container.style.left = '50%';
       container.style.marginTop = '-50vw';
       container.style.marginLeft = '-50vh';
+      
+      // 강제 적용을 위한 추가 스타일
+      container.style.setProperty('transform', 'rotate(90deg)', 'important');
+      container.style.setProperty('position', 'fixed', 'important');
     }
   }, []);
 

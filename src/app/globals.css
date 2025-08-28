@@ -100,17 +100,30 @@
     font-weight: 700;
 }
 
-/* 글로브 뷰어 90도 회전 스타일 */
+/* 글로브 뷰어 90도 회전 스타일 - 강제 적용 */
 .globe-viewer-rotated {
-  transform: rotate(90deg);
-  transform-origin: center center;
-  width: 100vh;
-  height: 100vw;
-  position: fixed;
-  top: 50%;
-  left: 50%;
-  margin-top: -50vw;
-  margin-left: -50vh;
+  transform: rotate(90deg) !important;
+  transform-origin: center center !important;
+  width: 100vh !important;
+  height: 100vw !important;
+  position: fixed !important;
+  top: 50% !important;
+  left: 50% !important;
+  margin-top: -50vw !important;
+  margin-left: -50vh !important;
+}
+
+/* 글로브 뷰어 컨테이너 강제 스타일 */
+.globe-viewer-container {
+  transform: rotate(90deg) !important;
+  transform-origin: center center !important;
+  width: 100vh !important;
+  height: 100vw !important;
+  position: fixed !important;
+  top: 50% !important;
+  left: 50% !important;
+  margin-top: -50vw !important;
+  margin-left: -50vh !important;
 }
 
 /* 대사 하이라이트 스타일 */
