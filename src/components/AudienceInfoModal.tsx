@@ -650,137 +650,7 @@ export default function AudienceInfoModal({
                     </p>
                   </div>
                 </div>
-                <div className="bg-gray-100 p-3 rounded-lg mb-4">
-                  <p className="text-sm text-gray-700 mb-2">
-                    <strong>결제 상태 모니터링 중...</strong>
-                  </p>
-                  <p className="text-xs text-gray-600 mb-3">
-                    ⏰ 3초마다 결제 완료 여부를 확인하고 있습니다
-                  </p>
-                  <button
-                    onClick={async () => {
-                      console.log("🔄 수동 결제 상태 확인 시도...");
-                      if (qrCodeData?.mul_no) {
-                        console.log("수동 확인 - mul_no:", qrCodeData.mul_no);
 
-                        try {
-                          // 1. 먼저 기존 API로 확인 시도
-                          console.log("수동 확인 - 기존 API 호출 시도...");
-                          const response = await fetch(
-                            "/api/payment-callback/check-status",
-                            {
-                              method: "POST",
-                              headers: {
-                                "Content-Type": "application/json",
-                              },
-                              body: JSON.stringify({
-                                mul_no: qrCodeData.mul_no,
-                                payment_type: "sms_payment",
-                              }),
-                            }
-                          );
-
-                          console.log(
-                            "수동 확인 - API 응답 상태:",
-                            response.status
-                          );
-
-                          if (response.ok) {
-                            const result = await response.json();
-                            console.log("수동 확인 - API 결과:", result);
-
-                            if (result.data.status === "completed") {
-                              console.log(
-                                "✅ 수동 확인 - API에서 결제 완료 감지!"
-                              );
-                              setPaymentStatus("success");
-
-                              // 로컬 스토리지에 저장
-                              const completedPayments = JSON.parse(
-                                localStorage.getItem("completedPayments") ||
-                                  "[]"
-                              );
-                              const newCompletedPayment = {
-                                mul_no: qrCodeData.mul_no,
-                                timestamp: new Date().toISOString(),
-                                propName: propName,
-                                attendeeCount: formData.attendeeCount,
-                              };
-                              completedPayments.push(newCompletedPayment);
-                              localStorage.setItem(
-                                "completedPayments",
-                                JSON.stringify(completedPayments)
-                              );
-
-                              // 결제 완료 처리
-                              await handlePaymentSuccess();
-                            } else {
-                              console.log(
-                                "⏳ 수동 확인 - API에서 아직 결제 진행 중..."
-                              );
-                              alert(
-                                `결제 상태: ${result.status}\n메시지: ${
-                                  result.message ||
-                                  "아직 결제가 완료되지 않았습니다."
-                                }`
-                              );
-                            }
-                          } else {
-                            console.error(
-                              "수동 확인 - API 응답 실패:",
-                              response.status
-                            );
-
-                            // 2. API 실패 시 PayApp 직접 확인 시도 (백업)
-                            console.log(
-                              "수동 확인 - PayApp 직접 확인 시도 (백업)..."
-                            );
-                            try {
-                              const payappUrl = `https://www.payapp.kr/web/payapp.jsp?cmd=paycheck&userid=kiosk&mul_no=${qrCodeData.mul_no}`;
-                              console.log("수동 확인 - PayApp URL:", payappUrl);
-
-                              const payappResponse = await fetch(payappUrl, {
-                                method: "GET",
-                                mode: "no-cors", // CORS 문제 해결
-                              });
-
-                              console.log(
-                                "수동 확인 - PayApp 응답:",
-                                payappResponse
-                              );
-
-                              // no-cors 모드에서는 응답 내용을 읽을 수 없으므로
-                              // 사용자에게 안내
-                              alert(
-                                "PayApp 직접 확인을 시도했습니다. 브라우저 콘솔에서 로그를 확인해주세요."
-                              );
-                            } catch (payappError) {
-                              console.error(
-                                "수동 확인 - PayApp 직접 확인 오류:",
-                                payappError
-                              );
-                              alert(
-                                "PayApp 직접 확인에 실패했습니다. 잠시 후 다시 시도해주세요."
-                              );
-                            }
-                          }
-                        } catch (error) {
-                          console.error("수동 확인 - 전체 오류:", error);
-                          alert(
-                            "결제 상태 확인 중 오류가 발생했습니다. 콘솔 로그를 확인해주세요."
-                          );
-                        }
-                      } else {
-                        alert(
-                          "결제 정보를 찾을 수 없습니다. 페이지를 새로고침하고 다시 시도해주세요."
-                        );
-                      }
-                    }}
-                    className="px-4 py-2 bg-blue-500 text-white text-sm rounded hover:bg-blue-600 transition-colors"
-                  >
-                    🔄 수동으로 결제 상태 확인
-                  </button>
-                </div>
               </>
             )}
 
@@ -907,7 +777,7 @@ export default function AudienceInfoModal({
                   }
                 }}
                 disabled={isLoading}
-                className="px-4 py-2 bg-red-600 text-white hover:bg-red-700 transition-colors rounded disabled:opacity-50"
+                className="px-4 py-2 bg-gray-600 text-white hover:bg-gray-700 transition-colors rounded disabled:opacity-50"
               >
                 {isLoading ? '처리중...' : '결제 취소'}
               </button>
