@@ -92,7 +92,7 @@ export default function GlobeViewer({ onConnectionChange, onPaymentCountChange }
 
     // 지구 텍스처 로드
     const textureLoader = new THREE.TextureLoader();
-    const earthTexture = textureLoader.load('/earthmap4k.jpg');
+    const earthTexture = textureLoader.load('/earthmap1k.jpg');
     
     // 지구본 생성 - 실제 지구 텍스처 사용, 완전 불투명
     const globeGeometry = new THREE.SphereGeometry(1, 128, 128);
