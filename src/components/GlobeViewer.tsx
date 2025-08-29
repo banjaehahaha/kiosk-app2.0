@@ -71,9 +71,13 @@ export default function GlobeViewer({ onConnectionChange, onPaymentCountChange }
   const handleNewPayment = useCallback((payment: CompletedPayment) => {
     console.log('🎉 새로운 결제 감지됨:', payment);
     
+    // memo 필드에서 상품명 추출 (goodname 대신 memo 사용)
+    const productName = payment.memo;
+    console.log('🔍 상품명 추출:', productName);
+    
     // props.json에서 해당 상품 찾기
     const matchedProp = propsData.props.find(prop => 
-      prop.name === payment.goodname
+      prop.name === productName
     );
     
     console.log('🔍 상품 매칭 결과:', matchedProp);
@@ -83,7 +87,7 @@ export default function GlobeViewer({ onConnectionChange, onPaymentCountChange }
       
       // 주문 정보 설정
       const orderInfo: OrderInfo = {
-        propName: payment.goodname,
+        propName: productName,
         orderTime: payment.created_at,
         origin: `${matchedProp.origin.city}, ${matchedProp.origin.country}`,
         shippingDays: matchedProp.shippingDays
@@ -95,7 +99,7 @@ export default function GlobeViewer({ onConnectionChange, onPaymentCountChange }
       // 해당 상품에 주문 완료 애니메이션 적용
       triggerOrderCompleteAnimation(matchedProp.name);
     } else {
-      console.log('❌ 상품 매칭 실패:', payment.goodname);
+      console.log('❌ 상품 매칭 실패:', productName);
     }
   }, []);
 
