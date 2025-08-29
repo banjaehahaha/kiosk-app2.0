@@ -13,12 +13,21 @@ interface CompletedPayment {
 
 export async function GET(request: NextRequest): Promise<NextResponse> {
   try {
+    console.log('🔍 Supabase API 호출 시작...');
+    console.log('환경 변수 확인:', {
+      url: process.env.SUPABASE_URL ? '설정됨' : '설정되지 않음',
+      key: process.env.SUPABASE_ANON_KEY ? '설정됨' : '설정되지 않음'
+    });
+    
     if (!supabase) {
+      console.error('❌ Supabase 클라이언트가 초기화되지 않음');
       return NextResponse.json(
         { success: false, error: 'Supabase not configured' },
         { status: 500 }
       );
     }
+    
+    console.log('✅ Supabase 클라이언트 확인됨');
 
     // 완료된 결제 조회
     const { data: payments, error } = await supabase
