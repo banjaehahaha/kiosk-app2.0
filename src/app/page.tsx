@@ -675,6 +675,10 @@ export default function KioskApp() {
             setSelectedProp(null);
             setCurrentPage('chapter4');
           }}
+          onNavigateToChapter5={() => {
+            setSelectedProp(null);
+            setCurrentPage('chapter5');
+          }}
           onStartBooking={(prop) => {
             setSelectedProp(null); // PropsModal 닫기
             setShowAudienceInfo(true); // AudienceInfoModal 열기
