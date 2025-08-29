@@ -69,14 +69,18 @@ export default function GlobeViewer({ onConnectionChange, onPaymentCountChange }
 
   // 결제 완료 이벤트 처리 함수
   const handleNewPayment = useCallback((payment: CompletedPayment) => {
-    console.log('New payment detected:', payment);
+    console.log('🎉 새로운 결제 감지됨:', payment);
     
     // props.json에서 해당 상품 찾기
     const matchedProp = propsData.props.find(prop => 
       prop.name === payment.prop_name
     );
     
+    console.log('🔍 상품 매칭 결과:', matchedProp);
+    
     if (matchedProp) {
+      console.log('✅ 상품 매칭 성공! 애니메이션 시작...');
+      
       // 주문 정보 설정
       const orderInfo: OrderInfo = {
         propName: payment.prop_name,
@@ -90,6 +94,8 @@ export default function GlobeViewer({ onConnectionChange, onPaymentCountChange }
       
       // 해당 상품에 주문 완료 애니메이션 적용
       triggerOrderCompleteAnimation(matchedProp.name);
+    } else {
+      console.log('❌ 상품 매칭 실패:', payment.prop_name);
     }
   }, []);
 
@@ -1342,12 +1348,14 @@ export default function GlobeViewer({ onConnectionChange, onPaymentCountChange }
 
   // 결제 폴링 서비스 시작
   useEffect(() => {
+    console.log('🚀 결제 폴링 서비스 시작...');
     paymentPollingServiceRef.current = new PaymentPollingService();
     paymentPollingServiceRef.current.startPolling({
       onNewPayment: handleNewPayment
     });
 
     return () => {
+      console.log('🛑 결제 폴링 서비스 중지...');
       if (paymentPollingServiceRef.current) {
         paymentPollingServiceRef.current.stopPolling();
       }
