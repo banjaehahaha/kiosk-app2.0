@@ -117,3 +117,4 @@ export default class GlobePaymentMonitorService {
     return this.isPolling;
   }
 }
+

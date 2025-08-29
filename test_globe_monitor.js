@@ -54,3 +54,4 @@ console.log('🧪 GlobeViewer 모니터링 테스트 스크립트 로드 완료'
 console.log('📝 사용법:');
 console.log('   - 브라우저: testGlobeMonitorAPI()');
 console.log('   - Node.js: node test_globe_monitor.js');
+
