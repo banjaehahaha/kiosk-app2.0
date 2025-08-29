@@ -9,7 +9,8 @@
         "city": "Charleston, South Carolina"
       },
       "shippingDays": "2~4weeks",
-      "url": "https://www.ebay.com/itm/156792552955?_trkparms=amclksrc%3DITM%26aid%3D777008%26algo%3DPERSONAL.TOPIC%26ao%3D1%26asc%3D20250324085124%26meid%3Dfb8957e7da8a4c64959a8e1d8c55f932%26pid%3D101770%26rk%3D1%26rkt%3D1%26itm%3D156792552955%26pmt%3D0%26noa%3D1%26pg%3D4375194%26algv%3DRecentlyViewedItemsV2WithMLRPboosterAndUpdatedFeatures_BP&_trksid=p4375194.c101770.m146925&_trkparms=parentrq%3Ab724fa731980a6b5a4ff430dffe7167e%7Cpageci%3A280f9e11-7b44-11f0-8c8a-320094e92aa7%7Ciid%3A1%7Cvlpname%3Avlp_homepage"
+      "url": "https://www.ebay.com/itm/156792552955?_trkparms=amclksrc%3DITM%26aid%3D777008%26algo%3DPERSONAL.TOPIC%26ao%3D1%26asc%3D20250324085124%26meid%3Dfb8957e7da8a4c64959a8e1d8c55f932%26pid%3D101770%26rk%3D1%26rkt%3D1%26itm%3D156792552955%26pmt%3D0%26noa%3D1%26pg%3D4375194%26algv%3DRecentlyViewedItemsV2WithMLRPboosterAndUpdatedFeatures_BP&_trksid=p4375194.c101770.m146925&_trkparms=parentrq%3Ab724fa731980a6b5a4ff430dffe7167e%7Cpageci%3A280f9e11-7b44-11f0-8c8a-320094e92aa7%7Ciid%3A1%7Cvlpname%3Avlp_homepage",
+      "status": "pending"
     },
     {
       "id": 2,
@@ -20,7 +21,8 @@
         "city": "Netania"
       },
       "shippingDays": "3~4weeks",
-      "url": "https://www.ebay.com/itm/296419665336"
+      "url": "https://www.ebay.com/itm/296419665336",
+      "status": "pending"
     },
     {
       "id": 3,
@@ -31,7 +33,8 @@
         "city": "Zagreb"
       },
       "shippingDays": "3~4weeks",
-      "url": "https://www.ebay.com/itm/376040922014"
+      "url": "https://www.ebay.com/itm/376040922014",
+      "status": "pending"
     },
     {
       "id": 4,
@@ -42,7 +45,8 @@
         "city": "Charleston, South Carolina"
       },
       "shippingDays": "2~4weeks",
-      "url": "https://www.ebay.com/itm/156792552945"
+      "url": "https://www.ebay.com/itm/156792552945",
+      "status": "pending"
     },
     {
       "id": 5,
@@ -53,7 +57,8 @@
         "city": "불명"
       },
       "shippingDays": "1~3weeks",
-      "url": "https://cnturi.shop/product/288453"
+      "url": "https://cnturi.shop/product/288453",
+      "status": "pending"
     },
     {
       "id": 6,
@@ -64,7 +69,8 @@
         "city": "불명"
       },
       "shippingDays": "1~3weeks",
-      "url": "https://cnturi.shop/product/288286"
+      "url": "https://cnturi.shop/product/288286",
+      "status": "pending"
     },
     {
       "id": 7,
@@ -75,7 +81,8 @@
         "city": "불명"
       },
       "shippingDays": "1~3weeks",
-      "url": "https://cnturi.shop/product/285584"
+      "url": "https://cnturi.shop/product/285584",
+      "status": "pending"
     },
     {
       "id": 8,
@@ -86,7 +93,8 @@
         "city": "불명"
       },
       "shippingDays": "1~3weeks",
-      "url": "https://cnturi.shop/product/282559"
+      "url": "https://cnturi.shop/product/282559",
+      "status": "pending"
     },
     {
       "id": 9,
@@ -97,7 +105,8 @@
         "city": "불명"
       },
       "shippingDays": "1~3weeks",
-      "url": "https://cnturi.shop/product/287960"
+      "url": "https://cnturi.shop/product/287960",
+      "status": "pending"
     },
     {
       "id": 10,
@@ -108,7 +117,8 @@
         "city": "불명"
       },
       "shippingDays": "1~3weeks",
-      "url": "https://cnturi.shop/product/271254"
+      "url": "https://cnturi.shop/product/271254",
+      "status": "pending"
     },
     {
       "id": 11,
@@ -119,7 +129,8 @@
         "city": "Saint-Piat, Centre"
       },
       "shippingDays": "1~2weeks",
-      "url": "https://ebay.us/m/k6KLK2"
+      "url": "https://ebay.us/m/k6KLK2",
+      "status": "pending"
     },
     {
       "id": 12,
@@ -130,7 +141,8 @@
         "city": "Sofia city"
       },
       "shippingDays": "5~7weeks",
-      "url": "https://ebay.us/m/RwaoQc"
+      "url": "https://ebay.us/m/RwaoQc",
+      "status": "pending"
     },
     {
       "id": 13,
@@ -141,7 +153,8 @@
         "city": "Middelburg"
       },
       "shippingDays": "3~4weeks",
-      "url": "https://ebay.us/m/YKwK86"
+      "url": "https://ebay.us/m/YKwK86",
+      "status": "pending"
     },
     {
       "id": 14,
@@ -152,7 +165,8 @@
         "city": "bucharest"
       },
       "shippingDays": "3~8weeks",
-      "url": "https://ebay.us/m/gOMCwy"
+      "url": "https://ebay.us/m/gOMCwy",
+      "status": "pending"
     },
     {
       "id": 15,
@@ -163,7 +177,8 @@
         "city": "Mrázov"
       },
       "shippingDays": "3~11weeks",
-      "url": "https://ebay.us/m/Ea4l7r"
+      "url": "https://ebay.us/m/Ea4l7r",
+      "status": "pending"
     },
     {
       "id": 16,
@@ -174,7 +189,8 @@
         "city": "Sutton"
       },
       "shippingDays": "1~2weeks",
-      "url": "https://ebay.us/m/bGJkqL"
+      "url": "https://ebay.us/m/bGJkqL",
+      "status": "pending"
     },
     {
       "id": 17,
@@ -185,7 +201,8 @@
         "city": "Kochi"
       },
       "shippingDays": "4days",
-      "url": "https://www.rainbow-trading.co.jp/item/3238/"
+      "url": "https://www.rainbow-trading.co.jp/item/3238/",
+      "status": "pending"
     },
     {
       "id": 18,
@@ -196,7 +213,8 @@
         "city": "Kochi"
       },
       "shippingDays": "4days",
-      "url": "https://www.rainbow-trading.co.jp/item/923/"
+      "url": "https://www.rainbow-trading.co.jp/item/923/",
+      "status": "pending"
     },
     {
       "id": 19,
@@ -207,7 +225,8 @@
         "city": "Kochi"
       },
       "shippingDays": "4days",
-      "url": "https://www.rainbow-trading.co.jp/item/4040/"
+      "url": "https://www.rainbow-trading.co.jp/item/4040/",
+      "status": "pending"
     },
     {
       "id": 20,
@@ -218,7 +237,8 @@
         "city": "Kochi"
       },
       "shippingDays": "4days",
-      "url": "https://www.rainbow-trading.co.jp/item/4061/"
+      "url": "https://www.rainbow-trading.co.jp/item/4061/",
+      "status": "pending"
     },
     {
       "id": 21,
@@ -229,7 +249,8 @@
         "city": "Kochi"
       },
       "shippingDays": "4days",
-      "url": "https://www.rainbow-trading.co.jp/item/4021/"
+      "url": "https://www.rainbow-trading.co.jp/item/4021/",
+      "status": "pending"
     },
     {
       "id": 22,
@@ -240,7 +261,8 @@
         "city": "Kochi"
       },
       "shippingDays": "4days",
-      "url": "https://www.rainbow-trading.co.jp/item/4115/"
+      "url": "https://www.rainbow-trading.co.jp/item/4115/",
+      "status": "pending"
     },
     {
       "id": 23,
@@ -251,7 +273,8 @@
         "city": "Kochi"
       },
       "shippingDays": "4days",
-      "url": "https://www.rainbow-trading.co.jp/item/4114/"
+      "url": "https://www.rainbow-trading.co.jp/item/4114/",
+      "status": "pending"
     },
     {
       "id": 24,
@@ -262,7 +285,8 @@
         "city": "Kochi"
       },
       "shippingDays": "4days",
-      "url": "https://www.rainbow-trading.co.jp/item/4245/"
+      "url": "https://www.rainbow-trading.co.jp/item/4245/",
+      "status": "pending"
     },
     {
       "id": 25,
@@ -273,7 +297,8 @@
         "city": "Kochi"
       },
       "shippingDays": "4days",
-      "url": "https://www.rainbow-trading.co.jp/item/4246/"
+      "url": "https://www.rainbow-trading.co.jp/item/4246/",
+      "status": "pending"
     },
     {
       "id": 26,
@@ -284,7 +309,8 @@
         "city": "Liaoning"
       },
       "shippingDays": "1~2weeks",
-      "url": "https://ko.aliexpress.com/item/1005004361569564.html?gps-id=pcStoreJustForYou&scm=1007.23125.137358.0&scm_id=1007.23125.137358.0&scm-url=1007.23125.137358.0&pvid=90d164fb-8149-4164-8ba8-084bea35ba18&_t=gps-id%3ApcStoreJustForYou%2Cscm-url%3A1007.23125.137358.0%2Cpvid%3A90d164fb-8149-4164-8ba8-084bea35ba18%2Ctpp_buckets%3A668%232846%238115%232000&pdp_ext_f=%7B%22order%22%3A%229%22%2C%22eval%22%3A%221%22%2C%22sceneId%22%3A%2213125%22%7D&pdp_npi=6%40dis%21KRW%21106516%2197157%21%21%21531.94%21485.20%21%40212a6e2917556823730658077ece96%2112000030284754405%21rec%21KR%21%21ABX%211%210%21n_tag%3A-29910%3Bd%3Ae6535cdd%3Bm03_new_user%3A-29895%3BpisId%3A5000000176755829&spm=a2g0o.store_pc_home.smartJustForYou_2002740648210.1005004361569564&gatewayAdapt=glo2kor"
+      "url": "https://ko.aliexpress.com/item/1005004361569564.html?gps-id=pcStoreJustForYou&scm=1007.23125.137358.0&scm_id=1007.23125.137358.0&scm-url=1007.23125.137358.0&pvid=90d164fb-8149-4164-8ba8-084bea35ba18&_t=gps-id%3ApcStoreJustForYou%2Cscm-url%3A1007.23125.137358.0%2Cpvid%3A90d164fb-8149-4164-8ba8-084bea35ba18%2Ctpp_buckets%3A668%232846%238115%232000&pdp_ext_f=%7B%22order%22%3A%229%22%2C%22eval%22%3A%221%22%2C%22sceneId%22%3A%2213125%22%7D&pdp_npi=6%40dis%21KRW%21106516%2197157%21%21%21531.94%21485.20%21%40212a6e2917556823730658077ece96%2112000030284754405%21rec%21KR%21%21ABX%211%210%21n_tag%3A-29910%3Bd%3Ae6535cdd%3Bm03_new_user%3A-29895%3BpisId%3A5000000176755829&spm=a2g0o.store_pc_home.smartJustForYou_2002740648210.1005004361569564&gatewayAdapt=glo2kor",
+      "status": "pending"
     },
     {
       "id": 27,
@@ -295,7 +321,8 @@
         "city": "Liaoning"
       },
       "shippingDays": "1~2weeks",
-      "url": "https://ko.aliexpress.com/item/1005004776856098.html?gps-id=pcStoreJustForYou&scm=1007.23125.137358.0&scm_id=1007.23125.137358.0&scm-url=1007.23125.137358.0&pvid=46ca592c-8db7-4054-830f-1c4b52270123&_t=gps-id%3ApcStoreJustForYou%2Cscm-url%3A1007.23125.137358.0%2Cpvid%3A46ca592c-8db7-4054-830f-1c4b52270123%2Ctpp_buckets%3A668%232846%238112%231997&pdp_ext_f=%7B%22order%22%3A%223%22%2C%22eval%22%3A%221%22%2C%22sceneId%22%3A%2213125%22%7D&pdp_npi=6%40dis%21KRW%21105981%2196682%21%21%21531.94%21485.27%21%40210141f717554432216772013e7bbc%2112000033944979611%21rec%21KR%21%21ABXZ%211%210%21m03_new_user%3A-29895%3Bn_tag%3A-29910%3BpisId%3A5000000176755829&spm=a2g0o.store_pc_home.smartJustForYou_2002740648210.1005004776856098&gatewayAdapt=glo2kor"
+      "url": "https://ko.aliexpress.com/item/1005004776856098.html?gps-id=pcStoreJustForYou&scm=1007.23125.137358.0&scm_id=1007.23125.137358.0&scm-url=1007.23125.137358.0&pvid=46ca592c-8db7-4054-830f-1c4b52270123&_t=gps-id%3ApcStoreJustForYou%2Cscm-url%3A1007.23125.137358.0%2Cpvid%3A46ca592c-8db7-4054-830f-1c4b52270123%2Ctpp_buckets%3A668%232846%238112%231997&pdp_ext_f=%7B%22order%22%3A%223%22%2C%22eval%22%3A%221%22%2C%22sceneId%22%3A%2213125%22%7D&pdp_npi=6%40dis%21KRW%21105981%2196682%21%21%21531.94%21485.27%21%40210141f717554432216772013e7bbc%2112000033944979611%21rec%21KR%21%21ABXZ%211%210%21m03_new_user%3A-29895%3Bn_tag%3A-29910%3BpisId%3A5000000176755829&spm=a2g0o.store_pc_home.smartJustForYou_2002740648210.1005004776856098&gatewayAdapt=glo2kor",
+      "status": "pending"
     },
     {
       "id": 28,
@@ -306,7 +333,8 @@
         "city": "Liaoning"
       },
       "shippingDays": "1~2weeks",
-      "url": "https://ko.aliexpress.com/item/1005008636351062.html?gps-id=pcStoreJustForYou&scm=1007.23125.137358.0&scm_id=1007.23125.137358.0&scm-url=1007.23125.137358.0&pvid=1072713f-7bc4-42c2-ad05-aa224d8a49d7&_t=gps-id%3ApcStoreJustForYou%2Cscm-url%3A1007.23125.137358.0%2Cpvid%3A1072713f-7bc4-42c2-ad05-aa224d8a49d7%2Ctpp_buckets%3A668%232846%238116%232002&pdp_ext_f=%7B%22order%22%3A%22-1%22%2C%22eval%22%3A%221%22%2C%22sceneId%22%3A%2213125%22%7D&pdp_npi=6%40dis%21KRW%21170300%21170300%21%21%21850.48%21850.48%21%40210156fc17556829000335200e6138%2112000046044944592%21rec%21KR%21%21ABX%211%210%21n_tag%3A-29910%3Bd%3Ae6535cdd%3Bm03_new_user%3A-29895&spm=a2g0o.store_pc_home.smartJustForYou_2002740648210.1005008636351062&gatewayAdapt=glo2kor"
+      "url": "https://ko.aliexpress.com/item/1005008636351062.html?gps-id=pcStoreJustForYou&scm=1007.23125.137358.0&scm_id=1007.23125.137358.0&scm-url=1007.23125.137358.0&pvid=1072713f-7bc4-42c2-ad05-aa224d8a49d7&_t=gps-id%3ApcStoreJustForYou%2Cscm-url%3A1007.23125.137358.0%2Cpvid%3A1072713f-7bc4-42c2-ad05-aa224d8a49d7%2Ctpp_buckets%3A668%232846%238116%232002&pdp_ext_f=%7B%22order%22%3A%22-1%22%2C%22eval%22%3A%221%22%2C%22sceneId%22%3A%2213125%22%7D&pdp_npi=6%40dis%21KRW%21170300%21170300%21%21%21850.48%21850.48%21%40210156fc17556829000335200e6138%2112000046044944592%21rec%21KR%21%21ABX%211%210%21n_tag%3A-29910%3Bd%3Ae6535cdd%3Bm03_new_user%3A-29895&spm=a2g0o.store_pc_home.smartJustForYou_2002740648210.1005008636351062&gatewayAdapt=glo2kor",
+      "status": "pending"
     },
     {
       "id": 29,
@@ -317,7 +345,8 @@
         "city": "불명"
       },
       "shippingDays": "1~3weeks",
-      "url": "https://cnturi.shop/product/282602"
+      "url": "https://cnturi.shop/product/282602",
+      "status": "pending"
     },
     {
       "id": 30,
@@ -328,7 +357,8 @@
         "city": "불명"
       },
       "shippingDays": "1~3weeks",
-      "url": "https://m.bunjang.co.kr/products/329454260"
+      "url": "https://m.bunjang.co.kr/products/329454260",
+      "status": "pending"
     },
     {
       "id": 31,
@@ -339,7 +369,8 @@
         "city": "Vatican City"
       },
       "shippingDays": "배송 완료",
-      "url": "https://example.com/vatican"
+      "url": "https://example.com/vatican",
+      "status": "completed"
     },
     {
       "id": 32,
@@ -350,7 +381,8 @@
         "city": "Beijing"
       },
       "shippingDays": "배송 완료",
-      "url": "https://example.com/beijing"
+      "url": "https://example.com/beijing",
+      "status": "completed"
     }
   ]
 }

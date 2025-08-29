@@ -152,14 +152,14 @@ export function PaymentTracker({ onConnectionChange, onPaymentCountChange }: Pay
   const simulatePayments = () => {
     const mockPayments = [
       {
-        propName: 'North Korean Army Badge',
+        propName: 'North Korean Army Airborne Glider Infantry Badge Pin',
         fromCity: 'Charleston',
         fromCountry: 'United States',
         amount: 45000,
         timestamp: new Date(Date.now() - 1000 * 60 * 5) // 5분 전
       },
       {
-        propName: 'DPRK Vintage Photo Postcards',
+        propName: 'DPRK 1969 Vintage Photo Postcards Set',
         fromCity: 'Sutton',
         fromCountry: 'United Kingdom',
         amount: 32000,
@@ -189,10 +189,10 @@ export function PaymentTracker({ onConnectionChange, onPaymentCountChange }: Pay
     
     const randomCity = testCities[Math.floor(Math.random() * testCities.length)];
     const testProps = [
-      'North Korean Badge',
-      'DPRK Vintage Item',
-      'Korean Military Pin',
-      'Historical Artifact'
+      'North Korean Army Airborne Glider Infantry Badge Pin',
+      'North Korea Badge',
+      'Vintage North Korea badge ZENLAM Space programm',
+      'Very Rare Vintage DPRK North Korean Army Parachutist Badge Pin'
     ];
     
     const randomProp = testProps[Math.floor(Math.random() * testProps.length)];

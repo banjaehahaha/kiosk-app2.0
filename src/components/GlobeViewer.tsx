@@ -779,6 +779,9 @@ export default function GlobeViewer({ onConnectionChange, onPaymentCountChange }
     const handlePayment = (event: CustomEvent) => {
       const payment: Payment = event.detail;
       addPaymentArrow(payment);
+      
+      // 결제 완료된 props의 "주문 완료" 텍스트 표시
+      showOrderCompletedText(payment.fromCity.propName);
     };
 
     window.addEventListener('payment-completed', handlePayment as EventListener);
@@ -787,6 +790,115 @@ export default function GlobeViewer({ onConnectionChange, onPaymentCountChange }
       window.removeEventListener('payment-completed', handlePayment as EventListener);
     };
   }, [addPaymentArrow]);
+
+  // "주문 완료" 텍스트 표시 함수
+  const showOrderCompletedText = useCallback((propName: string) => {
+    if (!globeRef.current) return;
+
+    // props.json에서 해당 prop 찾기
+    const prop = propsData.props.find(p => p.name === propName);
+    if (!prop) return;
+
+    // 해당 prop의 도시 찾기
+    const city = cities.find(c => 
+      c.city === prop.origin.city || 
+      (c.city.includes(prop.origin.city) || prop.origin.city.includes(c.city))
+    );
+
+    if (!city) return;
+
+    // 도시 좌표 계산
+    const x = Math.cos(city.lat * (Math.PI / 180)) * Math.cos(-city.lng * (Math.PI / 180)) * 1.02;
+    const y = Math.sin(city.lat * (Math.PI / 180)) * 1.02;
+    const z = Math.cos(city.lat * (Math.PI / 180)) * Math.sin(-city.lng * (Math.PI / 180)) * 1.02;
+
+    // "주문 완료" 텍스트 생성 (Canvas로 텍스트 텍스처 생성)
+    const orderCompletedCanvas = document.createElement('canvas');
+    const orderCompletedCtx = orderCompletedCanvas.getContext('2d');
+    orderCompletedCanvas.width = 512;
+    orderCompletedCanvas.height = 128;
+    
+    if (orderCompletedCtx) {
+      orderCompletedCtx.fillStyle = '#F8D1E7';  // 핑크색 배경
+      orderCompletedCtx.fillRect(0, 0, orderCompletedCanvas.width, orderCompletedCanvas.height);
+      orderCompletedCtx.fillStyle = '#000000';  // 검정 텍스트
+      orderCompletedCtx.font = 'bold 48px Arial';
+      orderCompletedCtx.textAlign = 'center';
+      orderCompletedCtx.textBaseline = 'middle';
+      orderCompletedCtx.fillText('주문 완료', orderCompletedCanvas.width / 2, orderCompletedCanvas.height / 2);
+    }
+    
+    const orderCompletedTexture = new THREE.CanvasTexture(orderCompletedCanvas);
+    orderCompletedTexture.minFilter = THREE.LinearFilter;
+    orderCompletedTexture.magFilter = THREE.LinearFilter;
+    orderCompletedTexture.generateMipmaps = false;
+    
+    const orderCompletedGeometry = new THREE.PlaneGeometry(0.3, 0.08);
+    const orderCompletedMaterial = new THREE.MeshBasicMaterial({ 
+      map: orderCompletedTexture,
+      transparent: true,
+      side: THREE.DoubleSide
+    });
+    
+    const orderCompletedMesh = new THREE.Mesh(orderCompletedGeometry, orderCompletedMaterial);
+    
+    // 이미지 위에 배치
+    const baseOffset = 0.2;
+    let regionOffsetX = 0;
+    let regionOffsetY = 0;
+    let regionOffsetZ = 0;
+    
+    // props ID와 지역을 기반으로 위치를 조정하여 겹치지 않도록 함
+    if (prop.origin.country === 'Japan' && prop.origin.city === 'Kochi') {
+      regionOffsetX = (prop.id % 4) * 0.09;
+      regionOffsetY = Math.floor(prop.id / 4) * 0.11;
+      regionOffsetZ = (prop.id % 3) * 0.09;
+    } else if (prop.origin.country === 'China' && prop.origin.city === 'Liaoning') {
+      regionOffsetX = (prop.id % 3) * 0.08;
+      regionOffsetY = Math.floor(prop.id / 3) * 0.06;
+      regionOffsetZ = (prop.id % 2) * 0.08;
+    } else if (prop.origin.country === 'United States' && prop.origin.city === 'Charleston, South Carolina') {
+      regionOffsetX = (prop.id % 2) * 0.09;
+      regionOffsetY = Math.floor(prop.id / 2) * 0.11;
+      regionOffsetZ = (prop.id % 2) * 0.09;
+    } else {
+      regionOffsetX = (prop.id % 3) * 0.06;
+      regionOffsetY = (prop.id % 2) * 0.08;
+      regionOffsetZ = (prop.id % 3) * 0.06;
+    }
+    
+    const offsetX = baseOffset + regionOffsetX;
+    const offsetY = baseOffset + regionOffsetY;
+    const offsetZ = baseOffset + regionOffsetZ;
+    
+    // "주문 완료" 텍스트를 이미지 위에 배치
+    orderCompletedMesh.position.set(x + offsetX, y + offsetY + 0.3, z + offsetZ);
+    
+    // 지구본에 추가
+    globeRef.current.add(orderCompletedMesh);
+    
+    // 반짝거리는 애니메이션 효과
+    const animateTwinkle = () => {
+      const time = Date.now() * 0.005;
+      const opacity = 0.5 + 0.5 * Math.sin(time * 3);
+      const scale = 1 + 0.1 * Math.sin(time * 2);
+      
+      orderCompletedMaterial.opacity = opacity;
+      orderCompletedMesh.scale.setScalar(scale);
+      
+      // 애니메이션 계속 실행
+      requestAnimationFrame(animateTwinkle);
+    };
+    
+    animateTwinkle();
+    
+    // 10초 후 "주문 완료" 텍스트 제거
+    setTimeout(() => {
+      if (globeRef.current && orderCompletedMesh.parent) {
+        globeRef.current.remove(orderCompletedMesh);
+      }
+    }, 10000);
+  }, [cities]);
 
   // 모든 props에 대해 이미지와 텍스트 추가하는 함수
   const addAllPropsImagesAndText = useCallback(() => {
