@@ -44,6 +44,11 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
       );
     }
 
+    console.log('📊 Supabase에서 조회된 결제 데이터:', {
+      totalCount: payments?.length || 0,
+      sampleData: payments?.slice(0, 2) || []
+    });
+
     // processed_at이 null인 것만 필터링 (아직 처리되지 않은 결제)
     const unprocessedPayments: CompletedPayment[] = payments
       .filter(payment => !payment.processed_at)
@@ -56,6 +61,11 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
         processed: false,
         memo: payment.memo
       }));
+
+    console.log('🔍 필터링된 미처리 결제:', {
+      unprocessedCount: unprocessedPayments.length,
+      sampleUnprocessed: unprocessedPayments.slice(0, 2)
+    });
 
     return NextResponse.json({
       success: true,
