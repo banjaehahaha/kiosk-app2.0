@@ -240,7 +240,7 @@ export default function GlobeViewer({ onConnectionChange, onPaymentCountChange }
     if (ctx) {
       // 깜빡이는 애니메이션을 위한 함수
       const animateOrderComplete = () => {
-        const alpha = 0.5 + 0.5 * Math.sin(Date.now() * 0.01); // 깜빡임 효과
+        const alpha = 0.5 + 0.5 * Math.sin(Date.now() * 0.002); // 깜빡임 속도 늦춤 (0.01 → 0.002)
         
         ctx.clearRect(0, 0, orderCompleteCanvas.width, orderCompleteCanvas.height);
         ctx.fillStyle = `rgba(236, 72, 153, ${alpha})`; // 분홍 바탕
@@ -1015,7 +1015,7 @@ export default function GlobeViewer({ onConnectionChange, onPaymentCountChange }
     };
   }, [addPaymentArrow]);
 
-  // 서울까지 흰색 점선 추가 함수
+  // 서울까지 흰색 점선 추가 함수 (베이징/바티칸 방식으로 수정)
   const addDottedLineToSeoul = useCallback((fromCity: any) => {
     if (!arrowsRef.current) return;
 
@@ -1025,43 +1025,24 @@ export default function GlobeViewer({ onConnectionChange, onPaymentCountChange }
     const toLat = 37.5665; // 서울 위도
     const toLng = 126.9780; // 서울 경도
 
-    // 3D 좌표로 변환
-    const fromLatRad = fromLat * (Math.PI / 180);
-    const fromLngRad = fromLng * (Math.PI / 180);
-    const toLatRad = toLat * (Math.PI / 180);
-    const toLngRad = toLng * (Math.PI / 180);
-
-    // 출발지와 도착지의 정확한 3D 좌표
-    const fromX = Math.cos(fromLatRad) * Math.cos(fromLngRad);
-    const fromY = Math.sin(fromLatRad);
-    const fromZ = Math.cos(fromLatRad) * Math.sin(fromLngRad);
-
-    const toX = Math.cos(toLatRad) * Math.cos(toLngRad);
-    const toY = Math.sin(toLatRad);
-    const toZ = Math.cos(toLatRad) * Math.sin(toLngRad);
-
-    // 점선 생성
+    // 지구 외곽을 따라가는 경로 생성 (베이징/바티칸 방식과 동일)
     const lineGeometry = new THREE.BufferGeometry();
     const points = [];
-    const segments = 100;
+    const segments = 200; // 더 부드러운 곡선을 위해 세그먼트 수 증가
 
     for (let i = 0; i <= segments; i++) {
       const t = i / segments;
       
-      // 직선 보간
-      const x = fromX + (toX - fromX) * t;
-      const y = fromY + (toY - fromY) * t;
-      const z = fromZ + (toZ - fromZ) * t;
+      // 위도와 경도를 보간 (베이징/바티칸 방식과 동일)
+      const lat = fromLat + (toLat - fromLat) * t;
+      const lng = fromLng + (toLng - fromLng) * t;
       
-      // 곡선 효과를 위해 약간 위로 올림 (지구본 표면에서)
-      const height = 0.3 * Math.sin(Math.PI * t);
-      const normalized = new THREE.Vector3(x, y, z).normalize();
+      // 3D 좌표로 변환 - 핀 위치 계산식과 동일하게 (1.02배, 경도 음수 변환)
+      const x = Math.cos(lat * (Math.PI / 180)) * Math.cos(-lng * (Math.PI / 180)) * 1.02;
+      const y = Math.sin(lat * (Math.PI / 180)) * 1.02;
+      const z = Math.cos(lat * (Math.PI / 180)) * Math.sin(-lng * (Math.PI / 180)) * 1.02;
       
-      points.push(
-        normalized.x * (1 + height),
-        normalized.y * (1 + height),
-        normalized.z * (1 + height)
-      );
+      points.push(x, y, z);
     }
 
     lineGeometry.setAttribute('position', new THREE.Float32BufferAttribute(points, 3));
@@ -1457,6 +1438,11 @@ export default function GlobeViewer({ onConnectionChange, onPaymentCountChange }
   // 결제 모니터링 서비스 시작
   useEffect(() => {
     console.log('🚀 GlobeViewer 결제 모니터링 서비스 시작...');
+    
+    // 모달 상태 초기화 (페이지 로드 시 모달 숨김)
+    setOrderModalVisible(false);
+    setCurrentOrderInfo(null);
+    
     paymentPollingServiceRef.current = new GlobePaymentMonitorService();
     paymentPollingServiceRef.current.startPolling({
       onNewPayment: handleNewPayment
