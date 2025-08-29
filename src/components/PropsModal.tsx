@@ -162,7 +162,7 @@ export default function PropsModal({
                 onClick={handleShowPerformanceInfo}
                 className="flex-1 px-4 py-2 bg-[#F8D1E7] text-[#1a1a1a] hover:bg-[#f0c4d8] transition-colors"
               >
-                공연 내용
+                퍼포먼스 내용
               </button>
               
               <button
@@ -181,8 +181,8 @@ export default function PropsModal({
                   </>
                 ) : (
                   <>
-                    공연 예매하고<br />
-                    이 상품을 공연의<br />
+                    퍼포먼스 예매하고<br />
+                    이 상품을 퍼포먼스의<br />
                     소품으로 등장시키기
                   </>
                 )}

@@ -717,7 +717,7 @@ export default function AudienceInfoModal({
                   <h4 className="text-sm font-medium text-gray-700 mb-3 text-left">결제 확인 내역</h4>
                   <div className="space-y-2 text-sm text-left">
                     <div className="flex justify-between">
-                      <span className="text-gray-600">공연명:</span>
+                      <span className="text-gray-600">퍼포먼스명:</span>
                       <span className="font-medium text-gray-800">뜻밖의 보간과 최근접 이웃 찾기</span>
                     </div>
                     <div className="flex justify-between">
@@ -747,11 +747,11 @@ export default function AudienceInfoModal({
                       </div>
                     )}
                     <div className="flex justify-between">
-                      <span className="text-gray-600">공연 일시:</span>
+                      <span className="text-gray-600">퍼포먼스 일시:</span>
                       <span className="font-medium text-gray-800">2025년 10월 30일 오후 7시</span>
                     </div>
                     <div className="flex justify-between">
-                      <span className="text-gray-600">공연 장소:</span>
+                      <span className="text-gray-600">퍼포먼스 장소: </span>
                       <span className="font-medium text-gray-800">인천아트플랫폼 C동 공연장</span>
                     </div>
                   </div>
@@ -1010,23 +1010,23 @@ export default function AudienceInfoModal({
             {/* 공연 정보 */}
             <div className="p-4 rounded-lg border border-[#404040]">
               <h4 className="text-sm font-medium text-[#F8D1E7] mb-2">
-                공연 정보
+                퍼포먼스 정보
               </h4>
               <div className="space-y-2 text-sm text-[#e5e5e5]">
                 <div className="flex justify-between">
-                  <span>공연명:</span>
+                  <span>퍼포먼스명:</span>
                   <span className="font-medium">
-                    부재시 픽션은 문 앞에 놔주세요
+                    뜻밖의 보간과 최근접 이웃 찾기
                   </span>
                 </div>
                 <div className="flex justify-between">
-                  <span>공연일시:</span>
-                  <span className="font-medium">2024년 10월 30일 오후 7시</span>
+                  <span>퍼포먼스 일시:</span>
+                  <span className="font-medium">2025년 10월 30일 오후 7시</span>
                 </div>
                 <div className="flex justify-between">
                   <span>장소:</span>
                   <span className="font-medium">
-                    합정역 2번 출구 앞 세아타워
+                    인천아트플랫폼 C동 공연장
                   </span>
                 </div>
                 <div className="flex justify-between">
@@ -1118,8 +1118,8 @@ export default function AudienceInfoModal({
               안내사항
             </h4>
             <ul className="text-xs text-[#b3b3b3] space-y-1">
-              <li>• 예매 완료 시 선택하신 소품이 공연에 등장합니다</li>
-              <li>• 결제 완료 후 예매 확정됩니다</li>
+              <li>• 예매 완료 시 선택하신 소품이 퍼포먼스에 등장합니다</li>
+              <li>• 결제 완료 후 예매가 확정됩니다</li>
               <li>• 대절버스 이용 시 지정된 시간과 장소에서 탑승해주세요</li>
               <li>• 문의사항은 010-7168-6144로 연락주세요</li>
             </ul>
@@ -1160,10 +1160,10 @@ export default function AudienceInfoModal({
           </button>
 
           <h2 className="text-xl font-bold text-center text-[#1a1a1a]">
-            공연 예매
+            퍼포먼스 예매
           </h2>
           <p className="text-sm text-center text-[#1a1a1a] mt-1">
-            예매 완료시 선택해주신 &apos;{propName}&apos;이(가) 공연에 소품으로
+            예매 완료시 선택해주신 &apos;{propName}&apos;이(가) 퍼포먼스에 소품으로
             등장합니다.
           </p>
         </div>
@@ -1329,8 +1329,8 @@ export default function AudienceInfoModal({
                 개인정보 이용 내용
               </h4>
               <p className="text-xs text-[#b3b3b3] leading-relaxed">
-                입력하신 개인정보는 공연 예매 및 안내, 대절버스 서비스 제공을
-                위해 이용됩니다. 수집된 정보는 공연 종료 직후 폐기됩니다.
+                입력하신 개인정보는 퍼포먼스 예매 및 안내, 대절버스 서비스 제공을
+                위해 이용됩니다. 수집된 정보는 퍼포먼스 종료 직후 폐기됩니다.
               </p>
             </div>
 

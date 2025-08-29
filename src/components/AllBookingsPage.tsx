@@ -171,7 +171,7 @@ export default function AllBookingsPage() {
         <div className="mt-8 bg-blue-50 border border-blue-200 rounded-lg p-4">
           <h3 className="font-medium text-blue-800 mb-2">📊 표시 정보</h3>
           <ul className="text-sm text-blue-700 space-y-1">
-            <li>• <strong>예매 정보</strong>: 선택된 소품, 예매일시</li>
+            <li>• <strong>예매 정보</strong>: 선택된 소품, 예매 일시</li>
             <li>• <strong>관객 정보</strong>: 이름, 전화번호</li>
             <li>• <strong>버스 이용</strong>: 대절버스 이용 여부 및 탑승 인원</li>
             <li>• <strong>예매 상태</strong>: 예매 확정 여부</li>

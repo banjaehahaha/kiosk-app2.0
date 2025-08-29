@@ -60,7 +60,7 @@ export default function CharactersPage() {
                 <tr>
                   <td className="py-4 px-4 text-lg font-bold text-[#F8D1E7] w-1/4 align-top">관객</td>
                   <td className="py-4 px-4 text-lg text-[#e5e5e5] leading-relaxed w-3/4">
-                  전시 《방금 전의 소문과 오래된 증거로부터》에서 10월 30일 공연 〈뜻밖의 보간과 최근접 이웃 찾기〉를 예매하면, 공연에 등장할 공연 소품을 선택할 수 있다. 의식하지 못한 채 분단에 틈을 만드는 데에 기여할 수 있다.
+                  전시 《방금 전의 소문과 오래된 증거로부터》에서 10월 30일 퍼포먼스 〈뜻밖의 보간과 최근접 이웃 찾기〉를 예매하면, 퍼포먼스에 등장할 소품을 선택할 수 있다. 의식하지 못한 채 분단에 틈을 만드는 데에 기여할 수 있다.
                   </td>
                 </tr>
                 
@@ -74,7 +74,7 @@ export default function CharactersPage() {
                 <tr>
                   <td className="py-4 px-4 text-lg font-bold text-[#F8D1E7] w-1/4 align-top">뜻밖의 보간과<br></br>최근접 이웃 찾기</td>
                   <td className="py-4 px-4 text-lg text-[#e5e5e5] leading-relaxed w-3/4">
-                  2025년 10월 30일에 인천아트플랫폼 C동 공연장에서 진행할 공연 제목. 중국 리서치 트립-전시-공연-출판으로 이어지는 프로젝트의 세 번째 순서이다. 관객이 주문한 물건은 이 공연에서 감정을 받게 된다. 
+                  2025년 10월 30일에 인천아트플랫폼 C동 공연장에서 진행할 퍼포먼스 제목. 중국 리서치 트립-전시-퍼포먼스-출판으로 이어지는 프로젝트의 세 번째 순서이다. 관객이 주문한 물건은 이 퍼포먼스에서 감정을 받게 된다. 
                   </td>
                 </tr>
               </tbody>
