@@ -4,7 +4,7 @@ import { useEffect, useRef, useState, useCallback } from 'react';
 import * as THREE from 'three';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
 import propsData from '@/data/props.json';
-import SupabasePaymentPollingService, { CompletedPayment } from '@/services/supabasePaymentPollingService';
+import GlobePaymentMonitorService, { CompletedPayment } from '@/services/globePaymentMonitorService';
 import OrderCompleteModal from './OrderCompleteModal';
 
 interface City {
@@ -52,8 +52,8 @@ export default function GlobeViewer({ onConnectionChange, onPaymentCountChange }
   const [orderModalVisible, setOrderModalVisible] = useState(false);
   const [currentOrderInfo, setCurrentOrderInfo] = useState<OrderInfo | null>(null);
   
-  // 결제 폴링 서비스
-  const paymentPollingServiceRef = useRef<SupabasePaymentPollingService | null>(null);
+  // 결제 모니터링 서비스
+  const paymentPollingServiceRef = useRef<GlobePaymentMonitorService | null>(null);
   
   // 이미지와 텍스트 메시를 저장할 ref
   const vaticanImageRef = useRef<THREE.Mesh | null>(null);
@@ -1346,16 +1346,16 @@ export default function GlobeViewer({ onConnectionChange, onPaymentCountChange }
     globeRef.current.add(beijingDeliveryMesh);
   }, []);
 
-  // 결제 폴링 서비스 시작
+  // 결제 모니터링 서비스 시작
   useEffect(() => {
-    console.log('🚀 결제 폴링 서비스 시작...');
-    paymentPollingServiceRef.current = new SupabasePaymentPollingService();
+    console.log('🚀 GlobeViewer 결제 모니터링 서비스 시작...');
+    paymentPollingServiceRef.current = new GlobePaymentMonitorService();
     paymentPollingServiceRef.current.startPolling({
       onNewPayment: handleNewPayment
     });
 
     return () => {
-      console.log('🛑 결제 폴링 서비스 중지...');
+      console.log('🛑 GlobeViewer 결제 모니터링 서비스 중지...');
       if (paymentPollingServiceRef.current) {
         paymentPollingServiceRef.current.stopPolling();
       }
