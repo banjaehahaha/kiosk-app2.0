@@ -75,10 +75,12 @@ export default function GlobeViewer({ onConnectionChange, onPaymentCountChange }
     const productName = payment.memo;
     console.log('🔍 상품명 추출:', productName);
     
-    // props.json에서 해당 상품 찾기
-    const matchedProp = propsData.props.find(prop => 
-      prop.name === productName
-    );
+          // props.json에서 해당 상품 찾기 (부분 매칭 추가)
+      const matchedProp = propsData.props.find(prop => 
+        prop.name === productName ||                    // 정확한 매칭
+        prop.name.includes(productName) ||              // props.json에 상품명이 포함
+        productName.includes(prop.name)                 // 상품명에 props.json이 포함
+      );
     
     console.log('🔍 상품 매칭 결과:', matchedProp);
     
