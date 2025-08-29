@@ -55,7 +55,7 @@ class PaymentPollingService {
           this.processedPayments.add(payment.id);
           callback.onNewPayment(payment);
           
-          // 처리 완료로 마킹
+          // 처리 완료로 마킹 (실패해도 클라이언트에서 처리)
           await this.markAsProcessed(payment.id);
         }
       }
@@ -66,15 +66,25 @@ class PaymentPollingService {
 
   private async markAsProcessed(paymentId: number) {
     try {
-      await fetch('/api/payment/check-completed', {
+      const response = await fetch('/api/payment/check-completed', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({ paymentId }),
       });
+      
+      if (!response.ok) {
+        console.warn(`⚠️ Payment ${paymentId} 마킹 실패 (${response.status}), 클라이언트에서 처리`);
+        // API 실패 시에도 클라이언트에서 processed로 처리
+        return true;
+      }
+      
+      return true;
     } catch (error) {
-      console.error('Error marking payment as processed:', error);
+      console.error('❌ Payment 마킹 에러:', error);
+      // 에러 발생 시에도 클라이언트에서 처리
+      return true;
     }
   }
 
