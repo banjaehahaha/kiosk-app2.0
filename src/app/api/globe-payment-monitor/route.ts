@@ -34,12 +34,12 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
       );
     }
 
-    // Supabase에서 status='completed'이고 processed_at이 null인 결제 조회
+    // Supabase에서 status='completed'이고 globe_processed가 null인 결제 조회
     const { data: payments, error } = await supabase
       .from('payments')
       .select('*')
       .eq('status', 'completed')
-      .is('processed_at', null)
+      .is('globe_processed', null)  // GlobeViewer 전용 처리 상태
       .order('created_at', { ascending: false });
 
     if (error) {
@@ -56,14 +56,13 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
     });
 
     const unprocessedPayments: CompletedPayment[] = payments
-      .filter(payment => !payment.processed_at)
       .map(payment => ({
         id: payment.id,
         goodname: payment.goodname,
         created_at: payment.created_at,
         price: payment.price,
         userid: payment.userid,
-        processed: false,
+        processed: false,  // globe_processed가 null이므로 false
         memo: payment.memo
       }));
 
@@ -103,10 +102,10 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
       );
     }
 
-    // 결제를 processed로 표시 (GlobeViewer에서 처리 완료)
+    // 결제를 globe_processed로 표시 (GlobeViewer에서 처리 완료)
     const { error } = await supabase
       .from('payments')
-      .update({ processed_at: new Date().toISOString() })
+      .update({ globe_processed: new Date().toISOString() })
       .eq('id', paymentId);
 
     if (error) {
