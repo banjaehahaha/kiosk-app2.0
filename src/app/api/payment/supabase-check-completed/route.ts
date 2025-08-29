@@ -31,7 +31,7 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
 
     // 완료된 결제 조회
     const { data: payments, error } = await supabase
-      .from('status')
+      .from('payments')
       .select('*')
       .eq('status', 'completed')
       .order('created_at', { ascending: false });
@@ -90,7 +90,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
 
     // 결제를 processed로 마킹
     const { error } = await supabase
-      .from('status')
+      .from('payments')
       .update({ processed_at: new Date().toISOString() })
       .eq('id', paymentId);
 

@@ -29,4 +29,4 @@ export interface PaymentRecord {
 }
 
 // 결제 테이블 이름
-export const PAYMENTS_TABLE = "status";
+export const PAYMENTS_TABLE = "payments";

@@ -46,7 +46,7 @@ async function createTestData() {
 
     for (const payment of testPayments) {
       const { data, error } = await supabase
-        .from('status')
+        .from('payments')
         .insert([payment])
         .select();
 
@@ -59,7 +59,7 @@ async function createTestData() {
 
     // 생성된 데이터 확인
     const { data: allPayments, error: selectError } = await supabase
-      .from('status')
+      .from('payments')
       .select('*')
       .eq('status', 'completed');
 
