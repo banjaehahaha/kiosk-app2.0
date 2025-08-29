@@ -600,6 +600,10 @@ export default function KioskApp() {
             content={`<div class="text-left text-lg font-bold mb-6">실내. 인천아트플랫폼 C동 공연장 – 2025년 10월 30일 – 저녁</div>
 
 <div class="text-left text-base mb-8">
+  전시 이후 본 프로젝트의 리서치-기반 퍼포먼스, 〈뜻밖의 보간과 최근접 이웃 찾기〉가 인천아트플랫폼에서 진행될 예정입니다. 전시에서 두 작가가 각자의 리서치와 연계된 물건과 그 물건을 쫓게 된 과정에 집중했다면, 퍼포먼스에서는 해당 물건이 유통되는 더 넓은 맥락과 리서치 트립 과정에서 겪은 사건들을 서사화하여 관객과 직접 소통할 계획입니다. 
+</div>
+
+<div class="text-left text-base mb-8">
   제목: 뜻밖의 보간과 최근접 이웃 찾기
 </div>
 
@@ -610,7 +614,7 @@ export default function KioskApp() {
 <div class="text-center mb-8">
   <div class="text-lg">북한 물건 콜렉터</div>
   <div class="max-w-md mx-auto p-4 mt-2 text-left">
-    <span class="text-base">"90년대 이전 물건들은 희귀해요. 고난의 행군 때 많은 물건들이 뗄감 등으로 쓰였거든요. 이 물건을 보면…"</span>
+    <span class="text-base">"90년대 이전 물건들은 희귀해요. 고난의 행군 때 많은 물건들이 땔감 등으로 쓰였거든요. 이 물건을 보면…"</span>
   </div>
 </div>
 

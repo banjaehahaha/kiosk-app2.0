@@ -778,10 +778,13 @@ export default function GlobeViewer({ onConnectionChange, onPaymentCountChange }
   useEffect(() => {
     const handlePayment = (event: CustomEvent) => {
       const payment: Payment = event.detail;
-      addPaymentArrow(payment);
+      // addPaymentArrow(payment); // 화살표 표시 비활성화
       
       // 결제 완료된 props의 "주문 완료" 텍스트 표시
       showOrderCompletedText(payment.fromCity.propName);
+      
+      // 해당 props의 핀부터 서울까지 흰색 점선 추가
+      addDottedLineToSeoul(payment.fromCity);
     };
 
     window.addEventListener('payment-completed', handlePayment as EventListener);
@@ -790,6 +793,76 @@ export default function GlobeViewer({ onConnectionChange, onPaymentCountChange }
       window.removeEventListener('payment-completed', handlePayment as EventListener);
     };
   }, [addPaymentArrow]);
+
+  // 서울까지 흰색 점선 추가 함수
+  const addDottedLineToSeoul = useCallback((fromCity: any) => {
+    if (!arrowsRef.current) return;
+
+    // 출발지와 도착지(서울) 좌표
+    const fromLat = fromCity.lat;
+    const fromLng = fromCity.lng;
+    const toLat = 37.5665; // 서울 위도
+    const toLng = 126.9780; // 서울 경도
+
+    // 3D 좌표로 변환
+    const fromLatRad = fromLat * (Math.PI / 180);
+    const fromLngRad = fromLng * (Math.PI / 180);
+    const toLatRad = toLat * (Math.PI / 180);
+    const toLngRad = toLng * (Math.PI / 180);
+
+    // 출발지와 도착지의 정확한 3D 좌표
+    const fromX = Math.cos(fromLatRad) * Math.cos(fromLngRad);
+    const fromY = Math.sin(fromLatRad);
+    const fromZ = Math.cos(fromLatRad) * Math.sin(fromLngRad);
+
+    const toX = Math.cos(toLatRad) * Math.cos(toLngRad);
+    const toY = Math.sin(toLatRad);
+    const toZ = Math.cos(toLatRad) * Math.sin(toLngRad);
+
+    // 점선 생성
+    const lineGeometry = new THREE.BufferGeometry();
+    const points = [];
+    const segments = 100;
+
+    for (let i = 0; i <= segments; i++) {
+      const t = i / segments;
+      
+      // 직선 보간
+      const x = fromX + (toX - fromX) * t;
+      const y = fromY + (toY - fromY) * t;
+      const z = fromZ + (toZ - fromZ) * t;
+      
+      // 곡선 효과를 위해 약간 위로 올림 (지구본 표면에서)
+      const height = 0.3 * Math.sin(Math.PI * t);
+      const normalized = new THREE.Vector3(x, y, z).normalize();
+      
+      points.push(
+        normalized.x * (1 + height),
+        normalized.y * (1 + height),
+        normalized.z * (1 + height)
+      );
+    }
+
+    lineGeometry.setAttribute('position', new THREE.Float32BufferAttribute(points, 3));
+
+    // 흰색 점선 재질
+    const lineMaterial = new THREE.LineDashedMaterial({ 
+      color: 0xffffff, 
+      linewidth: 2,
+      dashSize: 0.1,
+      gapSize: 0.05,
+      transparent: true,
+      opacity: 0.8
+    });
+
+    const dottedLine = new THREE.Line(lineGeometry, lineMaterial);
+    dottedLine.computeLineDistances(); // 점선 효과를 위해 필요
+    dottedLine.userData = { payment: fromCity, createdAt: Date.now() };
+
+    arrowsRef.current.add(dottedLine);
+
+    // 점선은 제거하지 않고 계속 유지
+  }, []);
 
   // "주문 완료" 텍스트 표시 함수
   const showOrderCompletedText = useCallback((propName: string) => {
@@ -892,12 +965,7 @@ export default function GlobeViewer({ onConnectionChange, onPaymentCountChange }
     
     animateTwinkle();
     
-    // 10초 후 "주문 완료" 텍스트 제거
-    setTimeout(() => {
-      if (globeRef.current && orderCompletedMesh.parent) {
-        globeRef.current.remove(orderCompletedMesh);
-      }
-    }, 10000);
+    // "주문 완료" 텍스트는 제거하지 않고 계속 유지
   }, [cities]);
 
   // 모든 props에 대해 이미지와 텍스트 추가하는 함수
