@@ -4,7 +4,7 @@ import { useEffect, useRef, useState, useCallback } from 'react';
 import * as THREE from 'three';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
 import propsData from '@/data/props.json';
-import PaymentPollingService, { CompletedPayment } from '@/services/paymentPollingService';
+import SupabasePaymentPollingService, { CompletedPayment } from '@/services/supabasePaymentPollingService';
 import OrderCompleteModal from './OrderCompleteModal';
 
 interface City {
@@ -53,7 +53,7 @@ export default function GlobeViewer({ onConnectionChange, onPaymentCountChange }
   const [currentOrderInfo, setCurrentOrderInfo] = useState<OrderInfo | null>(null);
   
   // 결제 폴링 서비스
-  const paymentPollingServiceRef = useRef<PaymentPollingService | null>(null);
+  const paymentPollingServiceRef = useRef<SupabasePaymentPollingService | null>(null);
   
   // 이미지와 텍스트 메시를 저장할 ref
   const vaticanImageRef = useRef<THREE.Mesh | null>(null);
@@ -73,7 +73,7 @@ export default function GlobeViewer({ onConnectionChange, onPaymentCountChange }
     
     // props.json에서 해당 상품 찾기
     const matchedProp = propsData.props.find(prop => 
-      prop.name === payment.prop_name
+      prop.name === payment.goodname
     );
     
     console.log('🔍 상품 매칭 결과:', matchedProp);
@@ -83,7 +83,7 @@ export default function GlobeViewer({ onConnectionChange, onPaymentCountChange }
       
       // 주문 정보 설정
       const orderInfo: OrderInfo = {
-        propName: payment.prop_name,
+        propName: payment.goodname,
         orderTime: payment.created_at,
         origin: `${matchedProp.origin.city}, ${matchedProp.origin.country}`,
         shippingDays: matchedProp.shippingDays
@@ -95,7 +95,7 @@ export default function GlobeViewer({ onConnectionChange, onPaymentCountChange }
       // 해당 상품에 주문 완료 애니메이션 적용
       triggerOrderCompleteAnimation(matchedProp.name);
     } else {
-      console.log('❌ 상품 매칭 실패:', payment.prop_name);
+      console.log('❌ 상품 매칭 실패:', payment.goodname);
     }
   }, []);
 
@@ -1349,7 +1349,7 @@ export default function GlobeViewer({ onConnectionChange, onPaymentCountChange }
   // 결제 폴링 서비스 시작
   useEffect(() => {
     console.log('🚀 결제 폴링 서비스 시작...');
-    paymentPollingServiceRef.current = new PaymentPollingService();
+    paymentPollingServiceRef.current = new SupabasePaymentPollingService();
     paymentPollingServiceRef.current.startPolling({
       onNewPayment: handleNewPayment
     });
