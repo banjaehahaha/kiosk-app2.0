@@ -67,6 +67,28 @@ export default function GlobeViewer({ onConnectionChange, onPaymentCountChange }
   const beijingText2Ref = useRef<THREE.Mesh | null>(null);
   const beijingDeliveryRef = useRef<THREE.Mesh | null>(null);
 
+  // 모든 상품에 대한 ref 추가
+  const kochiImageRef = useRef<THREE.Mesh | null>(null);
+  const kochiTextRef = useRef<THREE.Mesh | null>(null);
+  const charlestonImageRef = useRef<THREE.Mesh | null>(null);
+  const charlestonTextRef = useRef<THREE.Mesh | null>(null);
+  const netaniaImageRef = useRef<THREE.Mesh | null>(null);
+  const netaniaTextRef = useRef<THREE.Mesh | null>(null);
+  const zagrebImageRef = useRef<THREE.Mesh | null>(null);
+  const zagrebTextRef = useRef<THREE.Mesh | null>(null);
+  const sofiaImageRef = useRef<THREE.Mesh | null>(null);
+  const sofiaTextRef = useRef<THREE.Mesh | null>(null);
+  const middelburgImageRef = useRef<THREE.Mesh | null>(null);
+  const middelburgTextRef = useRef<THREE.Mesh | null>(null);
+  const bucharestImageRef = useRef<THREE.Mesh | null>(null);
+  const bucharestTextRef = useRef<THREE.Mesh | null>(null);
+  const mrazovImageRef = useRef<THREE.Mesh | null>(null);
+  const mrazovTextRef = useRef<THREE.Mesh | null>(null);
+  const suttonImageRef = useRef<THREE.Mesh | null>(null);
+  const suttonTextRef = useRef<THREE.Mesh | null>(null);
+  const liaoningImageRef = useRef<THREE.Mesh | null>(null);
+  const liaoningTextRef = useRef<THREE.Mesh | null>(null);
+
   // 결제 완료 이벤트 처리 함수
   const handleNewPayment = useCallback((payment: CompletedPayment) => {
     console.log('🎉 새로운 결제 감지됨:', payment);
@@ -75,19 +97,19 @@ export default function GlobeViewer({ onConnectionChange, onPaymentCountChange }
     const productName = payment.memo;
     console.log('🔍 상품명 추출:', productName);
     
-          // props.json에서 해당 상품 찾기 (부분 매칭 추가)
-      const matchedProp = propsData.props.find(prop => 
-        prop.name === productName ||                    // 정확한 매칭
-        prop.name.includes(productName) ||              // props.json에 상품명이 포함
-        productName.includes(prop.name)                 // 상품명에 props.json이 포함
-      );
+    // props.json에서 해당 상품 찾기 (부분 매칭 추가)
+    const matchedProp = propsData.props.find(prop => 
+      prop.name === productName ||                    // 정확한 매칭
+      prop.name.includes(productName) ||              // props.json에 상품명이 포함
+      productName.includes(prop.name)                 // 상품명에 props.json이 포함
+    );
     
     console.log('🔍 상품 매칭 결과:', matchedProp);
     
     if (matchedProp) {
-      console.log('✅ 상품 매칭 성공! 애니메이션 시작...');
+      console.log('✅ 상품 매칭 성공! 3가지 효과 시작...');
       
-      // 주문 정보 설정
+      // 1️⃣ 주문 완료 모달 표시
       const orderInfo: OrderInfo = {
         propName: productName,
         orderTime: payment.created_at,
@@ -98,8 +120,12 @@ export default function GlobeViewer({ onConnectionChange, onPaymentCountChange }
       setCurrentOrderInfo(orderInfo);
       setOrderModalVisible(true);
       
-      // 해당 상품에 주문 완료 애니메이션 적용
+      // 2️⃣ 해당 상품 이미지 위에 '주문 완료' 텍스트 애니메이션
       triggerOrderCompleteAnimation(matchedProp.name);
+      
+      // 3️⃣ 해당 상품의 도시 핀부터 서울까지 점선 애니메이션
+      triggerDeliveryRouteAnimation(matchedProp);
+      
     } else {
       console.log('❌ 상품 매칭 실패:', productName);
     }
@@ -111,20 +137,96 @@ export default function GlobeViewer({ onConnectionChange, onPaymentCountChange }
     const matchedProp = propsData.props.find(prop => prop.name === propName);
     if (!matchedProp) return;
     
-    // 해당 상품의 이미지와 텍스트에 애니메이션 적용
+    console.log('🎬 애니메이션 시작:', matchedProp.name, '위치:', matchedProp.origin.city);
+    
+    // 동적으로 모든 상품의 위치를 찾아서 애니메이션 적용
     const cityName = matchedProp.origin.city;
     
-    if (cityName === "Vatican City") {
-      // 바티칸 상품 애니메이션
-      if (vaticanImageRef.current && vaticanText1Ref.current) {
-        applyOrderCompleteAnimation(vaticanImageRef.current, vaticanText1Ref.current);
-      }
-    } else if (cityName === "Beijing") {
-      // 베이징 상품 애니메이션
-      if (beijingImageRef.current && beijingText1Ref.current) {
-        applyOrderCompleteAnimation(beijingImageRef.current, beijingText1Ref.current);
-      }
+    // 모든 상품의 ref를 배열로 관리
+    const allRefs = [
+      { city: "Vatican City", imageRef: vaticanImageRef, textRef: vaticanText1Ref },
+      { city: "Beijing", imageRef: beijingImageRef, textRef: beijingText1Ref },
+      { city: "Kochi", imageRef: kochiImageRef, textRef: kochiTextRef },
+      { city: "Charleston, South Carolina", imageRef: charlestonImageRef, textRef: charlestonTextRef },
+      { city: "Netania", imageRef: netaniaImageRef, textRef: netaniaTextRef },
+      { city: "Zagreb", imageRef: zagrebImageRef, textRef: zagrebTextRef },
+      { city: "Sofia city", imageRef: sofiaImageRef, textRef: sofiaTextRef },
+      { city: "Middelburg", imageRef: middelburgImageRef, textRef: middelburgTextRef },
+      { city: "bucharest", imageRef: bucharestImageRef, textRef: bucharestTextRef },
+      { city: "Mrázov", imageRef: mrazovImageRef, textRef: mrazovTextRef },
+      { city: "Sutton", imageRef: suttonImageRef, textRef: suttonTextRef },
+      { city: "Liaoning", imageRef: liaoningImageRef, textRef: liaoningTextRef }
+    ];
+    
+    // 매칭되는 ref 찾기
+    const matchedRef = allRefs.find(ref => ref.city === cityName);
+    
+    if (matchedRef && matchedRef.imageRef.current && matchedRef.textRef.current) {
+      applyOrderCompleteAnimation(matchedRef.imageRef.current, matchedRef.textRef.current);
+      console.log('✅ 애니메이션 적용 완료:', cityName);
+    } else {
+      console.log('⚠️ 애니메이션 ref를 찾을 수 없음:', cityName);
     }
+  }, []);
+
+  // 배송 경로 애니메이션 트리거 함수
+  const triggerDeliveryRouteAnimation = useCallback((matchedProp: any) => {
+    console.log('🚚 배송 경로 애니메이션 시작:', matchedProp.name, '위치:', matchedProp.origin.city);
+    
+    // 해당 상품의 도시 정보로 점선 생성
+    const cityInfo = {
+      lat: getCityLatitude(matchedProp.origin.city),
+      lng: getCityLongitude(matchedProp.origin.city),
+      name: matchedProp.origin.city,
+      country: matchedProp.origin.country
+    };
+    
+    // 서울까지 점선 추가 (함수 정의 후에 호출)
+    setTimeout(() => {
+      if (typeof addDottedLineToSeoul === 'function') {
+        addDottedLineToSeoul(cityInfo);
+        console.log('✅ 배송 경로 점선 추가 완료:', cityInfo.name);
+      }
+    }, 100);
+  }, []);
+
+  // 도시별 위도/경도 정보 반환 함수
+  const getCityLatitude = useCallback((cityName: string): number => {
+    const cityCoordinates: { [key: string]: { lat: number; lng: number } } = {
+      "Vatican City": { lat: 41.9022, lng: 12.4539 },
+      "Beijing": { lat: 39.9042, lng: 116.4074 },
+      "Kochi": { lat: 33.5588, lng: 133.5314 },
+      "Charleston, South Carolina": { lat: 32.7765, lng: -79.9311 },
+      "Netania": { lat: 32.3328, lng: 34.8600 },
+      "Zagreb": { lat: 45.8150, lng: 15.9819 },
+      "Sofia city": { lat: 42.6977, lng: 23.3219 },
+      "Middelburg": { lat: 51.5000, lng: 3.6100 },
+      "bucharest": { lat: 44.4268, lng: 26.1025 },
+      "Mrázov": { lat: 49.8175, lng: 12.7000 },
+      "Sutton": { lat: 51.3600, lng: -0.2000 },
+      "Liaoning": { lat: 41.8057, lng: 123.4315 }
+    };
+    
+    return cityCoordinates[cityName]?.lat || 0;
+  }, []);
+
+  const getCityLongitude = useCallback((cityName: string): number => {
+    const cityCoordinates: { [key: string]: { lat: number; lng: number } } = {
+      "Vatican City": { lat: 41.9022, lng: 12.4539 },
+      "Beijing": { lat: 39.9042, lng: 116.4074 },
+      "Kochi": { lat: 33.5588, lng: 133.5314 },
+      "Charleston, South Carolina": { lat: 32.7765, lng: -79.9311 },
+      "Netania": { lat: 32.3328, lng: 34.8600 },
+      "Zagreb": { lat: 45.8150, lng: 15.9819 },
+      "Sofia city": { lat: 42.6977, lng: 23.3219 },
+      "Middelburg": { lat: 51.5000, lng: 3.6100 },
+      "bucharest": { lat: 44.4268, lng: 26.1025 },
+      "Mrázov": { lat: 49.8175, lng: 12.7000 },
+      "Sutton": { lat: 51.3600, lng: -0.2000 },
+      "Liaoning": { lat: 41.8057, lng: 123.4315 }
+    };
+    
+    return cityCoordinates[cityName]?.lng || 0;
   }, []);
 
   // 주문 완료 애니메이션 적용 함수
