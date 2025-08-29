@@ -20,6 +20,7 @@ CREATE TABLE IF NOT EXISTS booking_info (
   payment_amount INTEGER NOT NULL,
   payapp_mul_no VARCHAR(100),
   booking_status VARCHAR(20) DEFAULT 'confirmed',
+  processed BOOLEAN DEFAULT FALSE,
   created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
   updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
   FOREIGN KEY (audience_id) REFERENCES audience_info(id)
@@ -40,3 +41,4 @@ CREATE INDEX IF NOT EXISTS idx_audience_phone ON audience_info(phone);
 CREATE INDEX IF NOT EXISTS idx_booking_audience ON booking_info(audience_id);
 CREATE INDEX IF NOT EXISTS idx_booking_prop ON booking_info(prop_id);
 CREATE INDEX IF NOT EXISTS idx_payment_booking ON payment_logs(booking_id);
+CREATE INDEX IF NOT EXISTS idx_booking_processed ON booking_info(processed);

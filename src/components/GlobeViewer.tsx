@@ -4,6 +4,8 @@ import { useEffect, useRef, useState, useCallback } from 'react';
 import * as THREE from 'three';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
 import propsData from '@/data/props.json';
+import PaymentPollingService, { CompletedPayment } from '@/services/paymentPollingService';
+import OrderCompleteModal from './OrderCompleteModal';
 
 interface City {
   id: number;
@@ -28,6 +30,13 @@ interface GlobeViewerProps {
   onPaymentCountChange: (count: number) => void;
 }
 
+interface OrderInfo {
+  propName: string;
+  orderTime: string;
+  origin: string;
+  shippingDays: string;
+}
+
 export default function GlobeViewer({ onConnectionChange, onPaymentCountChange }: GlobeViewerProps) {
   const mountRef = useRef<HTMLDivElement>(null);
   const sceneRef = useRef<THREE.Scene | null>(null);
@@ -40,6 +49,11 @@ export default function GlobeViewer({ onConnectionChange, onPaymentCountChange }
   const arrowsRef = useRef<THREE.Group | null>(null);
   const animationIdRef = useRef<number | null>(null);
   const [paymentCount, setPaymentCount] = useState(0);
+  const [orderModalVisible, setOrderModalVisible] = useState(false);
+  const [currentOrderInfo, setCurrentOrderInfo] = useState<OrderInfo | null>(null);
+  
+  // 결제 폴링 서비스
+  const paymentPollingServiceRef = useRef<PaymentPollingService | null>(null);
   
   // 이미지와 텍스트 메시를 저장할 ref
   const vaticanImageRef = useRef<THREE.Mesh | null>(null);
@@ -52,6 +66,99 @@ export default function GlobeViewer({ onConnectionChange, onPaymentCountChange }
   const beijingText1Ref = useRef<THREE.Mesh | null>(null);
   const beijingText2Ref = useRef<THREE.Mesh | null>(null);
   const beijingDeliveryRef = useRef<THREE.Mesh | null>(null);
+
+  // 결제 완료 이벤트 처리 함수
+  const handleNewPayment = useCallback((payment: CompletedPayment) => {
+    console.log('New payment detected:', payment);
+    
+    // props.json에서 해당 상품 찾기
+    const matchedProp = propsData.props.find(prop => 
+      prop.name === payment.prop_name
+    );
+    
+    if (matchedProp) {
+      // 주문 정보 설정
+      const orderInfo: OrderInfo = {
+        propName: payment.prop_name,
+        orderTime: payment.created_at,
+        origin: `${matchedProp.origin.city}, ${matchedProp.origin.country}`,
+        shippingDays: matchedProp.shippingDays
+      };
+      
+      setCurrentOrderInfo(orderInfo);
+      setOrderModalVisible(true);
+      
+      // 해당 상품에 주문 완료 애니메이션 적용
+      triggerOrderCompleteAnimation(matchedProp.name);
+    }
+  }, []);
+
+  // 주문 완료 애니메이션 트리거 함수
+  const triggerOrderCompleteAnimation = useCallback((propName: string) => {
+    // props.json에서 해당 상품의 위치 정보 찾기
+    const matchedProp = propsData.props.find(prop => prop.name === propName);
+    if (!matchedProp) return;
+    
+    // 해당 상품의 이미지와 텍스트에 애니메이션 적용
+    const cityName = matchedProp.origin.city;
+    
+    if (cityName === "Vatican City") {
+      // 바티칸 상품 애니메이션
+      if (vaticanImageRef.current && vaticanText1Ref.current) {
+        applyOrderCompleteAnimation(vaticanImageRef.current, vaticanText1Ref.current);
+      }
+    } else if (cityName === "Beijing") {
+      // 베이징 상품 애니메이션
+      if (beijingImageRef.current && beijingText1Ref.current) {
+        applyOrderCompleteAnimation(beijingImageRef.current, beijingText1Ref.current);
+      }
+    }
+  }, []);
+
+  // 주문 완료 애니메이션 적용 함수
+  const applyOrderCompleteAnimation = useCallback((imageMesh: THREE.Mesh, textMesh: THREE.Mesh) => {
+    // 분홍 바탕 + 검정 텍스트로 '주문 완료' 애니메이션 생성
+    const orderCompleteCanvas = document.createElement('canvas');
+    const ctx = orderCompleteCanvas.getContext('2d');
+    orderCompleteCanvas.width = 256;
+    orderCompleteCanvas.height = 64;
+    
+    if (ctx) {
+      // 깜빡이는 애니메이션을 위한 함수
+      const animateOrderComplete = () => {
+        const alpha = 0.5 + 0.5 * Math.sin(Date.now() * 0.01); // 깜빡임 효과
+        
+        ctx.clearRect(0, 0, orderCompleteCanvas.width, orderCompleteCanvas.height);
+        ctx.fillStyle = `rgba(236, 72, 153, ${alpha})`; // 분홍 바탕
+        ctx.fillRect(0, 0, orderCompleteCanvas.width, orderCompleteCanvas.height);
+        
+        ctx.fillStyle = '#000000'; // 검정 텍스트
+        ctx.font = 'bold 24px Arial';
+        ctx.textAlign = 'center';
+        ctx.textBaseline = 'middle';
+        ctx.fillText('주문 완료', orderCompleteCanvas.width / 2, orderCompleteCanvas.height / 2);
+        
+        // 텍스처 업데이트
+        if (textMesh.material instanceof THREE.MeshBasicMaterial && textMesh.material.map) {
+          textMesh.material.map.needsUpdate = true;
+        }
+        
+        // 애니메이션 계속
+        requestAnimationFrame(animateOrderComplete);
+      };
+      
+      // 애니메이션 시작
+      animateOrderComplete();
+      
+      // 10초 후 애니메이션 중지
+      setTimeout(() => {
+        // 원래 텍스트로 복원
+        if (textMesh.material instanceof THREE.MeshBasicMaterial && textMesh.material.map) {
+          textMesh.material.map.needsUpdate = true;
+        }
+      }, 10000);
+    }
+  }, []);
 
   // props.json에서 도시 데이터를 동적으로 생성
   const cities: City[] = propsData.props.map((prop, index) => {
@@ -1233,6 +1340,20 @@ export default function GlobeViewer({ onConnectionChange, onPaymentCountChange }
     globeRef.current.add(beijingDeliveryMesh);
   }, []);
 
+  // 결제 폴링 서비스 시작
+  useEffect(() => {
+    paymentPollingServiceRef.current = new PaymentPollingService();
+    paymentPollingServiceRef.current.startPolling({
+      onNewPayment: handleNewPayment
+    });
+
+    return () => {
+      if (paymentPollingServiceRef.current) {
+        paymentPollingServiceRef.current.stopPolling();
+      }
+    };
+  }, [handleNewPayment]);
+
   // WebSocket 연결 상태 시뮬레이션
   useEffect(() => {
     const timer = setTimeout(() => {
@@ -1241,6 +1362,12 @@ export default function GlobeViewer({ onConnectionChange, onPaymentCountChange }
 
     return () => clearTimeout(timer);
   }, [onConnectionChange]);
+
+  // 모달 닫기 함수
+  const handleCloseModal = useCallback(() => {
+    setOrderModalVisible(false);
+    setCurrentOrderInfo(null);
+  }, []);
 
   return (
     <>
@@ -1284,6 +1411,13 @@ export default function GlobeViewer({ onConnectionChange, onPaymentCountChange }
           </div>
         </div>
       </div>
+
+      {/* 주문 완료 모달 */}
+      <OrderCompleteModal
+        isVisible={orderModalVisible}
+        orderInfo={currentOrderInfo}
+        onClose={handleCloseModal}
+      />
     </>
   );
 }
