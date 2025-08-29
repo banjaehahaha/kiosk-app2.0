@@ -11,12 +11,12 @@ interface CompletedPayment {
   processed: boolean;
 }
 
-export async function GET(request: NextRequest) {
+export async function GET(request: NextRequest): Promise<NextResponse> {
   try {
     const dbPath = path.join(process.cwd(), 'data', 'kiosk.db');
     const db = new Database(dbPath);
 
-    return new Promise((resolve) => {
+    return new Promise<NextResponse>((resolve) => {
       const query = `
         SELECT 
           b.id,
@@ -59,7 +59,7 @@ export async function GET(request: NextRequest) {
   }
 }
 
-export async function POST(request: NextRequest) {
+export async function POST(request: NextRequest): Promise<NextResponse> {
   try {
     const { paymentId } = await request.json();
     
@@ -73,7 +73,7 @@ export async function POST(request: NextRequest) {
     const dbPath = path.join(process.cwd(), 'data', 'kiosk.db');
     const db = new Database(dbPath);
 
-    return new Promise((resolve) => {
+    return new Promise<NextResponse>((resolve) => {
       const query = `
         UPDATE booking_info 
         SET processed = 1 
