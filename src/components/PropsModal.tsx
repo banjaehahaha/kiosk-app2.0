@@ -26,6 +26,7 @@ interface PropsModalProps {
       city: string;
     };
     shippingDays: string;
+    status?: string; // status 필드 추가 (optional)
   };
   completedProps?: number[];
 }
@@ -167,14 +168,14 @@ export default function PropsModal({
               
               <button
                 onClick={handleStartBooking}
-                disabled={completedProps.includes(prop.id)}
+                disabled={completedProps.includes(prop.id) || prop.status === 'ordered'}
                 className={`flex-1 px-4 py-2 text-sm leading-tight transition-colors ${
-                  completedProps.includes(prop.id)
+                  completedProps.includes(prop.id) || prop.status === 'ordered'
                     ? 'bg-[#404040] text-[#808080] cursor-not-allowed'
                     : 'bg-[#F8D1E7] text-[#1a1a1a] hover:bg-[#f0c4d8]'
                 }`}
               >
-                {completedProps.includes(prop.id) ? (
+                {completedProps.includes(prop.id) || prop.status === 'ordered' ? (
                   <>
                     주문 완료된<br />
                     상품입니다
