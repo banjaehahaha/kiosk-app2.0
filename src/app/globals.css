@@ -321,3 +321,107 @@ html, body {
 .animate-bounce-x {
   animation: bounce-x 2s ease-in-out infinite;
 }
+
+/* PayApp 결제 페이지 주소 필드 숨김 */
+@import url('https://fonts.googleapis.com/css2?family=D2Coding:wght@400;700&display=swap');
+
+/* 🏠 PayApp 결제 페이지 주소 필드 읽기 전용으로 설정 */
+/* PayApp 결제창이 iframe으로 로드될 때 적용 */
+iframe[src*="payapp.kr"] ~ *,
+iframe[src*="payapp.kr"] + *,
+iframe[src*="payapp.kr"] {
+  /* 주소 입력 관련 요소들을 읽기 전용으로 설정 */
+  input[name*="addr"],
+  input[name*="address"],
+  input[name*="zip"],
+  input[name*="post"] {
+    background-color: #f5f5f5 !important;
+    color: #666 !important;
+    cursor: not-allowed !important;
+    pointer-events: none !important;
+    user-select: none !important;
+    -webkit-user-select: none !important;
+    -moz-user-select: none !important;
+    -ms-user-select: none !important;
+    border: 1px solid #ddd !important;
+    opacity: 0.7 !important;
+  }
+  
+  /* 주소 입력창에 "자동 입력됨" 표시 */
+  input[name*="addr"]::placeholder,
+  input[name*="address"]::placeholder,
+  input[name*="zip"]::placeholder,
+  input[name*="post"]::placeholder {
+    content: "자동 입력됨" !important;
+    color: #999 !important;
+    font-style: italic !important;
+  }
+  
+  /* 배송 관련 필드는 숨김 */
+  input[name*="delivery"],
+  input[name*="shipping"],
+  select[name*="delivery"],
+  select[name*="shipping"],
+  label[for*="delivery"],
+  label[for*="shipping"],
+  .delivery-field,
+  .shipping-field {
+    display: none !important;
+    visibility: hidden !important;
+    opacity: 0 !important;
+    height: 0 !important;
+    width: 0 !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    border: 0 !important;
+    position: absolute !important;
+    left: -9999px !important;
+    top: -9999px !important;
+    clip: rect(0, 0, 0, 0) !important;
+    overflow: hidden !important;
+  }
+}
+
+/* 🚫 PayApp 결제창 내부 주소 필드 숨김 (더 강력한 선택자) */
+body:has(iframe[src*="payapp.kr"]),
+html:has(iframe[src*="payapp.kr"]) {
+  /* 주소 관련 모든 요소 완전 제거 */
+  *[data-field*="addr"],
+  *[data-field*="address"],
+  *[data-field*="zip"],
+  *[data-field*="post"] {
+    display: none !important;
+  }
+}
+
+/* 🚫 PayApp 결제창 자체에서 주소 필드 숨김 */
+iframe[src*="payapp.kr"] {
+  /* iframe 내부 콘텐츠에 대한 스타일 적용 시도 */
+  filter: url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg'><filter id='hide-addr'><feFlood flood-color='transparent'/><feComposite operator='atop' in='SourceGraphic'/></filter></svg>#hide-addr");
+}
+
+/* 🚫 추가적인 주소 필드 숨김 (PayApp 특정 클래스명) */
+.payapp-addr,
+.payapp-address,
+.payapp-zip,
+.payapp-post,
+.payapp-delivery,
+.payapp-shipping,
+[class*="payapp"][class*="addr"],
+[class*="payapp"][class*="address"],
+[class*="payapp"][class*="zip"],
+[class*="payapp"][class*="post"] {
+  display: none !important;
+  visibility: hidden !important;
+  opacity: 0 !important;
+  height: 0 !important;
+  width: 0 !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  border: 0 !important;
+  position: absolute !important;
+  left: -9999px !important;
+  top: -9999px !important;
+  clip: rect(0, 0, 0, 0) !important;
+  overflow: hidden !important;
+}

@@ -49,11 +49,24 @@ export async function POST(request: NextRequest) {
       price: body.price.toString(),
       recvphone: body.recvphone,
       memo: body.memo || '',
-      reqaddr: '요청안함', // 주소 입력 요청 안함 (고정값)
-      addr: 'N', // 주소 입력 비활성화
+      // 🏠 주소 입력 최소화 (PayApp 필수 요구사항 충족)
+      reqaddr: '요청안함', // 주소 입력 요청 안함
+      addr: '서울특별시 강남구 테헤란로 123', // 기본 주소 자동 설정
+      zipcode: '06123', // 기본 우편번호 자동 설정
       addr_required: 'N', // 주소 필수 입력 해제
-      zipcode: 'N', // 우편번호 입력 비활성화
       zipcode_required: 'N', // 우편번호 필수 입력 해제
+      
+      // 🚫 주소 입력창은 보이되 수정 불가능하게
+      addr_readonly: 'Y', // 주소 읽기 전용
+      zipcode_readonly: 'Y', // 우편번호 읽기 전용
+      addr_show: 'Y', // 주소 입력창 표시 (수정 불가)
+      addr_display: 'Y', // 주소 표시
+      
+      // 🚫 배송 관련 파라미터는 비활성화
+      delivery: 'N', // 배송 정보 입력 안함
+      delivery_required: 'N', // 배송 정보 필수 입력 해제
+      
+      // 🚫 기타 불필요한 입력 필드들
       vccode: body.vccode || '82',
       redirecturl: body.redirecturl,
       redirect: body.redirect || 'opener',
@@ -61,6 +74,9 @@ export async function POST(request: NextRequest) {
       checkretry: body.checkretry || 'n',
       var1: body.var1 || '',
       var2: body.var2 || '',
+      // SMS 전송 관련 파라미터 추가
+      sendphone: body.sendphone || 'N', // SMS 전송 비활성화
+      sms: body.sms || 'N', // SMS 기능 비활성화
     });
     
     // PayApp API 요청 전 모든 파라미터 로깅

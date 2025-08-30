@@ -2,6 +2,129 @@
 
 import { useEffect, useState, useRef } from 'react';
 
+// 🏠 PayApp 결제창 주소 필드 읽기 전용 설정 함수
+const makePayAppAddressFieldsReadOnly = () => {
+  try {
+    // PayApp 결제창 내부의 주소 관련 필드들을 찾아서 숨김
+    const addressSelectors = [
+      // 주소 입력 필드들
+      'input[name*="addr"]',
+      'input[name*="address"]',
+      'input[name*="zip"]',
+      'input[name*="post"]',
+      'input[name*="delivery"]',
+      'input[name*="shipping"]',
+      // 주소 선택 필드들
+      'select[name*="addr"]',
+      'select[name*="address"]',
+      'select[name*="zip"]',
+      'select[name*="post"]',
+      // 주소 텍스트 영역들
+      'textarea[name*="addr"]',
+      'textarea[name*="address"]',
+      // 주소 라벨들
+      'label[for*="addr"]',
+      'label[for*="address"]',
+      'label[for*="zip"]',
+      'label[for*="post"]',
+      // 주소 관련 클래스들
+      '.addr-field',
+      '.address-field',
+      '.zip-field',
+      '.post-field',
+      '.delivery-field',
+      '.shipping-field',
+      // PayApp 특정 클래스들
+      '.payapp-addr',
+      '.payapp-address',
+      '.payapp-zip',
+      '.payapp-post',
+      // 일반적인 주소 관련 클래스들
+      '[class*="addr"]',
+      '[class*="address"]',
+      '[class*="zip"]',
+      '[class*="post"]',
+      // 주소 관련 ID들
+      '[id*="addr"]',
+      '[id*="address"]',
+      '[id*="zip"]',
+      '[id*="post"]'
+    ];
+
+    // 모든 주소 관련 요소들을 찾아서 숨김
+    addressSelectors.forEach(selector => {
+      const elements = document.querySelectorAll(selector);
+      elements.forEach(element => {
+        if (element instanceof HTMLElement) {
+          element.style.display = 'none';
+          element.style.visibility = 'hidden';
+          element.style.opacity = '0';
+          element.style.height = '0';
+          element.style.width = '0';
+          element.style.margin = '0';
+          element.style.padding = '0';
+          element.style.border = '0';
+          element.style.position = 'absolute';
+          element.style.left = '-9999px';
+          element.style.top = '-9999px';
+          element.style.clip = 'rect(0, 0, 0, 0)';
+          element.style.overflow = 'hidden';
+          
+          // 부모 요소도 숨김 (주소 입력 그룹 전체)
+          const parent = element.closest('.form-group, .input-group, .field-group');
+          if (parent && parent instanceof HTMLElement) {
+            parent.style.display = 'none';
+            parent.style.visibility = 'hidden';
+          }
+        }
+      });
+    });
+
+    console.log('🏠 PayApp 주소 필드 읽기 전용 설정 완료');
+  } catch (error) {
+    console.error('PayApp 주소 필드 읽기 전용 설정 중 오류:', error);
+  }
+};
+
+// 🏠 PayApp 결제창 모니터링 및 주소 필드 읽기 전용 설정
+const monitorAndMakePayAppFieldsReadOnly = () => {
+  // MutationObserver를 사용하여 DOM 변경 감지
+  const observer = new MutationObserver((mutations) => {
+    mutations.forEach((mutation) => {
+      if (mutation.type === 'childList') {
+        // 새로운 노드가 추가되었는지 확인
+        mutation.addedNodes.forEach((node) => {
+          if (node instanceof HTMLElement) {
+            // PayApp 관련 요소가 추가되었는지 확인
+            if (node.querySelector && (
+              node.querySelector('[src*="payapp.kr"]') ||
+              node.querySelector('.payapp') ||
+              node.querySelector('[class*="payapp"]')
+            )) {
+              console.log('🏠 PayApp 결제창 감지됨, 주소 필드 읽기 전용 설정 시작');
+              // 약간의 지연 후 주소 필드 읽기 전용 설정 (DOM 렌더링 완료 대기)
+              setTimeout(makePayAppAddressFieldsReadOnly, 100);
+              setTimeout(makePayAppAddressFieldsReadOnly, 500);
+              setTimeout(makePayAppAddressFieldsReadOnly, 1000);
+            }
+          }
+        });
+      }
+    });
+  });
+
+  // 전체 문서 모니터링 시작
+  observer.observe(document.body, {
+    childList: true,
+    subtree: true
+  });
+
+  // 초기 실행
+  makePayAppAddressFieldsReadOnly();
+
+  return observer;
+};
+
 interface Payment {
   id: string;
   propName: string;
@@ -22,6 +145,20 @@ export function PaymentTracker({ onConnectionChange, onPaymentCountChange }: Pay
   const [isConnected, setIsConnected] = useState(false);
   const wsRef = useRef<WebSocket | null>(null);
   const reconnectTimeoutRef = useRef<NodeJS.Timeout | null>(null);
+  const payAppObserverRef = useRef<MutationObserver | null>(null);
+
+  // PayApp 주소 필드 읽기 전용 설정 모니터링 시작
+  useEffect(() => {
+    console.log('🏠 PayApp 주소 필드 읽기 전용 설정 모니터링 시작');
+    payAppObserverRef.current = monitorAndMakePayAppFieldsReadOnly();
+
+    return () => {
+      if (payAppObserverRef.current) {
+        payAppObserverRef.current.disconnect();
+        console.log('🏠 PayApp 주소 필드 읽기 전용 설정 모니터링 중지');
+      }
+    };
+  }, []);
 
   // WebSocket 연결 관리
   useEffect(() => {

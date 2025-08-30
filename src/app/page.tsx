@@ -11,6 +11,7 @@ import ChapterPage from '@/components/ChapterPage';
 import CharactersPage from '@/components/CharactersPage';
 import PropsModal from '@/components/PropsModal';
 import AudienceInfoModal from '@/components/AudienceInfoModal';
+import { usePayAppAddressHider } from '@/hooks/usePayAppAddressHider';
 
 
 interface Prop {
@@ -54,6 +55,9 @@ export default function KioskApp() {
   const [showAudienceInfo, setShowAudienceInfo] = useState(false);
   const [selectedPropForBooking, setSelectedPropForBooking] = useState<Prop | null>(null);
   const videoRef = useRef<HTMLVideoElement>(null);
+  
+  // 🚫 PayApp 주소 필드 숨김 훅 사용
+  usePayAppAddressHider();
   
   // localStorage에서 completedProps 로드
   useEffect(() => {
