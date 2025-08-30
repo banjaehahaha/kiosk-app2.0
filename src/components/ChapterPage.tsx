@@ -413,21 +413,22 @@ export default function ChapterPage({ chapterNumber, title, location, content, v
     }
   }, [chapterNumber]);
 
-  // 3장과 4장에서 PropsList 렌더링
-  if (chapterNumber === 3 || chapterNumber === 4) {
+  // 4장에서만 PropsList 렌더링
+  if (chapterNumber === 4) {
     return (
       <div className="bg-[#1a1a1a] pt-24 px-8 pb-8">
         <div className="max-w-4xl mx-auto">
           <div className="bg-[#2d2d2d] p-8 border border-[#404040]">
-            <div className="text-center mb-8">
-              <h1 className="text-3xl font-bold text-[#F8D1E7] mb-4">
-                {chapterNumber === 3 ? '3장' : '4장'}
-              </h1>
-              <p className="text-lg text-[#e5e5e5]">
-                {chapterNumber === 3 ? '2025년 7월 15일' : '2025년 8월 29일 ~ 9월 14일'}
-              </p>
+            {/* 4장 원래 텍스트 내용 */}
+            <div className="prose prose-invert max-w-none mb-8">
+              <div className="text-left text-lg font-bold mb-6">실내. 챔버 – 2025년 8월 29일 ~ 9월 14일 – 낮 ~ 오후</div>
+              
+              <div className="text-left text-base mb-8">
+                〈부재시 픽션은 문 앞에 놔주세요〉의 키오스크를 보던 관객은 4장에서 물품 리스트를 확인한다. 이 리스트는 10월 30일 퍼포먼스의 소품 후보들이다. 전시장에서 퍼포먼스를 예매하는 관객은 퍼포먼스에서 어떤 소품이 등장할지 선택할 수 있다. 선택된 물품은 곧바로 주문이 들어가고 전시장으로의 배송완료와 동시에 전시된다.
+              </div>
             </div>
             
+            {/* 상품 리스트 */}
             <PropsList 
               onPropSelect={(prop) => window.dispatchEvent(new CustomEvent('propSelected', { detail: prop }))}
               completedProps={completedProps}
@@ -443,20 +444,6 @@ export default function ChapterPage({ chapterNumber, title, location, content, v
     <div className="bg-[#1a1a1a] pt-24 px-8 pb-8">
       <div className="max-w-4xl mx-auto">
         <div className="bg-[#2d2d2d] p-8 border border-[#404040]">
-          <div className="text-center mb-8">
-            <h1 className="text-3xl font-bold text-[#F8D1E7] mb-4">
-              {chapterNumber}장
-            </h1>
-            <p className="text-lg text-[#e5e5e5]">
-              {title}
-            </p>
-            {location && (
-              <p className="text-base text-[#cccccc] mt-2">
-                {location}
-              </p>
-            )}
-          </div>
-          
           <div 
             className="prose prose-invert max-w-none"
             dangerouslySetInnerHTML={{ __html: content }}
