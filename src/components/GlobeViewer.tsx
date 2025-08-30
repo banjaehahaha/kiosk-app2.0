@@ -111,7 +111,7 @@ export default function GlobeViewer({ onConnectionChange, onPaymentCountChange }
       
       // 1️⃣ 주문 완료 모달 표시
       const orderInfo: OrderInfo = {
-        propName: productName,
+        propName: matchedProp.name, // props.json의 깔끔한 상품명 사용
         orderTime: payment.created_at,
         origin: `${matchedProp.origin.city}, ${matchedProp.origin.country}`,
         shippingDays: matchedProp.shippingDays
@@ -1051,7 +1051,7 @@ export default function GlobeViewer({ onConnectionChange, onPaymentCountChange }
 
     // 흰색 점선 재질 (더 선명하게)
     const lineMaterial = new THREE.LineDashedMaterial({ 
-      color: 0x00ff00, // 초록색으로 변경 (더 잘 보이게)
+      color: 0xffffff, // 흰색으로 변경
       linewidth: 3,    // 더 두껍게
       dashSize: 0.15,  // 점선 크기 조정
       gapSize: 0.08,   // 간격 조정
