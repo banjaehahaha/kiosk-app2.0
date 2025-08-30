@@ -325,39 +325,12 @@ html, body {
 /* PayApp 결제 페이지 주소 필드 숨김 */
 @import url('https://fonts.googleapis.com/css2?family=D2Coding:wght@400;700&display=swap');
 
-/* 🏠 PayApp 결제 페이지 주소 필드 읽기 전용으로 설정 */
+/* 🏠 PayApp 결제 페이지 배송 관련 필드만 숨김 */
 /* PayApp 결제창이 iframe으로 로드될 때 적용 */
 iframe[src*="payapp.kr"] ~ *,
 iframe[src*="payapp.kr"] + *,
 iframe[src*="payapp.kr"] {
-  /* 주소 입력 관련 요소들을 읽기 전용으로 설정 */
-  input[name*="addr"],
-  input[name*="address"],
-  input[name*="zip"],
-  input[name*="post"] {
-    background-color: #f5f5f5 !important;
-    color: #666 !important;
-    cursor: not-allowed !important;
-    pointer-events: none !important;
-    user-select: none !important;
-    -webkit-user-select: none !important;
-    -moz-user-select: none !important;
-    -ms-user-select: none !important;
-    border: 1px solid #ddd !important;
-    opacity: 0.7 !important;
-  }
-  
-  /* 주소 입력창에 "자동 입력됨" 표시 */
-  input[name*="addr"]::placeholder,
-  input[name*="address"]::placeholder,
-  input[name*="zip"]::placeholder,
-  input[name*="post"]::placeholder {
-    content: "자동 입력됨" !important;
-    color: #999 !important;
-    font-style: italic !important;
-  }
-  
-  /* 배송 관련 필드는 숨김 */
+  /* 배송 관련 필드만 숨김 (주소 필드는 그대로 두기) */
   input[name*="delivery"],
   input[name*="shipping"],
   select[name*="delivery"],
