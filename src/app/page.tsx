@@ -1,3 +1,5 @@
+
+
 'use client';
 
 import { useState, useEffect, useRef } from 'react';
@@ -339,13 +341,12 @@ export default function KioskApp() {
 
         <div class="text-center mb-8 sticky top-[25%] z-10 transition-all duration-300">
           <div class="w-full max-w-2xl mx-auto rounded-lg shadow-lg overflow-hidden">
-            <iframe 
-              src="https://player.vimeo.com/video/1114072967?h=437c298dd3&autoplay=1&loop=1&title=0&byline=0&portrait=0&controls=0&showinfo=0&modestbranding=1&rel=0&color=ffffff&muted=0"
-              class="w-full aspect-video"
-              frameborder="0"
-              allow="autoplay; fullscreen; picture-in-picture"
-              allowfullscreen
-            ></iframe>
+            <audio 
+              ref={audioRef}
+              src="/chapter2_1.0.mp3"
+              preload="auto"
+              className="hidden"
+            />
           </div>
         </div>
 
@@ -423,7 +424,7 @@ export default function KioskApp() {
 <div class="text-center mb-8">
   <div class="text-lg">상인</div>
   <div class="max-w-md mx-auto p-4 mt-2 text-left">
-    <span class="text-base dialogue-line" data-time=24.5-26">우리 여기 도문 토박이야.</span>
+    <span class="text-base dialogue-line" data-time="24.5-26">우리 여기 도문 토박이야.</span>
   </div>
 </div>
 
@@ -725,3 +726,4 @@ export default function KioskApp() {
     </div>
   );
 }
+
