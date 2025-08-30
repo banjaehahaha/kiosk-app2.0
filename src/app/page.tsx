@@ -77,7 +77,7 @@ export default function KioskApp() {
     window.scrollTo(0, 0);
   }, [currentPage]);
 
-  // 간단한 3분 자동 리셋
+  // 간단한 5분 자동 리셋
   useEffect(() => {
     let timer: NodeJS.Timeout;
     
@@ -89,8 +89,8 @@ export default function KioskApp() {
           setShowToc(false);
           setShowAudienceInfo(false);
           setSelectedPropForBooking(null);
-          console.log('3분 비활성으로 인한 자동 리셋');
-        }, 3 * 60 * 1000); // 3분
+          console.log('5분 비활성으로 인한 자동 리셋');
+        }, 5 * 60 * 1000); // 5분
     }
     
     // 클린업
