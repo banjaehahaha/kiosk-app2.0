@@ -240,7 +240,7 @@ export default function GlobeViewer({ onConnectionChange, onPaymentCountChange }
     if (ctx) {
       // 깜빡이는 애니메이션을 위한 함수
       const animateOrderComplete = () => {
-        const alpha = 0.5 + 0.5 * Math.sin(Date.now() * 0.002); // 깜빡임 속도 늦춤 (0.01 → 0.002)
+        const alpha = 0.5 + 0.5 * Math.sin(Date.now() * 0.0005); // 깜빡임 속도 더 늦춤 (0.002 → 0.0005)
         
         ctx.clearRect(0, 0, orderCompleteCanvas.width, orderCompleteCanvas.height);
         ctx.fillStyle = `rgba(236, 72, 153, ${alpha})`; // 분홍 바탕
@@ -1015,9 +1015,11 @@ export default function GlobeViewer({ onConnectionChange, onPaymentCountChange }
     };
   }, [addPaymentArrow]);
 
-  // 서울까지 흰색 점선 추가 함수 (베이징/바티칸 방식으로 수정)
+  // 서울까지 흰색 점선 추가 함수 (완전히 새로 작성)
   const addDottedLineToSeoul = useCallback((fromCity: any) => {
     if (!arrowsRef.current) return;
+
+    console.log('🚚 점선 경로 생성 시작:', fromCity);
 
     // 출발지와 도착지(서울) 좌표
     const fromLat = fromCity.lat;
@@ -1025,7 +1027,7 @@ export default function GlobeViewer({ onConnectionChange, onPaymentCountChange }
     const toLat = 37.5665; // 서울 위도
     const toLng = 126.9780; // 서울 경도
 
-    // 지구 외곽을 따라가는 경로 생성 (베이징/바티칸 방식과 동일)
+    // 지구 외곽을 따라가는 경로 생성 (베이징/바티칸 방식과 완전히 동일)
     const lineGeometry = new THREE.BufferGeometry();
     const points = [];
     const segments = 200; // 더 부드러운 곡선을 위해 세그먼트 수 증가
@@ -1033,11 +1035,11 @@ export default function GlobeViewer({ onConnectionChange, onPaymentCountChange }
     for (let i = 0; i <= segments; i++) {
       const t = i / segments;
       
-      // 위도와 경도를 보간 (베이징/바티칸 방식과 동일)
+      // 위도와 경도를 보간 (베이징/바티칸 방식과 완전히 동일)
       const lat = fromLat + (toLat - fromLat) * t;
       const lng = fromLng + (toLng - fromLng) * t;
       
-      // 3D 좌표로 변환 - 핀 위치 계산식과 동일하게 (1.02배, 경도 음수 변환)
+      // 3D 좌표로 변환 - 핀 위치 계산식과 완전히 동일하게 (1.02배, 경도 음수 변환)
       const x = Math.cos(lat * (Math.PI / 180)) * Math.cos(-lng * (Math.PI / 180)) * 1.02;
       const y = Math.sin(lat * (Math.PI / 180)) * 1.02;
       const z = Math.cos(lat * (Math.PI / 180)) * Math.sin(-lng * (Math.PI / 180)) * 1.02;
@@ -1047,14 +1049,14 @@ export default function GlobeViewer({ onConnectionChange, onPaymentCountChange }
 
     lineGeometry.setAttribute('position', new THREE.Float32BufferAttribute(points, 3));
 
-    // 흰색 점선 재질
+    // 흰색 점선 재질 (더 선명하게)
     const lineMaterial = new THREE.LineDashedMaterial({ 
-      color: 0xffffff, 
-      linewidth: 2,
-      dashSize: 0.1,
-      gapSize: 0.05,
+      color: 0x00ff00, // 초록색으로 변경 (더 잘 보이게)
+      linewidth: 3,    // 더 두껍게
+      dashSize: 0.15,  // 점선 크기 조정
+      gapSize: 0.08,   // 간격 조정
       transparent: true,
-      opacity: 0.8
+      opacity: 1.0     // 완전 불투명
     });
 
     const dottedLine = new THREE.Line(lineGeometry, lineMaterial);
@@ -1062,6 +1064,7 @@ export default function GlobeViewer({ onConnectionChange, onPaymentCountChange }
     dottedLine.userData = { payment: fromCity, createdAt: Date.now() };
 
     arrowsRef.current.add(dottedLine);
+    console.log('✅ 점선 경로 생성 완료:', fromCity.name);
 
     // 점선은 제거하지 않고 계속 유지
   }, []);
@@ -1439,9 +1442,13 @@ export default function GlobeViewer({ onConnectionChange, onPaymentCountChange }
   useEffect(() => {
     console.log('🚀 GlobeViewer 결제 모니터링 서비스 시작...');
     
-    // 모달 상태 초기화 (페이지 로드 시 모달 숨김)
+    // 모달 상태 완전 초기화 (페이지 로드 시 모달 숨김)
     setOrderModalVisible(false);
     setCurrentOrderInfo(null);
+    
+    // 로컬 스토리지도 초기화
+    localStorage.removeItem('orderModalVisible');
+    localStorage.removeItem('currentOrderInfo');
     
     paymentPollingServiceRef.current = new GlobePaymentMonitorService();
     paymentPollingServiceRef.current.startPolling({
@@ -1454,7 +1461,7 @@ export default function GlobeViewer({ onConnectionChange, onPaymentCountChange }
         paymentPollingServiceRef.current.stopPolling();
       }
     };
-  }, [handleNewPayment]);
+  }, []); // 빈 배열로 컴포넌트 마운트 시에만 실행
 
   // WebSocket 연결 상태 시뮬레이션
   useEffect(() => {
