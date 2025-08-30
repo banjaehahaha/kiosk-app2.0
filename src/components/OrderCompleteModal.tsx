@@ -45,15 +45,15 @@ export default function OrderCompleteModal({
       >
         <div className="text-center">
           {/* 주문 완료 아이콘 */}
-          <div className="mx-auto w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mb-4">
-            <svg className="w-8 h-8 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <div className="mx-auto w-16 h-16 bg-pink-100 rounded-full flex items-center justify-center mb-4">
+            <svg className="w-8 h-8 text-gray-700" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
             </svg>
           </div>
           
           {/* 제목 */}
           <h2 className="text-2xl font-bold text-gray-900 mb-4">
-            주문 완료! 🎉
+            주문 완료
           </h2>
           
           {/* 주문 정보 */}
@@ -81,10 +81,7 @@ export default function OrderCompleteModal({
             </div>
           </div>
           
-          {/* 남은 시간 표시 */}
-          <div className="mt-4 text-sm text-gray-500">
-            이 모달은 자동으로 사라집니다
-          </div>
+
         </div>
       </div>
     </div>
