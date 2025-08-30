@@ -12,6 +12,7 @@ interface Prop {
   };
   shippingDays: string;
   url: string;
+  status: string; // status 필드 추가
 }
 
 interface PropsListProps {
@@ -64,7 +65,7 @@ export default function PropsList({ onPropSelect, completedProps = [] }: PropsLi
     <>
       <div className="columns-3 gap-12 w-full">
         {props.map((prop) => {
-          const isCompleted = completedProps.includes(prop.id);
+          const isCompleted = completedProps.includes(prop.id) || prop.status === 'ordered';
           
           return (
             <div 

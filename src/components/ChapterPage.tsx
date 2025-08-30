@@ -325,55 +325,71 @@ export default function ChapterPage({ chapterNumber, title, location, content, v
       const startHighlightInterval = () => {
         console.log('1장 하이라이트 인터벌 시작');
         highlightInterval = setInterval(() => {
-          const currentTime = audio.currentTime;
-          
-          // 하이라이트 직접 처리
-          const dialogueLines = document.querySelectorAll('.dialogue-line');
-          let currentHighlightedElement: HTMLElement | null = null;
-          
-          dialogueLines.forEach((line) => {
-            const timeRange = line.getAttribute('data-time');
-            if (timeRange) {
-              const [start, end] = timeRange.split('-').map(Number);
-              const htmlElement = line as HTMLElement;
-              
-              if (currentTime >= start && currentTime < end) {
-                currentHighlightedElement = htmlElement;
-                if (lastHighlightedElement !== htmlElement) {
-                  // 이전 하이라이트 제거
-                  if (lastHighlightedElement) {
-                    lastHighlightedElement.style.setProperty('background-color', 'transparent', 'important');
-                    lastHighlightedElement.style.setProperty('color', '#e5e5e5', 'important');
+          try {
+            const currentTime = audio.currentTime;
+            console.log('현재 1장 오디오 시간:', currentTime);
+            
+            // 하이라이트 직접 처리
+            const dialogueLines = document.querySelectorAll('.dialogue-line');
+            console.log('찾은 dialogue-line 요소들:', dialogueLines.length);
+            
+            let currentHighlightedElement: HTMLElement | null = null;
+            
+            dialogueLines.forEach((line) => {
+              const timeRange = line.getAttribute('data-time');
+              if (timeRange) {
+                const [start, end] = timeRange.split('-').map(Number);
+                const htmlElement = line as HTMLElement;
+                
+                if (currentTime >= start && currentTime < end) {
+                  currentHighlightedElement = htmlElement;
+                  if (lastHighlightedElement !== htmlElement) {
+                    // 이전 하이라이트 제거
+                    if (lastHighlightedElement) {
+                      lastHighlightedElement.style.setProperty('background-color', 'transparent', 'important');
+                      lastHighlightedElement.style.setProperty('color', '#e5e5e5', 'important');
+                    }
+                    // 새 하이라이트 적용
+                    htmlElement.style.setProperty('background-color', '#fce7f3', 'important');
+                    htmlElement.style.setProperty('color', '#000000', 'important');
+                    lastHighlightedElement = htmlElement;
+                    console.log('1장 하이라이트 적용:', timeRange, '요소:', htmlElement.textContent);
                   }
-                  // 새 하이라이트 적용
-                  htmlElement.style.setProperty('background-color', '#fce7f3', 'important');
-                  htmlElement.style.setProperty('color', '#000000', 'important');
-                  lastHighlightedElement = htmlElement;
                 }
               }
+            });
+            
+            // 현재 하이라이트된 요소가 없으면 이전 하이라이트 제거
+            if (!currentHighlightedElement && lastHighlightedElement) {
+              lastHighlightedElement.style.setProperty('background-color', 'transparent', 'important');
+              lastHighlightedElement.style.setProperty('color', '#e5e5e5', 'important');
+              lastHighlightedElement = null;
             }
-          });
-          
-          // 현재 하이라이트된 요소가 없으면 이전 하이라이트 제거
-          if (!currentHighlightedElement && lastHighlightedElement) {
-            lastHighlightedElement.style.setProperty('background-color', 'transparent', 'important');
-            lastHighlightedElement.style.setProperty('color', '#e5e5e5', 'important');
-            lastHighlightedElement = null;
+          } catch (error) {
+            console.log('1장 오디오 시간 가져오기 실패:', error);
           }
-        }, 200); // 200ms마다 체크 (더 부드럽게)
+        }, 200); // 200ms마다 체크
       };
 
+      // 오디오 이벤트 리스너
       const handlePlay = () => {
-        console.log('1장 재생 시작, 하이라이트 시작');
+        console.log('1장 오디오 재생 시작, 하이라이트 시작');
         startHighlightInterval();
       };
 
-      const handleEnded = () => {
-        console.log('1장 재생 종료, 하이라이트 정리');
+      const handlePause = () => {
+        console.log('1장 오디오 일시정지, 하이라이트 정지');
         if (highlightInterval) {
           clearInterval(highlightInterval);
         }
-        // 모든 하이라이트 제거
+      };
+
+      const handleEnded = () => {
+        console.log('1장 오디오 종료, 하이라이트 정지');
+        if (highlightInterval) {
+          clearInterval(highlightInterval);
+        }
+        // 마지막 하이라이트 제거
         if (lastHighlightedElement) {
           lastHighlightedElement.style.setProperty('background-color', 'transparent', 'important');
           lastHighlightedElement.style.setProperty('color', '#e5e5e5', 'important');
@@ -381,58 +397,80 @@ export default function ChapterPage({ chapterNumber, title, location, content, v
         }
       };
 
-      // 오디오에 이벤트 리스너 추가
       audio.addEventListener('play', handlePlay);
+      audio.addEventListener('pause', handlePause);
       audio.addEventListener('ended', handleEnded);
-
+      
+      // 컴포넌트 언마운트 시 정리
       return () => {
-        // 오디오에서 이벤트 리스너 제거
-        audio.removeEventListener('play', handlePlay);
-        audio.removeEventListener('ended', handleEnded);
         if (highlightInterval) {
           clearInterval(highlightInterval);
         }
-        if (lastHighlightedElement) {
-          lastHighlightedElement.style.setProperty('background-color', 'transparent', 'important');
-          lastHighlightedElement.style.setProperty('color', '#e5e5e5', 'important');
-        }
+        audio.removeEventListener('play', handlePlay);
+        audio.removeEventListener('pause', handlePause);
+        audio.removeEventListener('ended', handleEnded);
       };
     }
   }, [chapterNumber]);
 
-  // 대사 하이라이트 기능 - 제거
-
-  return (
-    <div className="bg-[#1a1a1a] pt-24 px-8 pb-8 min-h-screen">
-      {/* 1장일 때만 음성 요소 추가 */}
-      {chapterNumber === 1 && (
-        <audio 
-          ref={audioRef}
-          src="/chapter1_1.1.mp3"
-          preload="auto"
-          className="hidden"
-        />
-      )}
-      
-      <div className="max-w-4xl mx-auto">
-        {/* 1장, 3장, 4장, 등장인물 페이지가 아닐 때만 제목과 부제 표시 */}
-        {chapterNumber !== 1 && chapterNumber !== 3 && chapterNumber !== 4 && chapterNumber !== 0 && chapterNumber !== 2 && (
-          <div className="text-center mb-12">
-            <h1 className="text-4xl font-bold text-[#e5e5e5] mb-4 font-d2coding-bold">{title}</h1>
-            {location && <p className="text-xl text-[#b3b3b3] font-d2coding">{location}</p>}
-          </div>
-        )}
-        
-        <div className="bg-[#2d2d2d]/80 backdrop-blur-sm p-8 border border-[#404040]/50">
-          <div className="prose prose-lg max-w-none">
-            <div 
-              className="text-[#e5e5e5] leading-relaxed font-d2coding"
-              dangerouslySetInnerHTML={{ __html: content }}
-            />
+  // 3장과 4장에서 PropsList 렌더링
+  if (chapterNumber === 3 || chapterNumber === 4) {
+    return (
+      <div className="bg-[#1a1a1a] pt-24 px-8 pb-8">
+        <div className="max-w-4xl mx-auto">
+          <div className="bg-[#2d2d2d] p-8 border border-[#404040]">
+            <div className="text-center mb-8">
+              <h1 className="text-3xl font-bold text-[#F8D1E7] mb-4">
+                {chapterNumber === 3 ? '3장' : '4장'}
+              </h1>
+              <p className="text-lg text-[#e5e5e5]">
+                {chapterNumber === 3 ? '2025년 7월 15일' : '2025년 8월 29일 ~ 9월 14일'}
+              </p>
+            </div>
             
-            {/* 4장일 때 PropsList 컴포넌트 렌더링 */}
-            {chapterNumber === 4 && <PropsList onPropSelect={(prop) => window.dispatchEvent(new CustomEvent('propSelected', { detail: prop }))} completedProps={completedProps} />}
+            <PropsList 
+              onPropSelect={(prop) => window.dispatchEvent(new CustomEvent('propSelected', { detail: prop }))}
+              completedProps={completedProps}
+            />
           </div>
+        </div>
+      </div>
+    );
+  }
+
+  // 1장, 2장, 5장은 기존 방식으로 렌더링
+  return (
+    <div className="bg-[#1a1a1a] pt-24 px-8 pb-8">
+      <div className="max-w-4xl mx-auto">
+        <div className="bg-[#2d2d2d] p-8 border border-[#404040]">
+          <div className="text-center mb-8">
+            <h1 className="text-3xl font-bold text-[#F8D1E7] mb-4">
+              {chapterNumber}장
+            </h1>
+            <p className="text-lg text-[#e5e5e5]">
+              {title}
+            </p>
+            {location && (
+              <p className="text-base text-[#cccccc] mt-2">
+                {location}
+              </p>
+            )}
+          </div>
+          
+          <div 
+            className="prose prose-invert max-w-none"
+            dangerouslySetInnerHTML={{ __html: content }}
+          />
+          
+          {/* 1장일 때만 음성 요소 추가 */}
+          {chapterNumber === 1 && (
+            <audio 
+              ref={audioRef}
+              src="/chapter1_1.1.mp3"
+              preload="auto"
+              className="hidden"
+            />
+          )}
         </div>
       </div>
     </div>

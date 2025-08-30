@@ -190,6 +190,22 @@ export default function GlobeViewer({ onConnectionChange, onPaymentCountChange }
     }, 100);
   }, []);
 
+  // props.json의 status가 'ordered'인 상품들에 점선 표시하는 함수
+  const showOrderedPropsRoutes = useCallback(() => {
+    console.log('🚚 props.json의 ordered 상품들에 점선 표시 시작...');
+    
+    // status가 'ordered'인 상품들 찾기
+    const orderedProps = propsData.props.filter(prop => prop.status === 'ordered');
+    
+    console.log('📋 ordered 상품들:', orderedProps);
+    
+    // 각 ordered 상품에 대해 점선 표시
+    orderedProps.forEach(prop => {
+      console.log(`🎯 ${prop.name} (${prop.origin.city}) 점선 표시...`);
+      triggerDeliveryRouteAnimation(prop);
+    });
+  }, [propsData.props, triggerDeliveryRouteAnimation]);
+
   // 도시별 위도/경도 정보 반환 함수
   const getCityLatitude = useCallback((cityName: string): number => {
     const cityCoordinates: { [key: string]: { lat: number; lng: number } } = {
@@ -1454,6 +1470,11 @@ export default function GlobeViewer({ onConnectionChange, onPaymentCountChange }
     paymentPollingServiceRef.current.startPolling({
       onNewPayment: handleNewPayment
     });
+
+    // props.json의 status가 'ordered'인 상품들에 점선 표시
+    setTimeout(() => {
+      showOrderedPropsRoutes();
+    }, 2000); // 2초 후 실행 (컴포넌트 완전 로드 후)
 
     return () => {
       console.log('🛑 GlobeViewer 결제 모니터링 서비스 중지...');
