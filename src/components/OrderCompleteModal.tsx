@@ -24,11 +24,11 @@ export default function OrderCompleteModal({
     if (isVisible && orderInfo) {
       setIsAnimating(true);
       
-      // 15초 후 자동으로 사라짐
+      // 2분 후 자동으로 사라짐
       const timer = setTimeout(() => {
         setIsAnimating(false);
         setTimeout(onClose, 500); // 애니메이션 완료 후 닫기
-      }, 15000);
+      }, 120000);
 
       return () => clearTimeout(timer);
     }
