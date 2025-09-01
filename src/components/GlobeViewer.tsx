@@ -47,10 +47,13 @@ export default function GlobeViewer({ onConnectionChange, onPaymentCountChange }
   const citiesRef = useRef<City[]>([]);
   const cityPinsRef = useRef<THREE.Group | null>(null);
   const arrowsRef = useRef<THREE.Group | null>(null);
-  const animationIdRef = useRef<number | null>(null);
+  const animationIdRef = useRef<number | NodeJS.Timeout | null>(null);
   const [paymentCount, setPaymentCount] = useState(0);
   const [orderModalVisible, setOrderModalVisible] = useState(false);
   const [currentOrderInfo, setCurrentOrderInfo] = useState<OrderInfo | null>(null);
+  
+  // 이미 점선이 생성된 상품들을 추적하는 Set
+  const createdLinesRef = useRef<Set<string>>(new Set());
   
   // 결제 모니터링 서비스
   const paymentPollingServiceRef = useRef<GlobePaymentMonitorService | null>(null);
@@ -205,6 +208,61 @@ export default function GlobeViewer({ onConnectionChange, onPaymentCountChange }
       triggerDeliveryRouteAnimation(prop);
     });
   }, [propsData.props, triggerDeliveryRouteAnimation]);
+
+  // completed props 데이터를 받아서 점선 표시하는 함수
+  const showCompletedPropsRoutes = useCallback((completedProps: any[]) => {
+    console.log('🚚 completed props 데이터로 점선 표시 시작...');
+    
+    console.log('📋 completed 상품들:', completedProps);
+    
+    // 각 completed 상품에 대해 점선 표시
+    completedProps.forEach(prop => {
+      console.log(`🎯 ${prop.name} (${prop.origin?.city || prop.city}) 점선 표시...`);
+      
+      // completed props 데이터 구조에 맞게 변환
+      const propData = {
+        name: prop.name,
+        origin: {
+          city: prop.origin?.city || prop.city,
+          country: prop.origin?.country || prop.country
+        }
+      };
+      
+      triggerDeliveryRouteAnimation(propData);
+    });
+  }, [triggerDeliveryRouteAnimation]);
+
+  // props.json의 "ordered" 상태와 completed props에서 '주문 완료' 텍스트 표시하는 함수
+  const showOrderCompletedTexts = useCallback(() => {
+    console.log('🎯 주문 완료 텍스트 표시 시작...');
+    
+    // props.json에서 "ordered" 상태인 상품들 찾기
+    const orderedProps = propsData.props.filter(prop => prop.status === 'ordered');
+    
+    // completed props 데이터 가져오기 (Local Storage에서)
+    const completedPropsFromStorage = localStorage.getItem('completedProps');
+    let completedProps: any[] = [];
+    
+    if (completedPropsFromStorage) {
+      try {
+        completedProps = JSON.parse(completedPropsFromStorage);
+      } catch (error) {
+        console.error('completed props 파싱 오류:', error);
+      }
+    }
+    
+    // 모든 주문 완료 상품들을 합치기
+    const allCompletedProps = [...orderedProps, ...completedProps];
+    
+    console.log('📋 모든 주문 완료 상품들:', allCompletedProps);
+    
+    // 각 상품에 대해 '주문 완료' 텍스트 표시
+    allCompletedProps.forEach(prop => {
+      const propName = prop.name;
+      console.log(`🎯 ${propName} 주문 완료 텍스트 표시...`);
+      showOrderCompletedText(propName);
+    });
+  }, []);
 
   // 도시별 위도/경도 정보 반환 함수
   const getCityLatitude = useCallback((cityName: string): number => {
@@ -362,9 +420,15 @@ export default function GlobeViewer({ onConnectionChange, onPaymentCountChange }
     controls.maxDistance = 7;    // 최대 거리를 늘려서 더 멀리 볼 수 있도록
     controlsRef.current = controls;
 
-    // 지구 텍스처 로드
+    // 지구 텍스처 로드 및 최적화
     const textureLoader = new THREE.TextureLoader();
     const earthTexture = textureLoader.load('/earthmap4k_pink2.jpg');
+    
+    // 지구본 텍스처 최적화
+    earthTexture.minFilter = THREE.LinearFilter;
+    earthTexture.magFilter = THREE.LinearFilter;
+    earthTexture.generateMipmaps = false; // 메모리 절약
+    earthTexture.anisotropy = 1; // 성능 향상
     
     // 지구본 생성 - 실제 지구 텍스처 사용, 완전 불투명
     const globeGeometry = new THREE.SphereGeometry(1, 128, 128);
@@ -463,9 +527,9 @@ export default function GlobeViewer({ onConnectionChange, onPaymentCountChange }
     // 베이징 이미지와 텍스트 추가
     addBeijingImageAndText();
 
-    // 애니메이션 루프
+    // 애니메이션 루프 (30fps로 제한)
     const animate = () => {
-      animationIdRef.current = requestAnimationFrame(animate);
+      animationIdRef.current = setTimeout(() => requestAnimationFrame(animate), 33); // 30fps
       
       // 지구본 회전
       if (globeRef.current) {
@@ -513,7 +577,11 @@ export default function GlobeViewer({ onConnectionChange, onPaymentCountChange }
     return () => {
       window.removeEventListener('resize', handleResize);
       if (animationIdRef.current) {
-        cancelAnimationFrame(animationIdRef.current);
+        if (typeof animationIdRef.current === 'number') {
+          cancelAnimationFrame(animationIdRef.current);
+        } else {
+          clearTimeout(animationIdRef.current);
+        }
       }
       if (mountRef.current && renderer.domElement) {
         mountRef.current.removeChild(renderer.domElement);
@@ -1031,9 +1099,27 @@ export default function GlobeViewer({ onConnectionChange, onPaymentCountChange }
     };
   }, [addPaymentArrow]);
 
-  // 서울까지 흰색 점선 추가 함수 (완전히 새로 작성)
+  // 서울까지 흰색 점선 추가 함수 (애니메이션 포함)
   const addDottedLineToSeoul = useCallback((fromCity: any) => {
     if (!arrowsRef.current) return;
+
+    // 점선 개수 제한 (최대 5개)
+    const MAX_DOTTED_LINES = 5;
+    if (arrowsRef.current.children.length >= MAX_DOTTED_LINES) {
+      // 가장 오래된 점선 제거
+      const oldestLine = arrowsRef.current.children[0];
+      if (oldestLine) {
+        arrowsRef.current.remove(oldestLine);
+        console.log('🗑️ 가장 오래된 점선 제거됨');
+      }
+    }
+
+    // 중복 체크: 이미 같은 상품에 대한 점선이 생성되었는지 확인
+    const lineKey = `${fromCity.name}-${fromCity.origin?.city || fromCity.city}`;
+    if (createdLinesRef.current.has(lineKey)) {
+      console.log('⚠️ 이미 생성된 점선이 있습니다:', lineKey);
+      return;
+    }
 
     console.log('🚚 점선 경로 생성 시작:', fromCity);
 
@@ -1065,22 +1151,52 @@ export default function GlobeViewer({ onConnectionChange, onPaymentCountChange }
 
     lineGeometry.setAttribute('position', new THREE.Float32BufferAttribute(points, 3));
 
-    // 흰색 점선 재질 (더 선명하게)
+    // 흰색 점선 재질 (더 촘촘하게)
     const lineMaterial = new THREE.LineDashedMaterial({ 
       color: 0xffffff, // 흰색으로 변경
-      linewidth: 3,    // 더 두껍게
-      dashSize: 0.15,  // 점선 크기 조정
-      gapSize: 0.08,   // 간격 조정
+      linewidth: 2,    // 더 얇게
+      dashSize: 0.08,  // 점선 크기를 더 작게
+      gapSize: 0.04,   // 간격을 더 좁게
       transparent: true,
-      opacity: 1.0     // 완전 불투명
+      opacity: 0.9     // 약간 투명하게
     });
 
     const dottedLine = new THREE.Line(lineGeometry, lineMaterial);
     dottedLine.computeLineDistances(); // 점선 효과를 위해 필요
     dottedLine.userData = { payment: fromCity, createdAt: Date.now() };
 
+    // 초기에는 투명하게 시작
+    dottedLine.material.opacity = 0;
+
     arrowsRef.current.add(dottedLine);
+    
+    // 생성된 점선을 추적 Set에 추가
+    createdLinesRef.current.add(lineKey);
+    
     console.log('✅ 점선 경로 생성 완료:', fromCity.name);
+
+    // 점선이 짧은 상태에서 시작해서 점점 길어지는 애니메이션
+    const animateLine = () => {
+      const elapsed = Date.now() - dottedLine.userData.createdAt;
+      const duration = 5000; // 5초 동안 애니메이션
+      const cycleTime = elapsed % duration; // 루프를 위한 시간 계산
+      const progress = cycleTime / duration;
+      
+      // 점선이 짧은 상태에서 시작해서 점점 길어짐 (0→1)
+      const appearProgress = progress; // 0에서 1로 선형 증가
+      
+      // 점선이 점진적으로 나타남 (0→1)
+      dottedLine.material.opacity = 0.9 * appearProgress;
+      
+      // 점선 크기도 점진적으로 커짐 (짧은 상태에서 길어짐)
+      dottedLine.material.dashSize = 0.08 * appearProgress;
+      dottedLine.material.gapSize = 0.04 * appearProgress;
+      
+      // 계속 루프 (30fps로 제한)
+      setTimeout(() => requestAnimationFrame(animateLine), 33); // 1000ms / 30fps ≈ 33ms
+    };
+    
+    animateLine();
 
     // 점선은 제거하지 않고 계속 유지
   }, []);
@@ -1125,7 +1241,8 @@ export default function GlobeViewer({ onConnectionChange, onPaymentCountChange }
     const orderCompletedTexture = new THREE.CanvasTexture(orderCompletedCanvas);
     orderCompletedTexture.minFilter = THREE.LinearFilter;
     orderCompletedTexture.magFilter = THREE.LinearFilter;
-    orderCompletedTexture.generateMipmaps = false;
+    orderCompletedTexture.generateMipmaps = false; // 메모리 절약
+    orderCompletedTexture.anisotropy = 1; // 성능 향상
     
     const orderCompletedGeometry = new THREE.PlaneGeometry(0.3, 0.08);
     const orderCompletedMaterial = new THREE.MeshBasicMaterial({ 
@@ -1171,11 +1288,11 @@ export default function GlobeViewer({ onConnectionChange, onPaymentCountChange }
     // 지구본에 추가
     globeRef.current.add(orderCompletedMesh);
     
-    // 반짝거리는 애니메이션 효과
+    // 반짝거리는 애니메이션 효과 (적당한 속도)
     const animateTwinkle = () => {
-      const time = Date.now() * 0.005;
-      const opacity = 0.5 + 0.5 * Math.sin(time * 3);
-      const scale = 1 + 0.1 * Math.sin(time * 2);
+      const time = Date.now() * 0.002; // 적당한 속도로 조정
+      const opacity = 0.6 + 0.4 * Math.sin(time * 2); // 적당한 깜빡임
+      const scale = 1 + 0.08 * Math.sin(time * 1.5); // 적당한 크기 변화
       
       orderCompletedMaterial.opacity = opacity;
       orderCompletedMesh.scale.setScalar(scale);
@@ -1207,9 +1324,15 @@ export default function GlobeViewer({ onConnectionChange, onPaymentCountChange }
       const y = Math.sin(city.lat * (Math.PI / 180)) * 1.02;
       const z = Math.cos(city.lat * (Math.PI / 180)) * Math.sin(-city.lng * (Math.PI / 180)) * 1.02;
 
-      // 이미지 텍스처 로드
+      // 이미지 텍스처 로드 및 최적화
       const textureLoader = new THREE.TextureLoader();
       const imageTexture = textureLoader.load(prop.image);
+      
+      // 상품 이미지 텍스처 최적화
+      imageTexture.minFilter = THREE.LinearFilter;
+      imageTexture.magFilter = THREE.LinearFilter;
+      imageTexture.generateMipmaps = false; // 메모리 절약
+      imageTexture.anisotropy = 1; // 성능 향상
       
       // 이미지 평면 생성 (원본 비율 유지)
       const imageGeometry = new THREE.PlaneGeometry(0.17, 0.24);
@@ -1313,7 +1436,8 @@ export default function GlobeViewer({ onConnectionChange, onPaymentCountChange }
       const textTexture = new THREE.CanvasTexture(textCanvas);
       textTexture.minFilter = THREE.LinearFilter;
       textTexture.magFilter = THREE.LinearFilter;
-      textTexture.generateMipmaps = false;
+      textTexture.generateMipmaps = false; // 메모리 절약
+      textTexture.anisotropy = 1; // 성능 향상
       
       // 텍스트 길이에 따라 Geometry 크기 동적 조정
       const textWidth = textCanvas.width / 512 * 0.4; // Canvas 크기에 비례하여 조정
@@ -1355,9 +1479,15 @@ export default function GlobeViewer({ onConnectionChange, onPaymentCountChange }
     const y = Math.sin(beijingLat) * 1.02;
     const z = Math.cos(beijingLat) * Math.sin(-beijingLng) * 1.02;
 
-    // 베이징 이미지 텍스처 로드
+    // 베이징 이미지 텍스처 로드 및 최적화
     const textureLoader = new THREE.TextureLoader();
     const beijingTexture = textureLoader.load('/images/beijing.png');
+    
+    // 베이징 이미지 텍스처 최적화
+    beijingTexture.minFilter = THREE.LinearFilter;
+    beijingTexture.magFilter = THREE.LinearFilter;
+    beijingTexture.generateMipmaps = false; // 메모리 절약
+    beijingTexture.anisotropy = 1; // 성능 향상
     
     // 베이징 이미지 평면 생성 (비율 유지, 80% 크기)
     const beijingImageGeometry = new THREE.PlaneGeometry(0.17, 0.24); // 원본 비율 666:970에 맞춤
@@ -1396,7 +1526,8 @@ export default function GlobeViewer({ onConnectionChange, onPaymentCountChange }
     const beijingDeliveryTexture = new THREE.CanvasTexture(beijingDeliveryCanvas);
     beijingDeliveryTexture.minFilter = THREE.LinearFilter;
     beijingDeliveryTexture.magFilter = THREE.LinearFilter;
-    beijingDeliveryTexture.generateMipmaps = false;
+    beijingDeliveryTexture.generateMipmaps = false; // 메모리 절약
+    beijingDeliveryTexture.anisotropy = 1; // 성능 향상
     const beijingDeliveryGeometry = new THREE.PlaneGeometry(0.3, 0.08);
     const beijingDeliveryMaterial = new THREE.MeshBasicMaterial({ 
       map: beijingDeliveryTexture,
@@ -1432,7 +1563,8 @@ export default function GlobeViewer({ onConnectionChange, onPaymentCountChange }
     const beijingTextTexture = new THREE.CanvasTexture(beijingTextCanvas);
     beijingTextTexture.minFilter = THREE.LinearFilter;
     beijingTextTexture.magFilter = THREE.LinearFilter;
-    beijingTextTexture.generateMipmaps = false;
+    beijingTextTexture.generateMipmaps = false; // 메모리 절약
+    beijingTextTexture.anisotropy = 1; // 성능 향상
     const beijingTextGeometry = new THREE.PlaneGeometry(0.4, 0.1); // 가로로 긴 직사각형 (한 줄 텍스트에 맞춤)
     const beijingTextMaterial = new THREE.MeshBasicMaterial({ 
       map: beijingTextTexture,
@@ -1475,6 +1607,25 @@ export default function GlobeViewer({ onConnectionChange, onPaymentCountChange }
     setTimeout(() => {
       showOrderedPropsRoutes();
     }, 2000); // 2초 후 실행 (컴포넌트 완전 로드 후)
+
+    // completed props 데이터가 있다면 점선 표시 (예시)
+    // 실제로는 API나 다른 소스에서 데이터를 받아와야 함
+    const completedPropsFromStorage = localStorage.getItem('completedProps');
+    if (completedPropsFromStorage) {
+      try {
+        const completedProps = JSON.parse(completedPropsFromStorage);
+        setTimeout(() => {
+          showCompletedPropsRoutes(completedProps);
+        }, 3000); // 3초 후 실행
+      } catch (error) {
+        console.error('completed props 파싱 오류:', error);
+      }
+    }
+
+    // props.json의 "ordered" 상태와 completed props에서 '주문 완료' 텍스트 표시
+    setTimeout(() => {
+      showOrderCompletedTexts();
+    }, 4000); // 4초 후 실행
 
     return () => {
       console.log('🛑 GlobeViewer 결제 모니터링 서비스 중지...');

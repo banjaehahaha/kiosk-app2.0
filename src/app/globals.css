@@ -114,6 +114,16 @@
 }
 
 /* 글로브 뷰어 컨테이너 강제 스타일 */
+
+/* 비메오 iframe 스타일 - 반응형 및 레터박스 제거 */
+#vimeo-player-chapter2 {
+  display: block !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  border: none !important;
+  outline: none !important;
+  object-fit: cover !important;
+}
 .globe-viewer-container {
   transform: rotate(90deg) !important;
   transform-origin: center center !important;

@@ -83,7 +83,21 @@ export default function KioskApp() {
     window.scrollTo(0, 0);
   }, [currentPage]);
 
-  // 간단한 5분 자동 리셋
+  // 5장에서 4장으로 이동하는 커스텀 이벤트 수신
+  useEffect(() => {
+    const handleNavigateToChapter4 = () => {
+      setCurrentPage('chapter4');
+      console.log('5장에서 4장으로 이동 완료');
+    };
+
+    window.addEventListener('navigateToChapter4', handleNavigateToChapter4);
+    
+    return () => {
+      window.removeEventListener('navigateToChapter4', handleNavigateToChapter4);
+    };
+  }, []);
+
+  // 간단한 10분 자동 리셋
   useEffect(() => {
     let timer: NodeJS.Timeout;
     
@@ -95,8 +109,8 @@ export default function KioskApp() {
           setShowToc(false);
           setShowAudienceInfo(false);
           setSelectedPropForBooking(null);
-          console.log('5분 비활성으로 인한 자동 리셋');
-        }, 5 * 60 * 1000); // 5분
+          console.log('10분 비활성으로 인한 자동 리셋');
+        }, 10 * 60 * 1000); // 10분
     }
     
     // 클린업
@@ -343,17 +357,24 @@ export default function KioskApp() {
 (최가영 시점 숏)
 </div>
 
-        <div class="text-center mb-8 sticky top-[25%] z-10 transition-all duration-300">
-          <div class="w-full max-w-2xl mx-auto rounded-lg shadow-lg overflow-hidden">
-            <audio 
-              ref={audioRef}
-              src="/chapter2_1.0.mp3"
-              preload="auto"
-              className="hidden"
-            />
+        <div class="text-center sticky top-[21%] z-10 transition-all duration-300">
+          <div class="w-full max-w-2xl mx-auto rounded-lg shadow-lg overflow-hidden relative" style="aspect-ratio: 16/9;">
+            <iframe
+              id="vimeo-player-chapter2"
+              src="https://player.vimeo.com/video/1114072967?h=437c298dd3&badge=0&autopause=0&player_id=0&app_id=58479&controls=0&title=0&byline=0&portrait=0&autoplay=1&transparent=0&background=0&speed=0&keyboard=0"
+              frameborder="0"
+              allow="autoplay; fullscreen; picture-in-picture; clipboard-write; encrypted-media; web-share"
+              referrerpolicy="strict-origin-when-cross-origin"
+              title="2025년 6월 1일"
+              class="absolute inset-0 w-full h-full"
+              style="display: block; margin: 0; padding: 0; border: none; outline: none;"
+            ></iframe>
           </div>
         </div>
 
+<div class="text-center mb-8">
+  <br>
+</div>
 
 <div class="text-center mb-8">
   <div class="text-lg">이혜원</div>
@@ -625,7 +646,30 @@ export default function KioskApp() {
 
 <div class="text-center text-base mb-8">
   (후략)
+</div>
+
+<div class="text-center mt-12">
+  <button
+    onclick="window.navigateToChapter4?.()"
+    class="relative px-10 py-6 bg-[#F8D1E7] text-[#1a1a1a] font-pretendard-semibold text-xl shadow-lg overflow-hidden cursor-pointer border-none"
+  >
+    <div class="absolute inset-0 bg-gradient-to-r from-white/0 via-white/10 to-white/0 transform -skew-x-12 animate-shine"></div>
+    <div class="relative flex items-center space-x-3">
+      <span>퍼포먼스에 등장할 소품 고르기</span>
+      <svg 
+        class="w-6 h-6 animate-bounce-x" 
+        fill="none" 
+        stroke="currentColor" 
+        viewBox="0 0 24 24"
+      >
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+      </svg>
+    </div>
+    <div class="absolute inset-0 bg-white/20 scale-0 transition-transform duration-200 ease-out active:scale-100"></div>
+  </button>
 </div>`}
+            completedProps={completedProps}
+            onCompletedPropsChange={setCompletedProps}
           />
         );
       default:

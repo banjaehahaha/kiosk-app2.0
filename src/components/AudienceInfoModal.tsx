@@ -646,7 +646,7 @@ export default function AudienceInfoModal({
                 </div>
                 <div className="bg-[#F8D1E7]/20 p-4 mb-4">
                   <h4 className="text-lg font-semibold text-gray-700 mb-2">
-                    📱 SMS 결제 링크 전송 완료!
+                    SMS 결제 링크 전송 완료
                   </h4>
                   <p className="text-sm text-gray-700 mb-2">
                     <strong>{formData.phone}</strong> 번호로
@@ -822,7 +822,7 @@ export default function AudienceInfoModal({
           {/* SMS 전송 완료 내용 */}
           <div className="text-center space-y-4">
             <h3 className="text-xl font-semibold text-[#e5e5e5] mb-4">
-              📱 SMS 결제 링크 전송 완료
+              SMS 결제 링크 전송 완료
             </h3>
 
             {/* 성공 아이콘 */}

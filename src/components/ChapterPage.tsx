@@ -132,6 +132,19 @@ export default function ChapterPage({ chapterNumber, title, location, content, v
         (window as unknown as { resetCompletedProps?: () => void }).resetCompletedProps = undefined;
       };
     }
+    
+    // 5장에서 4장으로 이동하는 함수 등록
+    if (chapterNumber === 5) {
+      (window as unknown as { navigateToChapter4: () => void }).navigateToChapter4 = () => {
+        console.log('5장에서 4장으로 이동 요청');
+        // 커스텀 이벤트 발생
+        window.dispatchEvent(new CustomEvent('navigateToChapter4'));
+      };
+      
+      return () => {
+        (window as unknown as { navigateToChapter4?: () => void }).navigateToChapter4 = undefined;
+      };
+    }
   }, [chapterNumber, handlePropCompleted]);
 
   useEffect(() => {
@@ -170,30 +183,56 @@ export default function ChapterPage({ chapterNumber, title, location, content, v
       return () => clearTimeout(timer);
     }
     
-    // 2장일 때는 즉시 음성 자동재생
-    if (chapterNumber === 2 && audioRef.current) {
-      const audio = audioRef.current;
-      audio.volume = 1; // 바로 최대 볼륨으로 설정
+    // 2장일 때는 비메오 iframe 플레이어 초기화
+    if (chapterNumber === 2) {
+      // 비메오 스크립트 로드 및 플레이어 초기화
+      const initVimeoPlayer = () => {
+        if (typeof window !== 'undefined' && window.Vimeo && window.Vimeo.Player) {
+          const iframe = document.getElementById('vimeo-player-chapter2') as HTMLIFrameElement;
+          if (iframe) {
+            try {
+              // iframe에서 Vimeo Player 생성
+              const player = new window.Vimeo.Player(iframe);
+              
+              console.log('2장 비메오 iframe 플레이어 초기화 완료');
+              
+              // 전역에서 접근할 수 있도록 저장
+              (window as any).chapter2VimeoPlayer = player;
+            } catch (error) {
+              console.error('2장 비메오 플레이어 초기화 실패:', error);
+            }
+          }
+        } else {
+          // 비메오 스크립트 로드
+          const script = document.createElement('script');
+          script.src = 'https://player.vimeo.com/api/player.js';
+          script.onload = () => {
+            setTimeout(initVimeoPlayer, 1000);
+          };
+          document.head.appendChild(script);
+        }
+      };
       
-      audio.play().catch(error => {
-        console.log('2장 음성 자동재생 실패:', error);
-      });
+      // iframe이 로드된 후 플레이어 초기화
+      setTimeout(initVimeoPlayer, 1500);
     }
   }, [chapterNumber]);
 
-  // 2장 오디오 하이라이트 효과 (1장과 동일한 방식)
+  // 2장 비메오 영상 하이라이트 효과
   useEffect(() => {
-    if (chapterNumber === 2 && audioRef.current) {
-      const audio = audioRef.current;
+    if (chapterNumber === 2) {
       let highlightInterval: NodeJS.Timeout;
       let lastHighlightedElement: HTMLElement | null = null;
       
       const startHighlightInterval = () => {
-        console.log('2장 하이라이트 인터벌 시작');
-        highlightInterval = setInterval(() => {
+        console.log('2장 비메오 하이라이트 인터벌 시작');
+        highlightInterval = setInterval(async () => {
           try {
-            const currentTime = audio.currentTime;
-            console.log('현재 2장 오디오 시간:', currentTime);
+            const player = (window as any).chapter2VimeoPlayer;
+            if (!player) return;
+            
+            const currentTime = await player.getCurrentTime();
+            console.log('현재 2장 비메오 영상 시간:', currentTime);
             
             // 하이라이트 직접 처리
             const dialogueLines = document.querySelectorAll('.dialogue-line');
@@ -232,49 +271,71 @@ export default function ChapterPage({ chapterNumber, title, location, content, v
               lastHighlightedElement = null;
             }
           } catch (error) {
-            console.log('2장 오디오 시간 가져오기 실패:', error);
+            console.log('2장 비메오 시간 가져오기 실패:', error);
           }
         }, 200); // 200ms마다 체크
       };
 
-      // 오디오 이벤트 리스너
-      const handlePlay = () => {
-        console.log('2장 오디오 재생 시작, 하이라이트 시작');
-        startHighlightInterval();
-      };
+      // 비메오 플레이어 이벤트 설정
+      const setupVimeoEvents = () => {
+        const player = (window as any).chapter2VimeoPlayer;
+        console.log('setupVimeoEvents 호출됨. 플레이어 상태:', !!player);
+        
+        if (player) {
+          console.log('비메오 플레이어 발견, 이벤트 설정 중...');
+          
+          player.on('play', () => {
+            console.log('2장 비메오 재생 시작, 하이라이트 시작');
+            startHighlightInterval();
+          });
 
-      const handlePause = () => {
-        console.log('2장 오디오 일시정지, 하이라이트 정지');
-        if (highlightInterval) {
-          clearInterval(highlightInterval);
+          player.on('pause', () => {
+            console.log('2장 비메오 일시정지, 하이라이트 정지');
+            if (highlightInterval) {
+              clearInterval(highlightInterval);
+            }
+          });
+
+          player.on('ended', () => {
+            console.log('2장 비메오 종료, 하이라이트 정지');
+            if (highlightInterval) {
+              clearInterval(highlightInterval);
+            }
+            // 마지막 하이라이트 제거
+            if (lastHighlightedElement) {
+              lastHighlightedElement.style.setProperty('background-color', 'transparent', 'important');
+              lastHighlightedElement.style.setProperty('color', '#e5e5e5', 'important');
+              lastHighlightedElement = null;
+            }
+          });
+
+          // 자동재생으로 인해 이미 재생 중일 수 있으므로 즉시 하이라이트 시작
+          player.getPaused().then((paused: boolean) => {
+            console.log('비메오 재생 상태 확인:', paused ? '일시정지됨' : '재생 중');
+            if (!paused) {
+              console.log('이미 재생 중이므로 하이라이트 시작');
+              startHighlightInterval();
+            }
+          }).catch((error: any) => {
+            console.error('비메오 재생 상태 확인 실패:', error);
+          });
+
+        } else {
+          console.log('플레이어 아직 준비되지 않음, 500ms 후 재시도');
+          // 플레이어가 아직 준비되지 않았으면 잠시 후 다시 시도
+          setTimeout(setupVimeoEvents, 500);
         }
       };
 
-      const handleEnded = () => {
-        console.log('2장 오디오 종료, 하이라이트 정지');
-        if (highlightInterval) {
-          clearInterval(highlightInterval);
-        }
-        // 마지막 하이라이트 제거
-        if (lastHighlightedElement) {
-          lastHighlightedElement.style.setProperty('background-color', 'transparent', 'important');
-          lastHighlightedElement.style.setProperty('color', '#e5e5e5', 'important');
-          lastHighlightedElement = null;
-        }
-      };
-
-      audio.addEventListener('play', handlePlay);
-      audio.addEventListener('pause', handlePause);
-      audio.addEventListener('ended', handleEnded);
+      // 비메오 플레이어 이벤트 설정
+      console.log('2장 하이라이트 useEffect 실행됨');
+      setTimeout(setupVimeoEvents, 2000); // 더 충분한 시간 제공
       
       // 컴포넌트 언마운트 시 정리
       return () => {
         if (highlightInterval) {
           clearInterval(highlightInterval);
         }
-        audio.removeEventListener('play', handlePlay);
-        audio.removeEventListener('pause', handlePause);
-        audio.removeEventListener('ended', handleEnded);
       };
     }
   }, [chapterNumber]);
