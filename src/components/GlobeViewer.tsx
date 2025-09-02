@@ -180,7 +180,7 @@ export default function GlobeViewer({ onConnectionChange, onPaymentCountChange }
     const cityInfo = {
       lat: getCityLatitude(matchedProp.origin.city),
       lng: getCityLongitude(matchedProp.origin.city),
-      name: matchedProp.origin.city,
+      name: matchedProp.name, // prop.name으로 설정 (Charleston 식별용)
       country: matchedProp.origin.country
     };
     
@@ -278,10 +278,14 @@ export default function GlobeViewer({ onConnectionChange, onPaymentCountChange }
       "bucharest": { lat: 44.4268, lng: 26.1025 },
       "Mrázov": { lat: 49.8175, lng: 12.7000 },
       "Sutton": { lat: 51.3600, lng: -0.2000 },
-      "Liaoning": { lat: 41.8057, lng: 123.4315 }
+      "Liaoning": { lat: 41.8057, lng: 123.4315 },
+      "Saint-Piat, Centre": { lat: 50.8503, lng: 4.3517 }, // 벨기에 브뤼셀 근처
+      "불명": { lat: 37.5665, lng: 126.9780 } // 서울 좌표로 대체 (한국 상품)
     };
     
-    return cityCoordinates[cityName]?.lat || 0;
+    const result = cityCoordinates[cityName]?.lat || 0;
+    console.log(`🔍 getCityLatitude("${cityName}") → ${result}`);
+    return result;
   }, []);
 
   const getCityLongitude = useCallback((cityName: string): number => {
@@ -297,10 +301,14 @@ export default function GlobeViewer({ onConnectionChange, onPaymentCountChange }
       "bucharest": { lat: 44.4268, lng: 26.1025 },
       "Mrázov": { lat: 49.8175, lng: 12.7000 },
       "Sutton": { lat: 51.3600, lng: -0.2000 },
-      "Liaoning": { lat: 41.8057, lng: 123.4315 }
+      "Liaoning": { lat: 41.8057, lng: 123.4315 },
+      "Saint-Piat, Centre": { lat: 50.8503, lng: 4.3517 }, // 벨기에 브뤼셀 근처
+      "불명": { lat: 37.5665, lng: 126.9780 } // 서울 좌표로 대체 (한국 상품)
     };
     
-    return cityCoordinates[cityName]?.lng || 0;
+    const result = cityCoordinates[cityName]?.lng || 0;
+    console.log(`🔍 getCityLongitude("${cityName}") → ${result}`);
+    return result;
   }, []);
 
   // 주문 완료 애니메이션 적용 함수
@@ -1103,23 +1111,11 @@ export default function GlobeViewer({ onConnectionChange, onPaymentCountChange }
   const addDottedLineToSeoul = useCallback((fromCity: any) => {
     if (!arrowsRef.current) return;
 
-    // 점선 개수 제한 (최대 5개)
-    const MAX_DOTTED_LINES = 5;
-    if (arrowsRef.current.children.length >= MAX_DOTTED_LINES) {
-      // 가장 오래된 점선 제거
-      const oldestLine = arrowsRef.current.children[0];
-      if (oldestLine) {
-        arrowsRef.current.remove(oldestLine);
-        console.log('🗑️ 가장 오래된 점선 제거됨');
-      }
-    }
+    // 점선 개수 제한 제거 (모든 점선 표시)
+    console.log('✅ 점선 개수 제한 없음 - 모든 점선 표시');
 
-    // 중복 체크: 이미 같은 상품에 대한 점선이 생성되었는지 확인
-    const lineKey = `${fromCity.name}-${fromCity.origin?.city || fromCity.city}`;
-    if (createdLinesRef.current.has(lineKey)) {
-      console.log('⚠️ 이미 생성된 점선이 있습니다:', lineKey);
-      return;
-    }
+    // 중복 체크 완전 제거 - 모든 점선 표시
+    console.log('🔍 점선 생성 시도:', fromCity.name);
 
     console.log('🚚 점선 경로 생성 시작:', fromCity);
 
@@ -1127,7 +1123,30 @@ export default function GlobeViewer({ onConnectionChange, onPaymentCountChange }
     const fromLat = fromCity.lat;
     const fromLng = fromCity.lng;
     const toLat = 37.5665; // 서울 위도
-    const toLng = 126.9780; // 서울 경도
+    let toLng = 126.9780; // 서울 경도 (수정 가능)
+
+    // Charleston을 정확히 식별하기 위해 여러 조건 확인
+    console.log('🔍 fromCity 정보:', fromCity);
+    console.log('🔍 fromCity.name:', fromCity.name);
+    console.log('🔍 fromCity.origin?.city:', fromCity.origin?.city);
+    console.log('🔍 fromCity.lat:', fromCity.lat);
+    console.log('🔍 fromCity.lng:', fromCity.lng);
+    
+    // Charleston을 정확히 식별하기 위해 여러 조건 확인
+    const isCharleston = fromCity.name === "North Korean Army Airborne Glider Infantry Badge Pin" || 
+                        fromCity.origin?.city === "Charleston, South Carolina" ||
+                        (fromCity.lat === 32.7765 && fromCity.lng === -79.9311);
+    
+    console.log('🔍 Charleston 조건 확인 결과:', isCharleston);
+    
+    if (isCharleston) {
+      // Charleston의 실제 경도는 -79.9311이지만, 선을 그릴 때는 지구 반대편을 돌아서 가도록
+      // 즉, 태평양을 건너 서울로 가는 최단 경로를 만들기 위해 서울의 경도를 조정
+      const originalToLng = toLng; // Save original toLng for logging
+      toLng = toLng - 360; // 서울 경도를 서쪽으로 360도 이동시켜 태평양 횡단 경로를 만듦
+      console.log('🌍 Charleston: 태평양 횡단 경로로 선 생성');
+      console.log('🌍 서울 경도 변경:', originalToLng, '→', toLng);
+    }
 
     // 지구 외곽을 따라가는 경로 생성 (베이징/바티칸 방식과 완전히 동일)
     const lineGeometry = new THREE.BufferGeometry();
@@ -1170,8 +1189,8 @@ export default function GlobeViewer({ onConnectionChange, onPaymentCountChange }
 
     arrowsRef.current.add(dottedLine);
     
-    // 생성된 점선을 추적 Set에 추가
-    createdLinesRef.current.add(lineKey);
+    // 점선 생성 완료 로그
+    console.log('✅ 점선 생성 완료 및 추적 추가:', fromCity.name);
     
     console.log('✅ 점선 경로 생성 완료:', fromCity.name);
 
@@ -1598,15 +1617,56 @@ export default function GlobeViewer({ onConnectionChange, onPaymentCountChange }
     localStorage.removeItem('orderModalVisible');
     localStorage.removeItem('currentOrderInfo');
     
-    paymentPollingServiceRef.current = new GlobePaymentMonitorService();
-    paymentPollingServiceRef.current.startPolling({
-      onNewPayment: handleNewPayment
+    // 1. 선 그리기 먼저 실행 (렌더링 안정화)
+    console.log('🚀 선 그리기 시작...');
+    
+    // 바티칸과 베이징 실선 즉시 생성
+    console.log('🏛️ 바티칸 실선 즉시 생성...');
+    addVaticanToSeoulLine();
+    
+    console.log('🏛️ 베이징 실선 즉시 생성...');
+    addBeijingToSeoulLine();
+    
+    // ordered 상품들의 점선 즉시 생성
+    console.log('🔧 ordered 상품 점선 즉시 생성 시작...');
+    const orderedProps = propsData.props.filter(prop => prop.status === 'ordered');
+    console.log('📋 즉시 생성할 ordered 상품들:', orderedProps);
+    
+    orderedProps.forEach((prop, index) => {
+      console.log(`🎯 즉시 처리 [${index + 1}] ${prop.name} (${prop.origin.city})`);
+      
+      const cityInfo = {
+        lat: getCityLatitude(prop.origin.city),
+        lng: getCityLongitude(prop.origin.city),
+        name: prop.name, // prop.name으로 설정 (Charleston 식별용)
+        country: prop.origin.country
+      };
+      
+      console.log('📍 즉시 생성할 도시 정보:', cityInfo);
+      
+      // 즉시 점선 생성 시도
+      if (typeof addDottedLineToSeoul === 'function') {
+        addDottedLineToSeoul(cityInfo);
+        console.log('✅ 즉시 점선 생성 완료:', cityInfo.name);
+      } else {
+        console.log('❌ addDottedLineToSeoul 함수가 정의되지 않음');
+      }
     });
-
-    // props.json의 status가 'ordered'인 상품들에 점선 표시
+    
+    // 2. 결제 모니터링 서비스 시작 (선 그리기와 독립적으로)
+    console.log('💳 결제 모니터링 서비스 시작...');
     setTimeout(() => {
-      showOrderedPropsRoutes();
-    }, 2000); // 2초 후 실행 (컴포넌트 완전 로드 후)
+      try {
+        paymentPollingServiceRef.current = new GlobePaymentMonitorService();
+        paymentPollingServiceRef.current.startPolling({
+          onNewPayment: handleNewPayment
+        });
+        console.log('✅ 결제 모니터링 서비스 시작 완료');
+      } catch (error) {
+        console.error('❌ 결제 모니터링 서비스 시작 실패:', error);
+        // 에러가 발생해도 선 그리기에 영향주지 않음
+      }
+    }, 1000); // 1초 후 시작 (선 그리기 완료 후)
 
     // completed props 데이터가 있다면 점선 표시 (예시)
     // 실제로는 API나 다른 소스에서 데이터를 받아와야 함
