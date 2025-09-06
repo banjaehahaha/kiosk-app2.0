@@ -46,7 +46,7 @@
       },
       "shippingDays": "2~4weeks",
       "url": "https://www.ebay.com/itm/156792552945",
-      "status": "pending"
+      "status": "ordered"
     },
     {
       "id": 5,
@@ -58,7 +58,7 @@
       },
       "shippingDays": "1~3weeks",
       "url": "https://cnturi.shop/product/288453",
-      "status": "pending"
+      "status": "ordered"
     },
     {
       "id": 6,
@@ -118,7 +118,7 @@
       },
       "shippingDays": "1~3weeks",
       "url": "https://cnturi.shop/product/271254",
-      "status": "pending"
+      "status": "ordered"
     },
     {
       "id": 11,
@@ -142,7 +142,7 @@
       },
       "shippingDays": "5~7weeks",
       "url": "https://ebay.us/m/RwaoQc",
-      "status": "ordered"
+      "status": "failed"
     },
     {
       "id": 13,
@@ -166,7 +166,7 @@
       },
       "shippingDays": "3~8weeks",
       "url": "https://ebay.us/m/gOMCwy",
-      "status": "pending"
+      "status": "ordered"
     },
     {
       "id": 15,
@@ -202,7 +202,7 @@
       },
       "shippingDays": "4days",
       "url": "https://www.rainbow-trading.co.jp/item/3238/",
-      "status": "pending"
+      "status": "failed"
     },
     {
       "id": 18,
@@ -214,7 +214,7 @@
       },
       "shippingDays": "4days",
       "url": "https://www.rainbow-trading.co.jp/item/923/",
-      "status": "pending"
+      "status": "failed"
     },
     {
       "id": 19,
@@ -274,7 +274,7 @@
       },
       "shippingDays": "4days",
       "url": "https://www.rainbow-trading.co.jp/item/4114/",
-      "status": "ordered"
+      "status": "completed"
     },
     {
       "id": 24,
@@ -286,7 +286,7 @@
       },
       "shippingDays": "4days",
       "url": "https://www.rainbow-trading.co.jp/item/4245/",
-      "status": "pending"
+      "status": "failed"
     },
     {
       "id": 25,

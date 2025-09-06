@@ -66,12 +66,13 @@ export default function PropsList({ onPropSelect, completedProps = [] }: PropsLi
       <div className="columns-3 gap-12 w-full">
         {props.map((prop) => {
           const isCompleted = completedProps.includes(prop.id) || prop.status === 'ordered';
+          const isFailed = prop.status === 'failed';
           
           return (
             <div 
               key={prop.id} 
               className={`inline-block w-full break-inside-avoid mb-12 transition-transform duration-200 hover:scale-105 ${
-                isCompleted ? 'cursor-pointer' : 'cursor-pointer'
+                isCompleted || isFailed ? 'cursor-pointer' : 'cursor-pointer'
               }`} 
               onClick={() => onPropSelect(prop)}
             >
@@ -80,7 +81,7 @@ export default function PropsList({ onPropSelect, completedProps = [] }: PropsLi
                   src={prop.image}
                   alt={prop.name}
                   className={`w-full h-auto object-contain block rounded-none shadow-none bg-transparent drop-shadow-md ${
-                    isCompleted ? 'filter blur-[3px]' : ''
+                    isCompleted || isFailed ? 'filter blur-[3px]' : ''
                   }`}
                   onError={(e) => {
                     // Remove the placeholder fallback - just let the image fail silently
@@ -95,6 +96,15 @@ export default function PropsList({ onPropSelect, completedProps = [] }: PropsLi
                   <div className="absolute inset-0 flex items-center justify-center">
                     <div className="bg-[#F8D1E7] text-black px-4 py-2 font-bold text-lg transform -rotate-[30deg]">
                       주문 완료
+                    </div>
+                  </div>
+                )}
+                
+                {/* 주문 실패 표시 */}
+                {isFailed && (
+                  <div className="absolute inset-0 flex items-center justify-center">
+                    <div className="bg-red-500 text-white px-4 py-2 font-bold text-lg transform -rotate-[30deg]">
+                      주문 실패
                     </div>
                   </div>
                 )}

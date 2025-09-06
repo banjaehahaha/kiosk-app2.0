@@ -239,6 +239,9 @@ export default function GlobeViewer({ onConnectionChange, onPaymentCountChange }
     // props.json에서 "ordered" 상태인 상품들 찾기
     const orderedProps = propsData.props.filter(prop => prop.status === 'ordered');
     
+    // props.json에서 "completed" 상태인 상품들 찾기
+    const completedPropsFromJson = propsData.props.filter(prop => prop.status === 'completed');
+    
     // completed props 데이터 가져오기 (Local Storage에서)
     const completedPropsFromStorage = localStorage.getItem('completedProps');
     let completedProps: any[] = [];
@@ -252,15 +255,38 @@ export default function GlobeViewer({ onConnectionChange, onPaymentCountChange }
     }
     
     // 모든 주문 완료 상품들을 합치기
-    const allCompletedProps = [...orderedProps, ...completedProps];
+    const allCompletedProps = [...orderedProps, ...completedPropsFromJson, ...completedProps];
     
     console.log('📋 모든 주문 완료 상품들:', allCompletedProps);
     
-    // 각 상품에 대해 '주문 완료' 텍스트 표시
+    // 각 상품에 대해 텍스트 표시
     allCompletedProps.forEach(prop => {
       const propName = prop.name;
-      console.log(`🎯 ${propName} 주문 완료 텍스트 표시...`);
-      showOrderCompletedText(propName);
+      // props.json의 completed 상태는 '배송완료' 텍스트 표시
+      if (prop.status === 'completed') {
+        console.log(`🎯 ${propName} 배송완료 텍스트 표시...`);
+        showDeliveryCompletedText(propName);
+      } else {
+        console.log(`🎯 ${propName} 주문 완료 텍스트 표시...`);
+        showOrderCompletedText(propName);
+      }
+    });
+  }, []);
+
+  // props.json의 "failed" 상태에서 '주문 실패' 텍스트 표시하는 함수
+  const showOrderFailedTexts = useCallback(() => {
+    console.log('🎯 주문 실패 텍스트 표시 시작...');
+    
+    // props.json에서 "failed" 상태인 상품들 찾기
+    const failedProps = propsData.props.filter(prop => prop.status === 'failed');
+    
+    console.log('📋 모든 주문 실패 상품들:', failedProps);
+    
+    // 각 상품에 대해 '주문 실패' 텍스트 표시
+    failedProps.forEach(prop => {
+      const propName = prop.name;
+      console.log(`🎯 ${propName} 주문 실패 텍스트 표시...`);
+      showOrderFailedText(propName);
     });
   }, []);
 
@@ -1325,6 +1351,186 @@ export default function GlobeViewer({ onConnectionChange, onPaymentCountChange }
     // "주문 완료" 텍스트는 제거하지 않고 계속 유지
   }, [cities]);
 
+  // "배송완료" 텍스트 표시 함수
+  const showDeliveryCompletedText = useCallback((propName: string) => {
+    if (!globeRef.current) return;
+
+    // props.json에서 해당 prop 찾기
+    const prop = propsData.props.find(p => p.name === propName);
+    if (!prop) return;
+
+    // 해당 prop의 도시 찾기
+    const city = cities.find(c => 
+      c.city === prop.origin.city || 
+      (c.city.includes(prop.origin.city) || prop.origin.city.includes(c.city))
+    );
+
+    if (!city) return;
+
+    // 도시 좌표 계산
+    const x = Math.cos(city.lat * (Math.PI / 180)) * Math.cos(-city.lng * (Math.PI / 180)) * 1.02;
+    const y = Math.sin(city.lat * (Math.PI / 180)) * 1.02;
+    const z = Math.cos(city.lat * (Math.PI / 180)) * Math.sin(-city.lng * (Math.PI / 180)) * 1.02;
+
+    // "배송완료" 텍스트 생성 (Canvas로 텍스트 텍스처 생성)
+    const deliveryCompletedCanvas = document.createElement('canvas');
+    const deliveryCompletedCtx = deliveryCompletedCanvas.getContext('2d');
+    deliveryCompletedCanvas.width = 512;
+    deliveryCompletedCanvas.height = 128;
+    
+    if (deliveryCompletedCtx) {
+      deliveryCompletedCtx.fillStyle = '#F8D1E7';  // 분홍색 배경
+      deliveryCompletedCtx.fillRect(0, 0, deliveryCompletedCanvas.width, deliveryCompletedCanvas.height);
+      deliveryCompletedCtx.fillStyle = '#000000';  // 검정 텍스트
+      deliveryCompletedCtx.font = 'bold 48px Arial';
+      deliveryCompletedCtx.textAlign = 'center';
+      deliveryCompletedCtx.textBaseline = 'middle';
+      deliveryCompletedCtx.fillText('배송완료', deliveryCompletedCanvas.width / 2, deliveryCompletedCanvas.height / 2);
+    }
+    
+    const deliveryCompletedTexture = new THREE.CanvasTexture(deliveryCompletedCanvas);
+    deliveryCompletedTexture.minFilter = THREE.LinearFilter;
+    deliveryCompletedTexture.magFilter = THREE.LinearFilter;
+    deliveryCompletedTexture.generateMipmaps = false; // 메모리 절약
+    deliveryCompletedTexture.anisotropy = 1; // 성능 향상
+    
+    const deliveryCompletedGeometry = new THREE.PlaneGeometry(0.3, 0.08);
+    const deliveryCompletedMaterial = new THREE.MeshBasicMaterial({ 
+      map: deliveryCompletedTexture,
+      transparent: true,
+      side: THREE.DoubleSide
+    });
+    
+    const deliveryCompletedMesh = new THREE.Mesh(deliveryCompletedGeometry, deliveryCompletedMaterial);
+    
+    // 이미지 위에 배치
+    const baseOffset = 0.2;
+    let regionOffsetX = 0;
+    let regionOffsetY = 0;
+    let regionOffsetZ = 0;
+    
+    // props ID와 지역을 기반으로 위치를 조정하여 겹치지 않도록 함
+    if (prop.origin.country === 'Japan' && prop.origin.city === 'Kochi') {
+      regionOffsetX = (prop.id % 4) * 0.09;
+      regionOffsetY = Math.floor(prop.id / 4) * 0.11;
+      regionOffsetZ = (prop.id % 3) * 0.09;
+    } else if (prop.origin.country === 'China' && prop.origin.city === 'Liaoning') {
+      regionOffsetX = (prop.id % 3) * 0.08;
+      regionOffsetY = Math.floor(prop.id / 3) * 0.06;
+      regionOffsetZ = (prop.id % 2) * 0.08;
+    } else if (prop.origin.country === 'United States' && prop.origin.city === 'Charleston, South Carolina') {
+      regionOffsetX = (prop.id % 2) * 0.09;
+      regionOffsetY = Math.floor(prop.id / 2) * 0.11;
+      regionOffsetZ = (prop.id % 2) * 0.09;
+    } else {
+      regionOffsetX = (prop.id % 3) * 0.06;
+      regionOffsetY = (prop.id % 2) * 0.08;
+      regionOffsetZ = (prop.id % 3) * 0.06;
+    }
+    
+    const offsetX = baseOffset + regionOffsetX;
+    const offsetY = baseOffset + regionOffsetY;
+    const offsetZ = baseOffset + regionOffsetZ;
+    
+    // "배송완료" 텍스트를 이미지 위에 배치
+    deliveryCompletedMesh.position.set(x + offsetX, y + offsetY + 0.3, z + offsetZ);
+    
+    // 지구본에 추가
+    globeRef.current.add(deliveryCompletedMesh);
+    
+    // "배송완료" 텍스트는 제거하지 않고 계속 유지 (애니메이션 없음)
+  }, [cities]);
+
+  // "주문 실패" 텍스트 표시 함수
+  const showOrderFailedText = useCallback((propName: string) => {
+    if (!globeRef.current) return;
+
+    // props.json에서 해당 prop 찾기
+    const prop = propsData.props.find(p => p.name === propName);
+    if (!prop) return;
+
+    // 해당 prop의 도시 찾기
+    const city = cities.find(c => 
+      c.city === prop.origin.city || 
+      (c.city.includes(prop.origin.city) || prop.origin.city.includes(c.city))
+    );
+
+    if (!city) return;
+
+    // 도시 좌표 계산
+    const x = Math.cos(city.lat * (Math.PI / 180)) * Math.cos(-city.lng * (Math.PI / 180)) * 1.02;
+    const y = Math.sin(city.lat * (Math.PI / 180)) * 1.02;
+    const z = Math.cos(city.lat * (Math.PI / 180)) * Math.sin(-city.lng * (Math.PI / 180)) * 1.02;
+
+    // "주문 실패" 텍스트 생성 (Canvas로 텍스트 텍스처 생성)
+    const orderFailedCanvas = document.createElement('canvas');
+    const orderFailedCtx = orderFailedCanvas.getContext('2d');
+    orderFailedCanvas.width = 512;
+    orderFailedCanvas.height = 128;
+    
+    if (orderFailedCtx) {
+      orderFailedCtx.fillStyle = '#ef4444';  // 빨간색 배경
+      orderFailedCtx.fillRect(0, 0, orderFailedCanvas.width, orderFailedCanvas.height);
+      orderFailedCtx.fillStyle = '#ffffff';  // 흰색 텍스트
+      orderFailedCtx.font = 'bold 48px Arial';
+      orderFailedCtx.textAlign = 'center';
+      orderFailedCtx.textBaseline = 'middle';
+      orderFailedCtx.fillText('주문 실패', orderFailedCanvas.width / 2, orderFailedCanvas.height / 2);
+    }
+    
+    const orderFailedTexture = new THREE.CanvasTexture(orderFailedCanvas);
+    orderFailedTexture.minFilter = THREE.LinearFilter;
+    orderFailedTexture.magFilter = THREE.LinearFilter;
+    orderFailedTexture.generateMipmaps = false; // 메모리 절약
+    orderFailedTexture.anisotropy = 1; // 성능 향상
+    
+    const orderFailedGeometry = new THREE.PlaneGeometry(0.3, 0.08);
+    const orderFailedMaterial = new THREE.MeshBasicMaterial({ 
+      map: orderFailedTexture,
+      transparent: true,
+      side: THREE.DoubleSide
+    });
+    
+    const orderFailedMesh = new THREE.Mesh(orderFailedGeometry, orderFailedMaterial);
+    
+    // 이미지 위에 배치
+    const baseOffset = 0.2;
+    let regionOffsetX = 0;
+    let regionOffsetY = 0;
+    let regionOffsetZ = 0;
+    
+    // props ID와 지역을 기반으로 위치를 조정하여 겹치지 않도록 함
+    if (prop.origin.country === 'Japan' && prop.origin.city === 'Kochi') {
+      regionOffsetX = (prop.id % 4) * 0.09;
+      regionOffsetY = Math.floor(prop.id / 4) * 0.11;
+      regionOffsetZ = (prop.id % 3) * 0.09;
+    } else if (prop.origin.country === 'China' && prop.origin.city === 'Liaoning') {
+      regionOffsetX = (prop.id % 3) * 0.08;
+      regionOffsetY = Math.floor(prop.id / 3) * 0.06;
+      regionOffsetZ = (prop.id % 2) * 0.08;
+    } else if (prop.origin.country === 'United States' && prop.origin.city === 'Charleston, South Carolina') {
+      regionOffsetX = (prop.id % 2) * 0.09;
+      regionOffsetY = Math.floor(prop.id / 2) * 0.11;
+      regionOffsetZ = (prop.id % 2) * 0.09;
+    } else {
+      regionOffsetX = (prop.id % 3) * 0.06;
+      regionOffsetY = (prop.id % 2) * 0.08;
+      regionOffsetZ = (prop.id % 3) * 0.06;
+    }
+    
+    const offsetX = baseOffset + regionOffsetX;
+    const offsetY = baseOffset + regionOffsetY;
+    const offsetZ = baseOffset + regionOffsetZ;
+    
+    // "주문 실패" 텍스트를 이미지 위에 배치
+    orderFailedMesh.position.set(x + offsetX, y + offsetY + 0.3, z + offsetZ);
+    
+    // 지구본에 추가
+    globeRef.current.add(orderFailedMesh);
+    
+    // "주문 실패" 텍스트는 제거하지 않고 계속 유지 (애니메이션 없음)
+  }, [cities]);
+
   // 모든 props에 대해 이미지와 텍스트 추가하는 함수
   const addAllPropsImagesAndText = useCallback(() => {
     if (!globeRef.current) return;
@@ -1687,6 +1893,11 @@ export default function GlobeViewer({ onConnectionChange, onPaymentCountChange }
       showOrderCompletedTexts();
     }, 4000); // 4초 후 실행
 
+    // props.json의 "failed" 상태에서 '주문 실패' 텍스트 표시
+    setTimeout(() => {
+      showOrderFailedTexts();
+    }, 5000); // 5초 후 실행
+
     return () => {
       console.log('🛑 GlobeViewer 결제 모니터링 서비스 중지...');
       if (paymentPollingServiceRef.current) {
@@ -1748,6 +1959,13 @@ export default function GlobeViewer({ onConnectionChange, onPaymentCountChange }
             <div>
               <div className="text-2xl">Arch of Triumph, Pyongyang</div>
               <div className="text-gray-300 text-lg">출발지: 베이징, 중국</div>
+            </div>
+          </div>
+          <div className="flex items-start">
+            <span className="text-pink-300 font-bold mr-4 text-2xl">3)</span>
+            <div>
+              <div className="text-2xl">2025 캘린더</div>
+              <div className="text-gray-300 text-lg">출발지: 고치, 일본</div>
             </div>
           </div>
         </div>
