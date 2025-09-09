@@ -52,7 +52,7 @@ export default function HomePage({ onNavigate }: HomePageProps) {
       <div className="text-center mb-8 relative z-20">
         <h1 className="text-[10rem] font-d2coding-bold text-[#e5e5e5] leading-tight tracking-tight">
           부재시<br />
-          픽션을<br />
+          픽션은<br />
           문 앞에<br />
           놔주세요
         </h1>
