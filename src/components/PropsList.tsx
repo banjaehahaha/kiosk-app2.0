@@ -65,7 +65,7 @@ export default function PropsList({ onPropSelect, completedProps = [] }: PropsLi
     <>
       <div className="columns-3 gap-12 w-full">
         {props.map((prop) => {
-          const isCompleted = completedProps.includes(prop.id) || prop.status === 'ordered';
+          const isCompleted = completedProps.includes(prop.id) || prop.status === 'ordered' || prop.status === 'completed';
           const isFailed = prop.status === 'failed';
           
           return (

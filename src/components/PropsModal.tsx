@@ -168,14 +168,14 @@ export default function PropsModal({
               
               <button
                 onClick={handleStartBooking}
-                disabled={completedProps.includes(prop.id) || prop.status === 'ordered' || prop.status === 'failed'}
+                disabled={completedProps.includes(prop.id) || prop.status === 'ordered' || prop.status === 'completed' || prop.status === 'failed'}
                 className={`flex-1 px-4 py-2 text-sm leading-tight transition-colors ${
-                  completedProps.includes(prop.id) || prop.status === 'ordered' || prop.status === 'failed'
+                  completedProps.includes(prop.id) || prop.status === 'ordered' || prop.status === 'completed' || prop.status === 'failed'
                     ? 'bg-[#404040] text-[#808080] cursor-not-allowed'
                     : 'bg-[#F8D1E7] text-[#1a1a1a] hover:bg-[#f0c4d8]'
                 }`}
               >
-                {completedProps.includes(prop.id) || prop.status === 'ordered' ? (
+                {completedProps.includes(prop.id) || prop.status === 'ordered' || prop.status === 'completed' ? (
                   <>
                     주문 완료된<br />
                     상품입니다
