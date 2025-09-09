@@ -130,7 +130,7 @@
       },
       "shippingDays": "1~2weeks",
       "url": "https://ebay.us/m/k6KLK2",
-      "status": "pending"
+      "status": "ordered"
     },
     {
       "id": 12,
@@ -190,7 +190,7 @@
       },
       "shippingDays": "1~2weeks",
       "url": "https://ebay.us/m/bGJkqL",
-      "status": "pending"
+      "status": "ordered"
     },
     {
       "id": 17,
@@ -238,7 +238,7 @@
       },
       "shippingDays": "4days",
       "url": "https://www.rainbow-trading.co.jp/item/4061/",
-      "status": "pending"
+      "status": "failed"
     },
     {
       "id": 21,
@@ -298,7 +298,7 @@
       },
       "shippingDays": "4days",
       "url": "https://www.rainbow-trading.co.jp/item/4246/",
-      "status": "pending"
+      "status": "failed"
     },
     {
       "id": 26,
