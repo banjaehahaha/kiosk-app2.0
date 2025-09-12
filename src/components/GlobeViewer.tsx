@@ -1968,6 +1968,20 @@ export default function GlobeViewer({ onConnectionChange, onPaymentCountChange }
               <div className="text-gray-300 text-lg">출발지: 고치, 일본</div>
             </div>
           </div>
+          <div className="flex items-start">
+            <span className="text-pink-300 font-bold mr-4 text-2xl">4)</span>
+            <div>
+              <div className="text-2xl">개성고려 인삼 비누</div>
+              <div className="text-gray-300 text-lg">출발지: 불명, 불명</div>
+            </div>
+          </div>
+          <div className="flex items-start">
+            <span className="text-pink-300 font-bold mr-4 text-2xl">5)</span>
+            <div>
+              <div className="text-2xl">레드 슬로건 쿼츠 백두산 남성용 시계</div>
+              <div className="text-gray-300 text-lg">출발지: Liaoning, China</div>
+            </div>
+          </div>
         </div>
       </div>
 

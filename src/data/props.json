@@ -118,7 +118,7 @@
       },
       "shippingDays": "1~3weeks",
       "url": "https://cnturi.shop/product/271254",
-      "status": "ordered"
+      "status": "completed"
     },
     {
       "id": 11,
@@ -154,7 +154,7 @@
       },
       "shippingDays": "3~4weeks",
       "url": "https://ebay.us/m/YKwK86",
-      "status": "pending"
+      "status": "ordered"
     },
     {
       "id": 14,
@@ -178,7 +178,7 @@
       },
       "shippingDays": "3~11weeks",
       "url": "https://ebay.us/m/Ea4l7r",
-      "status": "pending"
+      "status": "ordered"
     },
     {
       "id": 16,
@@ -226,7 +226,7 @@
       },
       "shippingDays": "4days",
       "url": "https://www.rainbow-trading.co.jp/item/4040/",
-      "status": "pending"
+      "status": "failed"
     },
     {
       "id": 20,
@@ -250,7 +250,7 @@
       },
       "shippingDays": "4days",
       "url": "https://www.rainbow-trading.co.jp/item/4021/",
-      "status": "pending"
+      "status": "failed"
     },
     {
       "id": 22,
@@ -322,7 +322,7 @@
       },
       "shippingDays": "1~2weeks",
       "url": "https://ko.aliexpress.com/item/1005004776856098.html?gps-id=pcStoreJustForYou&scm=1007.23125.137358.0&scm_id=1007.23125.137358.0&scm-url=1007.23125.137358.0&pvid=46ca592c-8db7-4054-830f-1c4b52270123&_t=gps-id%3ApcStoreJustForYou%2Cscm-url%3A1007.23125.137358.0%2Cpvid%3A46ca592c-8db7-4054-830f-1c4b52270123%2Ctpp_buckets%3A668%232846%238112%231997&pdp_ext_f=%7B%22order%22%3A%223%22%2C%22eval%22%3A%221%22%2C%22sceneId%22%3A%2213125%22%7D&pdp_npi=6%40dis%21KRW%21105981%2196682%21%21%21531.94%21485.27%21%40210141f717554432216772013e7bbc%2112000033944979611%21rec%21KR%21%21ABXZ%211%210%21m03_new_user%3A-29895%3Bn_tag%3A-29910%3BpisId%3A5000000176755829&spm=a2g0o.store_pc_home.smartJustForYou_2002740648210.1005004776856098&gatewayAdapt=glo2kor",
-      "status": "ordered"
+      "status": "completed"
     },
     {
       "id": 28,
@@ -334,7 +334,7 @@
       },
       "shippingDays": "1~2weeks",
       "url": "https://ko.aliexpress.com/item/1005008636351062.html?gps-id=pcStoreJustForYou&scm=1007.23125.137358.0&scm_id=1007.23125.137358.0&scm-url=1007.23125.137358.0&pvid=1072713f-7bc4-42c2-ad05-aa224d8a49d7&_t=gps-id%3ApcStoreJustForYou%2Cscm-url%3A1007.23125.137358.0%2Cpvid%3A1072713f-7bc4-42c2-ad05-aa224d8a49d7%2Ctpp_buckets%3A668%232846%238116%232002&pdp_ext_f=%7B%22order%22%3A%22-1%22%2C%22eval%22%3A%221%22%2C%22sceneId%22%3A%2213125%22%7D&pdp_npi=6%40dis%21KRW%21170300%21170300%21%21%21850.48%21850.48%21%40210156fc17556829000335200e6138%2112000046044944592%21rec%21KR%21%21ABX%211%210%21n_tag%3A-29910%3Bd%3Ae6535cdd%3Bm03_new_user%3A-29895&spm=a2g0o.store_pc_home.smartJustForYou_2002740648210.1005008636351062&gatewayAdapt=glo2kor",
-      "status": "pending"
+      "status": "ordered"
     },
     {
       "id": 29,
@@ -358,7 +358,7 @@
       },
       "shippingDays": "1~3weeks",
       "url": "https://m.bunjang.co.kr/products/329454260",
-      "status": "pending"
+      "status": "ordered"
     },
     {
       "id": 31,
